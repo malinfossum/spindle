@@ -1,7 +1,6 @@
 function viewDetailsPage() {
 	const id = model.viewState.musicInfo.id;
 	const album = model.data.musicInfo.find((a) => a.id === id);
-	const childControls = isChild();
 
 	if (!album) {
 		return /*HTML*/ `
@@ -68,11 +67,7 @@ function viewDetailsPage() {
 
         <div class="detail-actions">
             <button class="btn btn-accent" onclick="editAlbum(${album.id})">Rediger</button>
-                        ${
-													childControls
-														? ""
-														: /*HTML*/ `<button class="btn btn-danger" onclick="deleteAlbum(${album.id})">Slett</button>`
-												}
+            <button class="btn btn-danger" onclick="deleteAlbum(${album.id})">Slett</button>
             <button class="btn btn-ghost" onclick="changePage('homePage')">Avbryt</button>
         </div>
     </div>

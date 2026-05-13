@@ -1,8 +1,8 @@
-# Geir's Musikkbibliotek
+# Spindle
 
-En enkel musikkbibliotek-app laget i vanilla JavaScript som kundeprosjekt i GET Academy Emne 2.
+A music library for physical collections (LPs and CDs), built in vanilla JavaScript.
 
-Målet med prosjektet var å lage et praktisk og brukervennlig verktøy for å organisere en fysisk musikksamling med CD-er og LP-er. Brukeren kan bla i samlingen, søke etter album, se detaljer, legge til nye album, redigere eksisterende innhold og bruke ønskeliste. Den ferdige versjonen inneholder også brukerkontoer, profilsider og rollebasert tilgang med `user`, `child` og `admin`.
+Originally developed as a team assignment in GET Academy Emne 2 with Henry Elendheim. This repository is the rebuilt, general-purpose, open-source version maintained by Malin Fossum. The project provides a practical way to organize a physical music collection: browse the library, search albums, view and edit details, manage a wishlist, and (in upcoming releases) keep your data persisted and encrypted locally.
 
 ---
 
@@ -21,10 +21,9 @@ eller bruk Live Server i VS Code.
 - Legg til nye album med opplasting av eget coverbilde
 - Rediger eksisterende album
 - Ønskeliste
-- Brukerprofiler med egne albumsamlinger
+- Brukerprofil for én lokal samling
 - Innlogging og registrering
-- Rollebasert tilgang for `user`, `child` og `admin`
-- Admin-verktøy for å administrere delte sjangre og lokasjoner
+- Egendefinerte sjangre og lokasjoner
 - Responsivt oppsett med navigasjon for desktop og mobil
 - Lys og mørk temabryter
 - MVC-inspirert struktur med HTML, CSS og JavaScript
@@ -50,9 +49,7 @@ Prosjektet startet med kundedialog, kartlegging av behov, wireframes og modellpl
 
 ### Nice-to-have-utvidelser
 
-- Brukerkontoer og profiler
-- Flere brukerroller
-- Admin-funksjonalitet
+- Brukerkonto med passordbeskyttelse av lokal samling
 - Egendefinerte sjangre og lokasjoner
 - Støtte for coverbilder
 
@@ -86,4 +83,4 @@ Dette er et frontend-basert skoleprosjekt. Innlogging og brukerroller er impleme
 
 ## Kreditering
 
-Laget av **Team 2** som en del av GET Academy Emne 2.
+Opprinnelig utviklet av Malin Fossum og Henry Elendheim som **Team 2**-prosjekt i GET Academy Emne 2. Denne versjonen er Malin Fossums egen open-source-videreføring av prosjektet, med original credit til Henry i `git log`.

@@ -73,11 +73,6 @@ function submitChanges(isEdit) {
 
 		const existingAlbum = model.data.musicInfo[index];
 
-		if (!canManageAlbum(existingAlbum)) {
-			alert("Du har ikke tilgang til å redigere dette albumet.");
-			return;
-		}
-
 		model.viewState.musicInfo.ownerId = existingAlbum.ownerId;
 		model.data.musicInfo[index] = { ...model.viewState.musicInfo };
 	}
@@ -87,11 +82,6 @@ function submitChanges(isEdit) {
 
 function newLocation(event) {
 	event.preventDefault();
-
-	if (!isAdmin()) {
-		alert("Kun admin kan legge til lokasjoner.");
-		return;
-	}
 
 	const location = model.viewState.editMusicInfo.location.trim();
 
@@ -112,11 +102,6 @@ function newLocation(event) {
 function newGenre(event) {
 	event.preventDefault();
 
-	if (!isAdmin()) {
-		alert("Kun admin kan legge til sjangre.");
-		return;
-	}
-
 	const genre = model.viewState.editMusicInfo.genre.trim();
 
 	if (genre !== "") {
@@ -136,11 +121,6 @@ function newGenre(event) {
 function removeLocation(event) {
 	event.preventDefault();
 
-	if (!isAdmin()) {
-		alert("Kun admin kan slette lokasjoner.");
-		return;
-	}
-
 	const location = model.viewState.editMusicInfo.location.trim();
 	const locationIdx = model.data.location.indexOf(location);
 
@@ -159,11 +139,6 @@ function removeLocation(event) {
 
 function removeGenre(event) {
 	event.preventDefault();
-
-	if (!isAdmin()) {
-		alert("Kun admin kan slette sjangre.");
-		return;
-	}
 
 	const genre = model.viewState.editMusicInfo.genre.trim();
 	const genreIdx = model.data.genre.indexOf(genre);

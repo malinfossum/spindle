@@ -3,11 +3,6 @@ function viewMusicDetails(id) {
 
 	if (!album) return;
 
-	if (!canManageAlbum(album)) {
-		alert("Du har ikke tilgang til å se dette albumet.");
-		return;
-	}
-
 	model.viewState.musicInfo = {
 		...album,
 		location: [...album.location],

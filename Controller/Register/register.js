@@ -29,7 +29,6 @@ function register() {
 		id: rngUserId(),
 		username,
 		password,
-		role: isUnderAge(),
 	};
 
 	model.data.users.push(newUser);
@@ -48,12 +47,4 @@ function rngUserId() {
 	}
 
 	return number;
-}
-
-function isUnderAge() {
-	if (ageCheckbox.checked == false) {
-		return "child";
-	} else {
-		return "user";
-	}
 }

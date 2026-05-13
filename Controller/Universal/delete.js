@@ -3,11 +3,6 @@ function deleteAlbum(id) {
 
 	if (!album) return;
 
-	if (!canManageAlbum(album)) {
-		alert("Du har ikke tilgang til å slette dette albumet.");
-		return;
-	}
-
 	const confirmed = confirm("Er du sikker på at du vil slette albumet?");
 	if (!confirmed) return;
 

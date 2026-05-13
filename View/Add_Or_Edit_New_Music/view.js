@@ -8,8 +8,6 @@ function editDetailsPage() {
 
 function buildMusicForm(isEdit) {
 	const info = model.viewState.musicInfo;
-	const adminControls = isAdmin();
-	const childControls = isChild();
 
 	const locationCheckboxes = model.data.location
 		.map(
@@ -84,46 +82,34 @@ function buildMusicForm(isEdit) {
 
             <div class="checkbox-group">
                 ${locationCheckboxes}
-                ${
-									adminControls
-										? /*HTML*/ `
-                    <button 
-                    type="button" 
-                    onclick="model.app.showLocationInput=!model.app.showLocationInput; 
-                    updateView()">➕</button>
+                <button
+                type="button"
+                onclick="model.app.showLocationInput=!model.app.showLocationInput;
+                updateView()">➕</button>
 
-                    <button
-                    type="button" 
-                    onclick="model.app.showDeleteLocationInput=!model.app.showDeleteLocationInput; 
-                    updateView()">✖️</button>
-                `
-										: ""
-								}
+                <button
+                type="button"
+                onclick="model.app.showDeleteLocationInput=!model.app.showDeleteLocationInput;
+                updateView()">✖️</button>
             </div>
 
-            ${
-							adminControls
-								? /*HTML*/ `
-                <form onsubmit="newLocation(event)" style="visibility: ${model.app.showLocationInput ? "hidden" : "visible"};">
-                    <input class="form-input"
-                           type="text"
-                           placeholder="Ny lokasjon?"
-                           value="${model.viewState.editMusicInfo.location}"
-                           oninput="model.viewState.editMusicInfo.location = this.value">
-                    <button>✔️</button>
-                </form>
+            <form onsubmit="newLocation(event)" style="visibility: ${model.app.showLocationInput ? "hidden" : "visible"};">
+                <input class="form-input"
+                       type="text"
+                       placeholder="Ny lokasjon?"
+                       value="${model.viewState.editMusicInfo.location}"
+                       oninput="model.viewState.editMusicInfo.location = this.value">
+                <button>✔️</button>
+            </form>
 
-                <form onsubmit="removeLocation(event)" style="visibility: ${model.app.showDeleteLocationInput ? "hidden" : "visible"};">
-                    <input class="form-input"
-                           type="text"
-                           placeholder="Fjern lokasjon?"
-                           value="${model.viewState.editMusicInfo.location}"
-                           oninput="model.viewState.editMusicInfo.location = this.value">
-                    <button>✔️</button>
-                </form>
-            `
-								: ""
-						}
+            <form onsubmit="removeLocation(event)" style="visibility: ${model.app.showDeleteLocationInput ? "hidden" : "visible"};">
+                <input class="form-input"
+                       type="text"
+                       placeholder="Fjern lokasjon?"
+                       value="${model.viewState.editMusicInfo.location}"
+                       oninput="model.viewState.editMusicInfo.location = this.value">
+                <button>✔️</button>
+            </form>
         </div>
 
         <div class="form-row">
@@ -141,46 +127,34 @@ function buildMusicForm(isEdit) {
 
             <div class="checkbox-group">
                 ${genreBoxes}
-                ${
-									adminControls
-										? /*HTML*/ `
-                    <button 
-                    type="button" 
-                    onclick="model.app.showGenreInput=!model.app.showGenreInput; 
-                    updateView()">➕</button>
+                <button
+                type="button"
+                onclick="model.app.showGenreInput=!model.app.showGenreInput;
+                updateView()">➕</button>
 
-                    <button 
-                    type="button"
-                    onclick="model.app.showDeleteGenreInput=!model.app.showDeleteGenreInput; 
-                    updateView()">✖️</button>
-                `
-										: ""
-								}
+                <button
+                type="button"
+                onclick="model.app.showDeleteGenreInput=!model.app.showDeleteGenreInput;
+                updateView()">✖️</button>
             </div>
 
-            ${
-							adminControls
-								? /*HTML*/ `
-                <form onsubmit="newGenre(event)" style="visibility: ${model.app.showGenreInput ? "hidden" : "visible"};">
-                    <input class="form-input"
-                           type="text"
-                           placeholder="Ny sjanger?"
-                           value="${model.viewState.editMusicInfo.genre}"
-                           oninput="model.viewState.editMusicInfo.genre = this.value">
-                    <button>✔️</button>
-                </form>
+            <form onsubmit="newGenre(event)" style="visibility: ${model.app.showGenreInput ? "hidden" : "visible"};">
+                <input class="form-input"
+                       type="text"
+                       placeholder="Ny sjanger?"
+                       value="${model.viewState.editMusicInfo.genre}"
+                       oninput="model.viewState.editMusicInfo.genre = this.value">
+                <button>✔️</button>
+            </form>
 
-                <form onsubmit="removeGenre(event)" style="visibility: ${model.app.showDeleteGenreInput ? "hidden" : "visible"};">
-                    <input class="form-input"
-                           type="text"
-                           placeholder="Fjern sjanger?"
-                           value="${model.viewState.editMusicInfo.genre}"
-                           oninput="model.viewState.editMusicInfo.genre = this.value">
-                    <button>✔️</button>
-                </form>
-            `
-								: ""
-						}
+            <form onsubmit="removeGenre(event)" style="visibility: ${model.app.showDeleteGenreInput ? "hidden" : "visible"};">
+                <input class="form-input"
+                       type="text"
+                       placeholder="Fjern sjanger?"
+                       value="${model.viewState.editMusicInfo.genre}"
+                       oninput="model.viewState.editMusicInfo.genre = this.value">
+                <button>✔️</button>
+            </form>
         </div>
 
         <div class="form-row">
@@ -206,7 +180,7 @@ function buildMusicForm(isEdit) {
             
             <div class="form-actions-right">
                 ${
-									isEdit && !childControls
+									isEdit
 										? /*HTML*/ `<button class="btn btn-danger" onclick="deleteAlbum(model.viewState.musicInfo.id)">Slett</button>`
 										: ""
 								}

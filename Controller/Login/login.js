@@ -8,35 +8,13 @@ function isLoggedIn() {
 	return getLoggedInUser() !== null;
 }
 
-function isAdmin() {
-	const user = getLoggedInUser();
-	return user?.role === "admin";
-}
-
-function isChild() {
-	const user = getLoggedInUser();
-	return user?.role === "child";
-}
-
 function getAccessibleAlbums() {
 	if (!isLoggedIn()) return [];
-	if (isAdmin()) return model.data.musicInfo;
-	return model.data.musicInfo.filter(
-		(album) => album.ownerId === model.app.loggedInID,
-	);
+	return model.data.musicInfo;
 }
 
 function getProfileAlbums() {
-	if (!isLoggedIn()) return [];
-	return model.data.musicInfo.filter(
-		(album) => album.ownerId === model.app.loggedInID,
-	);
-}
-
-function canManageAlbum(album) {
-	if (!album || !isLoggedIn()) return false;
-	if (isAdmin()) return true;
-	return album.ownerId === model.app.loggedInID;
+	return getAccessibleAlbums();
 }
 
 function clearAuthMessage() {
