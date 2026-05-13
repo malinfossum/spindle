@@ -7,5 +7,6 @@ function deleteAlbum(id) {
 	if (!confirmed) return;
 
 	model.data.musicInfo = model.data.musicInfo.filter((a) => a.id !== id);
+	persistState();
 	changePage("homePage");
 }

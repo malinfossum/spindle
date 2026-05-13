@@ -25,6 +25,11 @@ const model = {
 
 		deleteConfirmation: false,
 		authMessage: "",
+
+		storageUnavailable: false,
+		storageQuotaExceeded: false,
+		storageError: "",
+		storage: null,
 	},
 
 	viewState: {

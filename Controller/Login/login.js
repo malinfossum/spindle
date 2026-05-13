@@ -63,6 +63,7 @@ function login() {
 	}
 
 	model.app.loggedInID = user.id;
+	persistState();
 	clearAuthMessage();
 	clearLoginForm();
 	changePage("homePage");
@@ -70,6 +71,7 @@ function login() {
 
 function logout() {
 	model.app.loggedInID = null;
+	persistState();
 	clearAuthMessage();
 	clearLoginForm();
 	clearRegisterForm();

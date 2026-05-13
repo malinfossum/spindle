@@ -33,6 +33,7 @@ function register() {
 
 	model.data.users.push(newUser);
 	model.app.loggedInID = newUser.id;
+	persistState();
 
 	clearRegisterForm();
 	clearAuthMessage();

@@ -29,12 +29,28 @@ function profilePage() {
 		})
 		.join("");
 
+	const storage = model.app.storage;
+	const storageBlock = storage
+		? /*HTML*/ `
+        <div class="profile-storage" role="status">
+            <div class="profile-storage-label">Lagring</div>
+            <div class="profile-storage-bar">
+                <div class="profile-storage-bar-fill" style="width: ${Math.min(storage.percent, 100)}%"></div>
+            </div>
+            <div class="profile-storage-stats">
+                ${formatBytes(storage.usage)} av ${formatBytes(storage.quota)} brukt (${storage.percent}%)
+            </div>
+        </div>`
+		: "";
+
 	return /*HTML*/ `
     <div class="page-header">
         <span class="page-title">${user.username} sin profil</span>
     </div>
 
     <p class="search-result-count">Mine album: ${albums.length}</p>
+
+    ${storageBlock}
 
     ${
 			albums.length

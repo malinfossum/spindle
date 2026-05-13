@@ -4,5 +4,6 @@ function toggleWishlist(id, checked) {
 	if (!album) return;
 
 	album.wishlist = checked;
+	persistState();
 	updateView();
 }

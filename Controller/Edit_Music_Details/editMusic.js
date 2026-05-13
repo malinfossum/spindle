@@ -61,6 +61,12 @@ function submitChanges(isEdit) {
 	}
 
 	if (!isEdit) {
+		if (isStorageNearFull()) {
+			alert(
+				"Lagringen er nesten full. Slett noen album før du legger til flere.",
+			);
+			return;
+		}
 		model.viewState.musicInfo.id = rng();
 		model.viewState.musicInfo.ownerId = model.app.loggedInID;
 		model.data.musicInfo.push({ ...model.viewState.musicInfo });
@@ -77,6 +83,7 @@ function submitChanges(isEdit) {
 		model.data.musicInfo[index] = { ...model.viewState.musicInfo };
 	}
 
+	persistState();
 	changePage("homePage");
 }
 
@@ -92,6 +99,7 @@ function newLocation(event) {
 			}
 		}
 		model.data.location.push(location);
+		persistState();
 	}
 
 	model.app.showLocationInput = !model.app.showLocationInput;
@@ -111,6 +119,7 @@ function newGenre(event) {
 			}
 		}
 		model.data.genre.push(genre);
+		persistState();
 	}
 
 	model.app.showGenreInput = !model.app.showGenreInput;
@@ -128,6 +137,7 @@ function removeLocation(event) {
 		deleteConfirmation();
 		if (model.app.deleteConfirmation === false) {
 			model.data.location.splice(locationIdx, 1);
+			persistState();
 		} else {
 			model.app.deleteConfirmation = false;
 		}
@@ -147,6 +157,7 @@ function removeGenre(event) {
 		deleteConfirmation();
 		if (model.app.deleteConfirmation === false) {
 			model.data.genre.splice(genreIdx, 1);
+			persistState();
 		} else {
 			model.app.deleteConfirmation = false;
 		}
