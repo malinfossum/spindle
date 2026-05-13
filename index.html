@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geir's Musikkbibliotek</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body>
+    <header class="Navbar">
+        <h1 onclick="changePage('homePage')">Geir's Musikk</h1>
+
+        <div class="nav-desktop">
+            <button onclick="changePage('homePage')">Hjem</button>
+            <button onclick="changePage('wishList')">Ønskeliste</button>
+
+            <input placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
+            <button onclick="changePage('searchPage')">Søk</button>
+
+            <button id="nav-login-desktop" onclick="handleLoginNavClick()">Logg inn</button>
+            <button id="nav-profile-desktop" style="display: none;" onclick="handleProfileNavClick()">Profil</button>
+        </div>
+
+        <div class="nav-mobile" id="mobile-menu">
+            <input placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
+            <button onclick="changePage('searchPage')">Søk</button>
+            <button class="navBurger" onclick="toggleMobileMenu()">☰</button>
+
+            <div class="mobile-menu-show">
+                <button onclick="changePage('homePage')">Hjem</button>
+                <button onclick="changePage('wishList')">Ønskeliste</button>
+
+                <button id="nav-login-mobile" onclick="handleLoginNavClick()">Logg inn</button>
+                <button id="nav-profile-mobile" style="display: none;" onclick="handleProfileNavClick()">Profil</button>
+            </div>
+
+        </div>
+
+
+        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+    </header>
+
+    <div id="app"></div>
+
+    <footer>
+        <p>© Pending - Team 2 Get Academy</p>
+    </footer>
+
+    <script src="Model/model.js"></script>
+
+    <script src="View/Add_Or_Edit_New_Music/view.js"></script>
+    <script src="View/Homepage/view.js"></script>
+    <script src="View/Login/view.js"></script>
+    <script src="View/Music_Details/view.js"></script>
+    <script src="View/Profile/view.js"></script>
+    <script src="View/Register/view.js"></script>
+    <script src="View/Search/view.js"></script>
+    <script src="View/Wishlist/view.js"></script>
+    
+    <script src="View/Universal/albumCard.js"></script>
+    <script src="Controller/Login/login.js"></script>
+    <script src="View/Universal/updateView.js"></script>
+
+    <script src="Controller/Edit_Music_Details/editMusic.js"></script>
+    <script src="Controller/Music_Details/editBtn.js"></script>
+    <script src="Controller/Register/register.js"></script>
+    <script src="Controller/Search/search.js"></script>
+    <script src="Controller/Universal/delete.js"></script>
+    <script src="Controller/Universal/navbar&Mobile.js"></script>
+    <script src="Controller/Universal/save.js"></script>
+    <script src="Controller/Universal/viewMusicDetails.js"></script>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isLight = html.getAttribute('data-theme') === 'light';
+            html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+            document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
+        }
+    </script>
+</body>
+
+</html>
