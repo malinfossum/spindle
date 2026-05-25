@@ -45,7 +45,7 @@ function profilePage() {
 
 	return /*HTML*/ `
     <div class="page-header">
-        <span class="page-title">${user.username} sin profil</span>
+        <span class="page-title">${escapeHtml(user.username)} sin profil</span>
     </div>
 
     <p class="search-result-count">Mine album: ${albums.length}</p>

@@ -242,6 +242,11 @@ footer {
 	padding: 0.55rem 0.9rem;
 }
 
+.btn[disabled] {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
 /* ============================================================
    PAGE HEADER
    ============================================================ */
@@ -733,6 +738,45 @@ footer {
 
 .auth-footer a:hover {
 	text-decoration: underline;
+}
+
+.form-hint {
+	margin-top: 0.4rem;
+	font-size: 0.78rem;
+	color: var(--text-muted);
+	line-height: 1.4;
+}
+
+.strength-bar {
+	display: flex;
+	gap: 4px;
+	margin-top: 6px;
+}
+
+.strength-bar span {
+	flex: 1;
+	height: 4px;
+	border-radius: 2px;
+}
+
+.strength-bar .bar-off {
+	background: var(--surface2);
+}
+
+.strength-bar .bar-on {
+	background: var(--accent);
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 /* ============================================================

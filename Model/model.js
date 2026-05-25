@@ -15,7 +15,16 @@ const model = {
 
 		currentPage: "login",
 		mobileMenuToggle: false,
-		loggedInID: null,
+
+		authBusy: false,
+		// In-memory only — NEVER persisted to localStorage.
+		crypto: {
+			unlocked: false,
+			encryptKey: null,
+			verifyKey: null,
+			kdfSaltB64: null,
+			verifyHmacB64: null,
+		},
 
 		showGenreInput: true,
 		showLocationInput: true,
@@ -40,7 +49,6 @@ const model = {
 
 		musicInfo: {
 			id: null,
-			ownerId: null,
 			title: "",
 			artist: "",
 			location: [],
@@ -52,7 +60,6 @@ const model = {
 		},
 
 		login: {
-			username: "",
 			password: "",
 		},
 
@@ -72,7 +79,6 @@ const model = {
 		musicInfo: [
 			{
 				id: 1,
-				ownerId: null,
 				title: "Abbey Road",
 				artist: "The Beatles",
 				location: [0],
@@ -84,7 +90,6 @@ const model = {
 			},
 			{
 				id: 2,
-				ownerId: null,
 				title: "The Dark Side of the Moon",
 				artist: "Pink Floyd",
 				location: [2],
@@ -96,7 +101,6 @@ const model = {
 			},
 			{
 				id: 3,
-				ownerId: null,
 				title: "The Rise and Fall of Ziggy Stardust and the Spiders from Mars",
 				artist: "David Bowie",
 				location: [0],
@@ -108,7 +112,6 @@ const model = {
 			},
 			{
 				id: 4,
-				ownerId: null,
 				title: "Kind of Blue",
 				artist: "Miles Davis",
 				location: [1],
@@ -120,6 +123,8 @@ const model = {
 			},
 		],
 
-		users: [],
+		user: {
+			username: "",
+		},
 	},
 };

@@ -1,38 +1,38 @@
 function loginPage() {
+	const busy = model.app.authBusy;
+
 	return /*HTML*/ `
     <div class="auth-wrapper">
         <div class="auth-card">
-            <div class="auth-title">Logg inn</div>
+            <div class="auth-title">Lås opp</div>
 
             ${
 							model.app.authMessage
-								? `<p class="auth-error">${model.app.authMessage}</p>`
+								? `<p class="auth-error" role="alert">${escapeHtml(model.app.authMessage)}</p>`
 								: ""
 						}
 
-            <div class="form-row">
-                <label class="form-label">Brukernavn</label>
-                <input class="form-input"
-                       type="text"
-                       placeholder="Brukernavn"
-                       value="${model.viewState.login.username}"
-                       oninput="model.viewState.login.username = this.value">
-            </div>
+            <form onsubmit="event.preventDefault(); login()">
+                <div class="form-row">
+                    <label class="form-label">Passord</label>
+                    <input class="form-input"
+                           type="password"
+                           autocomplete="current-password"
+                           placeholder="••••••"
+                           value="${escapeHtml(model.viewState.login.password)}"
+                           oninput="model.viewState.login.password = this.value">
+                </div>
 
-            <div class="form-row">
-                <label class="form-label">Passord</label>
-                <input class="form-input"
-                       type="password"
-                       placeholder="••••••"
-                       value="${model.viewState.login.password}"
-                       oninput="model.viewState.login.password = this.value">
-            </div>
-
-            <button class="btn btn-accent btn-full" onclick="login()">Logg inn</button>
+                <button class="btn btn-accent btn-full"
+                        type="submit"
+                        ${busy ? 'disabled aria-busy="true"' : 'aria-busy="false"'}>
+                    ${busy ? "Bekrefter…" : "Logg inn"}
+                </button>
+            </form>
 
             <p class="auth-footer">
-                Ingen konto?
-                <a href="#" onclick="clearAuthMessage(); changePage('register')">Registrer deg</a>
+                Ingen bibliotek?
+                <a href="#" onclick="clearAuthMessage(); changePage('register')">Opprett bibliotek</a>
             </p>
         </div>
     </div>

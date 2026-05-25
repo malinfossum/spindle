@@ -68,7 +68,6 @@ function submitChanges(isEdit) {
 			return;
 		}
 		model.viewState.musicInfo.id = rng();
-		model.viewState.musicInfo.ownerId = model.app.loggedInID;
 		model.data.musicInfo.push({ ...model.viewState.musicInfo });
 	} else {
 		const index = model.data.musicInfo.findIndex(
@@ -77,9 +76,6 @@ function submitChanges(isEdit) {
 
 		if (index === -1) return;
 
-		const existingAlbum = model.data.musicInfo[index];
-
-		model.viewState.musicInfo.ownerId = existingAlbum.ownerId;
 		model.data.musicInfo[index] = { ...model.viewState.musicInfo };
 	}
 
@@ -170,7 +166,6 @@ function removeGenre(event) {
 function emptyList() {
 	model.viewState.musicInfo = {
 		id: null,
-		ownerId: null,
 		title: "",
 		artist: "",
 		location: [],

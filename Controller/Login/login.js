@@ -1,11 +1,9 @@
 function getLoggedInUser() {
-	return (
-		model.data.users.find((user) => user.id === model.app.loggedInID) || null
-	);
+	return isLoggedIn() ? model.data.user : null;
 }
 
 function isLoggedIn() {
-	return getLoggedInUser() !== null;
+	return model.app.crypto.unlocked === true;
 }
 
 function getAccessibleAlbums() {
@@ -27,7 +25,6 @@ function setAuthMessage(message) {
 
 function clearLoginForm() {
 	model.viewState.login = {
-		username: "",
 		password: "",
 	};
 }
@@ -40,41 +37,104 @@ function clearRegisterForm() {
 	};
 }
 
-function login() {
-	const username = model.viewState.login.username.trim();
+async function login() {
+	if (model.app.authBusy) return;
+
 	const password = model.viewState.login.password;
-
-	if (!username || !password) {
-		setAuthMessage("Fyll inn brukernavn og passord.");
+	if (!password) {
+		setAuthMessage("Fyll inn passord.");
 		updateView();
 		return;
 	}
 
-	const user = model.data.users.find(
-		(u) =>
-			u.username.toLowerCase() === username.toLowerCase() &&
-			u.password === password,
-	);
-
-	if (!user) {
-		setAuthMessage("Feil brukernavn eller passord.");
+	const result = readEnvelope();
+	if (!result || !result.ok) {
+		setAuthMessage("Ingen bibliotek funnet. Opprett ett først.");
 		updateView();
 		return;
 	}
 
-	model.app.loggedInID = user.id;
-	persistState();
-	clearAuthMessage();
-	clearLoginForm();
-	changePage("homePage");
+	try {
+		model.app.authBusy = true;
+		updateView();
+
+		const saltBytes = base64ToBytes(result.envelope.kdfSalt);
+		const ivBytes = base64ToBytes(result.envelope.iv);
+		const verifyHmacBytes = base64ToBytes(result.envelope.verifyHmac);
+		const ciphertextBytes = base64ToBytes(result.envelope.ciphertext);
+
+		const { verifyKey, encryptKey } = await deriveKeys(password, saltBytes);
+		const computedHmac = await computeVerifyHmac(verifyKey);
+
+		if (!constantTimeEqual(computedHmac, verifyHmacBytes)) {
+			zeroKeys();
+			model.app.authBusy = false;
+			setAuthMessage("Feil passord.");
+			updateView();
+			return;
+		}
+
+		let plaintext;
+		try {
+			plaintext = await decryptLibrary(encryptKey, ivBytes, ciphertextBytes);
+		} catch (err) {
+			console.error("[auth] decrypt failed:", err);
+			zeroKeys();
+			model.app.authBusy = false;
+			setAuthMessage("Feil passord.");
+			updateView();
+			return;
+		}
+
+		model.data = JSON.parse(plaintext);
+		model.app.crypto = {
+			unlocked: true,
+			encryptKey,
+			verifyKey,
+			kdfSaltB64: result.envelope.kdfSalt,
+			verifyHmacB64: result.envelope.verifyHmac,
+		};
+		model.app.authBusy = false;
+		clearAuthMessage();
+		clearLoginForm();
+		changePage("homePage");
+	} catch (err) {
+		console.error("[login] failed:", err);
+		zeroKeys();
+		model.app.authBusy = false;
+		setAuthMessage("En uventet feil oppsto. Prøv igjen.");
+		updateView();
+	}
 }
 
 function logout() {
-	model.app.loggedInID = null;
-	persistState();
-	clearAuthMessage();
+	zeroKeys();
+
+	// Replace the library with an empty shell so a racing re-render can't briefly
+	// show the previous library before the login page mounts.
+	model.data = {
+		genre: [],
+		location: [],
+		musicInfo: [],
+		user: { username: "" },
+	};
+
 	clearLoginForm();
 	clearRegisterForm();
+	model.viewState.musicInfo = {
+		id: null,
+		title: "",
+		artist: "",
+		location: [],
+		releaseYear: null,
+		genre: [],
+		notes: "",
+		wishlist: false,
+		coverImg: null,
+	};
+	model.viewState.searchBar = "";
+
+	clearAuthMessage();
 	changePage("login");
 }
 
