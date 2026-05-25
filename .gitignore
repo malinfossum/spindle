@@ -1,0 +1,7 @@
+# Claude Code local tooling (worktrees, session state) — never commit to a public repo
+.claude/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
