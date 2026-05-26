@@ -40,7 +40,7 @@ Spindle is designed for one browser tab at a time. Don't run it in two tabs at o
 
 ## Credits
 
-Spindle is inspired by a team project Malin Fossum built with Henry Elendheim in GET Academy Emne 2. This repository is Malin's solo project — a new, independently developed take on the idea.
+Spindle is inspired by a team project Malin Fossum built with Henry Elendheim and Hans Nilsen in GET Academy Emne 2. This repository is Malin's solo project — a new, independently developed take on the idea.
 
 ## License
 
