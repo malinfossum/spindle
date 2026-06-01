@@ -52,7 +52,7 @@ function buildMusicForm(isEdit) {
                 ${albumCover}
                 <input class="form-cover-set-image"
                        type="file"
-                       accept="image/*"
+                       accept="image/jpeg,image/png,image/webp"
                        onchange="saveImage(this)">
             </div>
 

@@ -184,10 +184,40 @@ function emptyGenreLocationList() {
 	};
 }
 
-function saveImage(image) {
+async function saveImage(image) {
 	const file = image.files[0];
 	if (!file) return;
-	model.viewState.musicInfo.coverImg = URL.createObjectURL(file);
+
+	if (file.size > 2 * 1024 * 1024) {
+		alert("Bildet er for stort. Maks 2 MB.");
+		image.value = "";
+		return;
+	}
+
+	const mime = await sniffImageType(file);
+	if (!mime) {
+		alert("Ugyldig bildefil. Bruk JPEG, PNG eller WebP.");
+		image.value = "";
+		return;
+	}
+
+	// Build the data URI from the sniffed MIME, not file.type, so the stored
+	// prefix can't be spoofed. Strip FileReader's own prefix and re-attach ours.
+	const base64 = await readFileAsBase64(file);
+	model.viewState.musicInfo.coverImg = `data:${mime};base64,${base64}`;
+	updateView();
+}
+
+function readFileAsBase64(file) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			const result = reader.result;
+			resolve(result.slice(result.indexOf(",") + 1));
+		};
+		reader.onerror = () => reject(reader.error);
+		reader.readAsDataURL(file);
+	});
 }
 
 function deleteConfirmation() {
