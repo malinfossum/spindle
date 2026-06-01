@@ -17,7 +17,7 @@ function buildMusicForm(isEdit) {
                    name="location"
                    ${info.location.includes(i) ? "checked" : ""}
                    onchange="toggleLocationCheckbox(this, ${i})">
-            ${loc}
+            ${escapeHtml(loc)}
         </label>
     `,
 		)
@@ -31,14 +31,14 @@ function buildMusicForm(isEdit) {
                    name="genre"
                    ${info.genre.includes(i) ? "checked" : ""}
                    onchange="toggleGenreCheckbox(this, ${i})">
-            ${loc}
+            ${escapeHtml(loc)}
         </label>
     `,
 		)
 		.join("");
 
 	const albumCover = info.coverImg
-		? /*HTML*/ `<img src="${info.coverImg}" alt="Cover" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
+		? /*HTML*/ `<img src="${escapeHtml(info.coverImg)}" alt="Cover" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
 		: /*HTML*/ `<span class="form-cover-icon">🎵</span>`;
 
 	return /*HTML*/ `
@@ -62,7 +62,7 @@ function buildMusicForm(isEdit) {
                     <input class="form-input"
                            type="text"
                            placeholder="Artistnavn"
-                           value="${info.artist}"
+                           value="${escapeHtml(info.artist)}"
                            oninput="model.viewState.musicInfo.artist = this.value">
                 </div>
 
@@ -71,7 +71,7 @@ function buildMusicForm(isEdit) {
                     <input class="form-input"
                            type="text"
                            placeholder="Tittel"
-                           value="${info.title}"
+                           value="${escapeHtml(info.title)}"
                            oninput="model.viewState.musicInfo.title = this.value">
                 </div>
             </div>
@@ -97,7 +97,7 @@ function buildMusicForm(isEdit) {
                 <input class="form-input"
                        type="text"
                        placeholder="Ny lokasjon?"
-                       value="${model.viewState.editMusicInfo.location}"
+                       value="${escapeHtml(model.viewState.editMusicInfo.location)}"
                        oninput="model.viewState.editMusicInfo.location = this.value">
                 <button>✔️</button>
             </form>
@@ -106,7 +106,7 @@ function buildMusicForm(isEdit) {
                 <input class="form-input"
                        type="text"
                        placeholder="Fjern lokasjon?"
-                       value="${model.viewState.editMusicInfo.location}"
+                       value="${escapeHtml(model.viewState.editMusicInfo.location)}"
                        oninput="model.viewState.editMusicInfo.location = this.value">
                 <button>✔️</button>
             </form>
@@ -142,7 +142,7 @@ function buildMusicForm(isEdit) {
                 <input class="form-input"
                        type="text"
                        placeholder="Ny sjanger?"
-                       value="${model.viewState.editMusicInfo.genre}"
+                       value="${escapeHtml(model.viewState.editMusicInfo.genre)}"
                        oninput="model.viewState.editMusicInfo.genre = this.value">
                 <button>✔️</button>
             </form>
@@ -151,7 +151,7 @@ function buildMusicForm(isEdit) {
                 <input class="form-input"
                        type="text"
                        placeholder="Fjern sjanger?"
-                       value="${model.viewState.editMusicInfo.genre}"
+                       value="${escapeHtml(model.viewState.editMusicInfo.genre)}"
                        oninput="model.viewState.editMusicInfo.genre = this.value">
                 <button>✔️</button>
             </form>
@@ -161,7 +161,7 @@ function buildMusicForm(isEdit) {
             <label class="form-label">Notater</label>
             <textarea class="form-textarea"
                       placeholder="Egne notater om albumet…"
-                      oninput="model.viewState.musicInfo.notes = this.value">${info.notes}</textarea>
+                      oninput="model.viewState.musicInfo.notes = this.value">${escapeHtml(info.notes)}</textarea>
         </div>
 
         <label class="checkbox-row">

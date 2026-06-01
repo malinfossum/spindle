@@ -3,7 +3,7 @@ function createAlbumCard(album) {
 	const location =
 		album.location.map((i) => model.data.location[i]).join(", ") || "—";
 	const albumCover = album.coverImg
-		? /*HTML*/ `<img src="${album.coverImg}" alt="Cover">`
+		? /*HTML*/ `<img src="${escapeHtml(album.coverImg)}" alt="Cover">`
 		: "🎵";
 
 	return /*HTML*/ `
@@ -11,11 +11,11 @@ function createAlbumCard(album) {
         <div class="album-cover">${albumCover}</div>
 
         <div class="album-info">
-            <div class="album-title">${album.title}</div>
-            <div class="album-artist">${album.artist}</div>
+            <div class="album-title">${escapeHtml(album.title)}</div>
+            <div class="album-artist">${escapeHtml(album.artist)}</div>
             <div class="album-meta">
-                <span class="tag">${genre}</span>
-                <span class="tag">📍 ${location}</span>
+                <span class="tag">${escapeHtml(genre)}</span>
+                <span class="tag">📍 ${escapeHtml(location)}</span>
                 <span class="tag">📅 ${album.releaseYear || "—"}</span>
                 ${album.wishlist ? '<span class="tag">⭐ Ønskeliste</span>' : ""}
             </div>

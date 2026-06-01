@@ -13,7 +13,7 @@ function viewDetailsPage() {
 	const location =
 		album.location.map((i) => model.data.location[i]).join(", ") || "—";
 	const albumCover = album.coverImg
-		? `<img src="${album.coverImg}" alt="Cover">`
+		? `<img src="${escapeHtml(album.coverImg)}" alt="Cover">`
 		: "🎵";
 
 	return /*HTML*/ `
@@ -24,17 +24,17 @@ function viewDetailsPage() {
             <div class="detail-fields">
                 <div class="field-row">
                     <div class="field-label">Artist</div>
-                    <div class="field-value">${album.artist}</div>
+                    <div class="field-value">${escapeHtml(album.artist)}</div>
                 </div>
 
                 <div class="field-row">
                     <div class="field-label">Album / Singel / EP</div>
-                    <div class="field-value">${album.title}</div>
+                    <div class="field-value">${escapeHtml(album.title)}</div>
                 </div>
 
                 <div class="field-row">
                     <div class="field-label">Lokasjon</div>
-                    <div class="field-value">${location}</div>
+                    <div class="field-value">${escapeHtml(location)}</div>
                 </div>
 
                 <div class="field-row">
@@ -44,7 +44,7 @@ function viewDetailsPage() {
 
                 <div class="field-row">
                     <div class="field-label">Sjanger</div>
-                    <div class="field-value">${genre}</div>
+                    <div class="field-value">${escapeHtml(genre)}</div>
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@ function viewDetailsPage() {
         <div class="field-row">
             <div class="field-label">Notater</div>
             <div class="field-value" style="color: var(--text-muted)">
-                ${album.notes || "—"}
+                ${escapeHtml(album.notes || "—")}
             </div>
         </div>
 

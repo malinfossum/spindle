@@ -4,10 +4,10 @@ function searchPage() {
 
 	const resultHTML = results.length
 		? results.map((album) => createAlbumCard(album)).join("")
-		: `<div class="empty-state"><div class="empty-state-icon">🔍</div>Ingen treff for "${query}"</div>`;
+		: `<div class="empty-state"><div class="empty-state-icon">🔍</div>Ingen treff for "${escapeHtml(query)}"</div>`;
 
 	const countHTML = query
-		? `<p class="search-result-count">Søkt: "${query}" — ${results.length} treff</p>`
+		? `<p class="search-result-count">Søkt: "${escapeHtml(query)}" — ${results.length} treff</p>`
 		: "";
 
 	return /*HTML*/ `

@@ -210,15 +210,6 @@ function renderStrength(password, elementId) {
 	if (text) text.textContent = `Passordstyrke: ${score} av 4`;
 }
 
-function escapeHtml(value) {
-	return String(value)
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;")
-		.replace(/'/g, "&#39;");
-}
-
 function zeroKeys() {
 	model.app.crypto.encryptKey = null;
 	model.app.crypto.verifyKey = null;
