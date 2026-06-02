@@ -61,12 +61,14 @@ const model = {
 
 		login: {
 			password: "",
+			errors: { password: "" },
 		},
 
 		createProfile: {
 			username: "",
 			password: "",
 			repeatPassword: "",
+			errors: { username: "", password: "", repeatPassword: "" },
 		},
 
 		searchBar: "",

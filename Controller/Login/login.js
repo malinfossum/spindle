@@ -26,6 +26,7 @@ function setAuthMessage(message) {
 function clearLoginForm() {
 	model.viewState.login = {
 		password: "",
+		errors: { password: "" },
 	};
 }
 
@@ -34,7 +35,40 @@ function clearRegisterForm() {
 		username: "",
 		password: "",
 		repeatPassword: "",
+		errors: { username: "", password: "", repeatPassword: "" },
 	};
+}
+
+// Wipes every per-field error on both auth forms. Called on navigation so a
+// validation error from one visit never lingers into the next.
+function resetAuthFieldErrors() {
+	model.viewState.login.errors = { password: "" };
+	model.viewState.createProfile.errors = {
+		username: "",
+		password: "",
+		repeatPassword: "",
+	};
+}
+
+// Clears one field's error the instant the user edits it. Updates the DOM
+// directly instead of re-rendering — exactly like renderStrength — because
+// calling updateView() on every keystroke would drop the input's focus.
+function clearFieldError(input, formName, fieldName) {
+	const errors = model.viewState[formName].errors;
+	if (!errors[fieldName]) return;
+
+	errors[fieldName] = "";
+	input.setAttribute("aria-invalid", "false");
+
+	const span = document.getElementById(`${input.id}-error`);
+	if (span) span.textContent = "";
+}
+
+// After a failed submit, send focus to the first field flagged invalid so a
+// keyboard or screen-reader user lands on the problem and hears its linked error.
+function focusFirstInvalid() {
+	const field = model.app.app.querySelector('[aria-invalid="true"]');
+	if (field) field.focus();
 }
 
 async function login() {
@@ -42,10 +76,15 @@ async function login() {
 
 	const password = model.viewState.login.password;
 	if (!password) {
-		setAuthMessage("Fyll inn passord.");
+		model.viewState.login.errors = { password: "Fyll inn passord." };
+		clearAuthMessage();
 		updateView();
+		focusFirstInvalid();
 		return;
 	}
+
+	// Past the empty check — any field error from a previous attempt is stale.
+	model.viewState.login.errors = { password: "" };
 
 	const result = readEnvelope();
 	if (!result || !result.ok) {
@@ -56,6 +95,7 @@ async function login() {
 
 	try {
 		model.app.authBusy = true;
+		clearAuthMessage();
 		updateView();
 
 		const saltBytes = base64ToBytes(result.envelope.kdfSalt);
@@ -69,8 +109,9 @@ async function login() {
 		if (!constantTimeEqual(computedHmac, verifyHmacBytes)) {
 			zeroKeys();
 			model.app.authBusy = false;
-			setAuthMessage("Feil passord.");
+			model.viewState.login.errors = { password: "Feil passord." };
 			updateView();
+			focusFirstInvalid();
 			return;
 		}
 
@@ -81,8 +122,9 @@ async function login() {
 			console.error("[auth] decrypt failed:", err);
 			zeroKeys();
 			model.app.authBusy = false;
-			setAuthMessage("Feil passord.");
+			model.viewState.login.errors = { password: "Feil passord." };
 			updateView();
+			focusFirstInvalid();
 			return;
 		}
 

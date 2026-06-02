@@ -62,5 +62,6 @@ function changePage(element) {
 
 	model.app.currentPage = element;
 	clearAuthMessage();
+	resetAuthFieldErrors();
 	updateView();
 }

@@ -23,6 +23,9 @@
 	--nav-bg: #141414;
 	--danger: #c0392b;
 	--danger-text: #e74c3c;
+	/* Inline form errors need their own red: a dark-bg-safe red is too light for
+	   the light theme's white card, so the value flips with the theme below. */
+	--error-text: #ff8a80;
 }
 
 html[data-theme="light"] {
@@ -45,6 +48,7 @@ html[data-theme="light"] {
 	--nav-bg: #ffffff;
 	--danger: #c0392b;
 	--danger-text: #c0392b;
+	--error-text: #c0392b;
 }
 
 /* ── Reset ── */
@@ -748,6 +752,18 @@ footer {
 	font-size: 0.78rem;
 	color: var(--text-muted);
 	line-height: 1.4;
+}
+
+.field-error {
+	display: block;
+	margin-top: 0.3rem;
+	font-size: 0.78rem;
+	line-height: 1.4;
+	color: var(--error-text);
+}
+
+.field-error:empty {
+	display: none;
 }
 
 .strength-bar {

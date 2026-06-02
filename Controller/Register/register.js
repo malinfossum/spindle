@@ -5,24 +5,37 @@ async function register() {
 	const password = model.viewState.createProfile.password;
 	const repeatPassword = model.viewState.createProfile.repeatPassword;
 
-	if (!username || !password || !repeatPassword) {
-		setAuthMessage("Fyll inn alle feltene.");
+	const errors = { username: "", password: "", repeatPassword: "" };
+
+	if (!username) errors.username = "Fyll inn brukernavn.";
+
+	if (!password) {
+		errors.password = "Fyll inn passord.";
+	} else {
+		const check = validatePassword(password);
+		if (!check.ok) errors.password = check.error;
+	}
+
+	if (!repeatPassword) {
+		errors.repeatPassword = "Gjenta passordet.";
+	} else if (password && password !== repeatPassword) {
+		errors.repeatPassword = "Passordene er ikke like.";
+	}
+
+	if (errors.username || errors.password || errors.repeatPassword) {
+		model.viewState.createProfile.errors = errors;
+		clearAuthMessage();
 		updateView();
+		focusFirstInvalid();
 		return;
 	}
 
-	if (password !== repeatPassword) {
-		setAuthMessage("Passordene er ikke like.");
-		updateView();
-		return;
-	}
-
-	const check = validatePassword(password);
-	if (!check.ok) {
-		setAuthMessage(check.error);
-		updateView();
-		return;
-	}
+	// Validation passed — drop any field errors from a previous attempt.
+	model.viewState.createProfile.errors = {
+		username: "",
+		password: "",
+		repeatPassword: "",
+	};
 
 	try {
 		model.app.authBusy = true;
