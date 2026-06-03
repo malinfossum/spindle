@@ -1,0 +1,95 @@
+function welcomePage() {
+	// First-time visitors should be nudged toward "Create library", returning ones
+	// toward "Log in". readEnvelope() (via loadState) only reads the stored envelope's
+	// shape — it never decrypts — so we can safely tell which library state we're in
+	// and give the likely action the accent button + first position.
+	const hasLibrary = loadState().kind === "encrypted";
+
+	const themeIcon =
+		document.documentElement.getAttribute("data-theme") === "light"
+			? "☀️"
+			: "🌙";
+
+	const createBtn = /*HTML*/ `
+        <button class="btn btn-full ${hasLibrary ? "" : "btn-accent"}"
+                type="button"
+                onclick="changePage('register')">
+            Opprett bibliotek
+        </button>`;
+
+	const loginBtn = /*HTML*/ `
+        <button class="btn btn-full ${hasLibrary ? "btn-accent" : ""}"
+                type="button"
+                onclick="changePage('login')">
+            Logg inn
+        </button>`;
+
+	const actions = hasLibrary ? loginBtn + createBtn : createBtn + loginBtn;
+
+	return /*HTML*/ `
+    <section class="welcome" aria-labelledby="welcome-heading">
+        <div class="welcome-top">
+            <div class="welcome-lang" role="group" aria-label="Språk – flere språk kommer senere">
+                <button class="lang-opt is-active" type="button" aria-pressed="true" disabled>NO</button>
+                <button class="lang-opt" type="button" aria-pressed="false" disabled
+                        title="Engelsk kommer senere">EN</button>
+            </div>
+            <button class="btn-theme welcome-theme"
+                    type="button"
+                    onclick="toggleTheme()"
+                    aria-label="Bytt tema (mørkt eller lyst)">${themeIcon}</button>
+        </div>
+
+        <div class="welcome-vinyl" aria-hidden="true">
+            ${vinylSvg()}
+        </div>
+
+        <div class="welcome-card">
+            <h1 class="welcome-brand" id="welcome-heading">Spindle</h1>
+            <p class="welcome-tagline">
+                Ditt fysiske musikkbibliotek — trygt lagret på din egen enhet.
+            </p>
+
+            <div class="welcome-actions">
+                ${actions}
+            </div>
+
+            <button class="link-btn welcome-about" type="button" onclick="changePage('about')">
+                Om Spindle
+            </button>
+        </div>
+
+        <p class="welcome-footer">
+            Bygget av Malin Fossum. Opprinnelig et lagprosjekt med Henry Elendheim.
+        </p>
+    </section>
+    `;
+}
+
+// Decorative rotating record for the welcome page. Kept in its own function so the
+// markup above stays readable. Purely visual (aria-hidden on the wrapper); the
+// spinning group is paused for users who prefer reduced motion via CSS.
+function vinylSvg() {
+	return /*HTML*/ `
+    <svg class="vinyl" viewBox="0 0 200 200" role="presentation" focusable="false">
+        <defs>
+            <radialGradient id="vinyl-sheen" cx="38%" cy="32%" r="75%">
+                <stop offset="0%" stop-color="#3b3b3b"/>
+                <stop offset="45%" stop-color="#151515"/>
+                <stop offset="100%" stop-color="#000000"/>
+            </radialGradient>
+        </defs>
+        <g class="vinyl-spin">
+            <circle cx="100" cy="100" r="98" fill="url(#vinyl-sheen)"/>
+            <circle cx="100" cy="100" r="86" fill="none" stroke="#2b2b2b" stroke-width="0.6"/>
+            <circle cx="100" cy="100" r="76" fill="none" stroke="#242424" stroke-width="0.6"/>
+            <circle cx="100" cy="100" r="66" fill="none" stroke="#2b2b2b" stroke-width="0.6"/>
+            <circle cx="100" cy="100" r="56" fill="none" stroke="#242424" stroke-width="0.6"/>
+            <circle cx="100" cy="100" r="46" fill="none" stroke="#2b2b2b" stroke-width="0.6"/>
+            <circle cx="100" cy="100" r="34" fill="#d4af37"/>
+            <circle cx="100" cy="100" r="34" fill="none" stroke="#b8962e" stroke-width="1"/>
+            <circle cx="100" cy="100" r="26" fill="none" stroke="rgba(0, 0, 0, 0.18)" stroke-width="1"/>
+            <circle cx="100" cy="100" r="3.4" fill="#0c0c0c"/>
+        </g>
+    </svg>`;
+}

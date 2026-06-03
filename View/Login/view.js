@@ -39,6 +39,10 @@ function loginPage() {
                 Ingen bibliotek?
                 <a href="#" onclick="changePage('register')">Opprett bibliotek</a>
             </p>
+
+            <p class="auth-footer">
+                <a href="#" onclick="changePage('welcome')">← Tilbake til start</a>
+            </p>
         </div>
     </div>
     `;

@@ -26,6 +26,11 @@
 	/* Inline form errors need their own red: a dark-bg-safe red is too light for
 	   the light theme's white card, so the value flips with the theme below. */
 	--error-text: #ff8a80;
+
+	/* Welcome landing: the frosted card sits over the vinyl, so its background is
+	   translucent; the vinyl is light-on-dark, so its opacity flips per theme. */
+	--welcome-card-bg: rgba(20, 20, 20, 0.55);
+	--welcome-vinyl-opacity: 0.55;
 }
 
 html[data-theme="light"] {
@@ -49,6 +54,9 @@ html[data-theme="light"] {
 	--danger: #c0392b;
 	--danger-text: #c0392b;
 	--error-text: #c0392b;
+
+	--welcome-card-bg: rgba(255, 255, 255, 0.65);
+	--welcome-vinyl-opacity: 0.32;
 }
 
 /* ── Reset ── */
@@ -1040,4 +1048,232 @@ footer {
 	justify-content: flex-end;
 	gap: 0.5rem;
 	flex-wrap: wrap;
+}
+
+/* ============================================================
+   LOGGED-OUT CHROME  (task H)
+   Welcome / login / register / about hide the app navbar + footer
+   so the welcome landing reads as a clean entry point. The body
+   class is set by syncChrome(); CSS owns the actual hiding.
+   ============================================================ */
+
+body.chrome-hidden .Navbar,
+body.chrome-hidden > footer {
+	display: none;
+}
+
+/* ============================================================
+   WELCOME  (task H — Option 5: rotating vinyl + frosted card)
+   ============================================================ */
+
+.welcome {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100vh - 3rem);
+	min-height: calc(100dvh - 3rem);
+	overflow: hidden;
+}
+
+.welcome-top {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.welcome-lang {
+	display: inline-flex;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.lang-opt {
+	background: none;
+	border: none;
+	color: var(--text-muted);
+	font-family: inherit;
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 0.3rem 0.55rem;
+	cursor: not-allowed;
+}
+
+.lang-opt.is-active {
+	background: var(--surface2);
+	color: var(--text);
+}
+
+.welcome-vinyl {
+	position: absolute;
+	right: -30%;
+	bottom: -24%;
+	width: 125%;
+	max-width: 460px;
+	opacity: var(--welcome-vinyl-opacity);
+	pointer-events: none;
+	z-index: 0;
+}
+
+.vinyl {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.vinyl-spin {
+	transform-box: fill-box;
+	transform-origin: center;
+	animation: vinyl-rotate 30s linear infinite;
+}
+
+@keyframes vinyl-rotate {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.welcome-card {
+	position: relative;
+	z-index: 1;
+	margin: auto;
+	width: 100%;
+	max-width: 340px;
+	background: var(--welcome-card-bg);
+	border: 1px solid var(--border);
+	border-radius: 14px;
+	padding: 2rem 1.5rem;
+	text-align: center;
+	box-shadow: 0 8px 32px var(--shadow);
+	-webkit-backdrop-filter: blur(12px);
+	backdrop-filter: blur(12px);
+}
+
+.welcome-brand {
+	font-size: 1.8rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	margin-bottom: 0.35rem;
+}
+
+.welcome-tagline {
+	color: var(--text-muted);
+	font-size: 0.9rem;
+	line-height: 1.5;
+	margin-bottom: 1.5rem;
+}
+
+.welcome-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	margin-bottom: 1rem;
+}
+
+.welcome-about {
+	margin-top: 0.25rem;
+}
+
+.welcome-footer {
+	position: relative;
+	z-index: 2;
+	padding-top: 1rem;
+	text-align: center;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	color: var(--text-muted);
+}
+
+/* Link-styled button — SPA navigation that isn't a primary action. */
+.link-btn {
+	background: none;
+	border: none;
+	padding: 0.25rem;
+	color: var(--accent);
+	font-family: inherit;
+	font-size: 0.85rem;
+	cursor: pointer;
+}
+
+.link-btn:hover {
+	text-decoration: underline;
+}
+
+/* ============================================================
+   ABOUT  (task H)
+   ============================================================ */
+
+.about-top {
+	margin-bottom: 1.25rem;
+}
+
+.about-title {
+	font-size: 1.4rem;
+	font-weight: 700;
+	margin-bottom: 0.75rem;
+}
+
+.about-lead {
+	font-size: 0.95rem;
+	line-height: 1.6;
+	color: var(--text);
+	margin-bottom: 1.5rem;
+}
+
+.about-subtitle {
+	font-size: 1rem;
+	font-weight: 600;
+	margin-bottom: 0.4rem;
+}
+
+.about-text {
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: var(--text-muted);
+	margin-bottom: 1.5rem;
+}
+
+.about-link {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+.about-link:hover {
+	text-decoration: underline;
+}
+
+/* ── Welcome refinements: tablet & desktop (≥ 768px) ── */
+@media (min-width: 768px) {
+	.welcome {
+		min-height: calc(100vh - 3.5rem);
+		min-height: calc(100dvh - 3.5rem);
+	}
+
+	.welcome-vinyl {
+		right: -18%;
+		bottom: -28%;
+		max-width: 620px;
+	}
+
+	.welcome-card {
+		max-width: 380px;
+		padding: 2.5rem 2rem;
+	}
+
+	.welcome-brand {
+		font-size: 2.1rem;
+	}
+}
+
+/* Respect reduced-motion: stop the vinyl from spinning. */
+@media (prefers-reduced-motion: reduce) {
+	.vinyl-spin {
+		animation: none;
+	}
 }

@@ -1,9 +1,8 @@
-updateView();
-
 function updateView() {
 	let html = storageBanner();
 
-	if (model.app.currentPage == "homePage") html += homeView();
+	if (model.app.currentPage == "welcome") html += welcomePage();
+	else if (model.app.currentPage == "homePage") html += homeView();
 	else if (model.app.currentPage == "searchPage") html += searchPage();
 	else if (model.app.currentPage == "wishList") html += wishListPage();
 	else if (model.app.currentPage == "viewDetails") html += viewDetailsPage();
@@ -12,9 +11,11 @@ function updateView() {
 	else if (model.app.currentPage == "profile") html += profilePage();
 	else if (model.app.currentPage == "login") html += loginPage();
 	else if (model.app.currentPage == "register") html += registerPage();
+	else if (model.app.currentPage == "about") html += aboutPage();
 
 	model.app.app.innerHTML = html;
 	syncNavbar();
+	syncChrome();
 }
 
 function storageBanner() {
@@ -48,10 +49,10 @@ function storageBanner() {
 }
 
 function changePage(element) {
-	const publicPages = ["login", "register"];
+	const publicPages = ["welcome", "login", "register", "about"];
 
 	if (!isLoggedIn() && !publicPages.includes(element)) {
-		model.app.currentPage = "login";
+		model.app.currentPage = "welcome";
 		updateView();
 		return;
 	}

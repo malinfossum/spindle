@@ -17,3 +17,12 @@ function toggleMobileMenu() {
 		console.log("Off");
 	}
 }
+
+// The logged-out flow (welcome, login, register, about) is shown without the app
+// navbar and footer so the welcome landing reads as a clean entry point. This only
+// flips a body class; CSS owns the actual hiding.
+function syncChrome() {
+	const loggedOutPages = ["welcome", "login", "register", "about"];
+	const hideChrome = loggedOutPages.includes(model.app.currentPage);
+	document.body.classList.toggle("chrome-hidden", hideChrome);
+}

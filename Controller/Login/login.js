@@ -177,7 +177,7 @@ function logout() {
 	model.viewState.searchBar = "";
 
 	clearAuthMessage();
-	changePage("login");
+	changePage("welcome");
 }
 
 function handleLoginNavClick() {

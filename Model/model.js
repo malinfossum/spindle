@@ -2,6 +2,7 @@ const model = {
 	app: {
 		app: document.getElementById("app"),
 		allPages: [
+			"welcome",
 			"homePage",
 			"searchPage",
 			"wishList",
@@ -11,9 +12,10 @@ const model = {
 			"profile",
 			"login",
 			"register",
+			"about",
 		],
 
-		currentPage: "login",
+		currentPage: "welcome",
 		mobileMenuToggle: false,
 
 		authBusy: false,

@@ -65,6 +65,8 @@
     <script src="View/Register/view.js"></script>
     <script src="View/Search/view.js"></script>
     <script src="View/Wishlist/view.js"></script>
+    <script src="View/Welcome/view.js"></script>
+    <script src="View/About/view.js"></script>
 
     <script src="View/Universal/albumCard.js"></script>
     <script src="Controller/Login/login.js"></script>
@@ -84,8 +86,17 @@
             const html = document.documentElement;
             const isLight = html.getAttribute('data-theme') === 'light';
             html.setAttribute('data-theme', isLight ? 'dark' : 'light');
-            document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
+            // Update every theme toggle (navbar + welcome). The navbar one is hidden
+            // on the logged-out flow, so the welcome page carries its own.
+            const icon = isLight ? '🌙' : '☀️';
+            document.querySelectorAll('.btn-theme').forEach((btn) => {
+                btn.textContent = icon;
+            });
         }
+
+        // First render runs here — after every view + controller script has loaded —
+        // so updateView() can safely call syncNavbar() and syncChrome().
+        updateView();
     </script>
 </body>
 

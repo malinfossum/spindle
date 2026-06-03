@@ -175,15 +175,14 @@ function formatBytes(bytes) {
 	}
 
 	const state = loadState();
-	if (state.kind === "encrypted") {
-		model.app.currentPage = "login";
-	} else if (state.kind === "error") {
-		model.app.currentPage = "register";
+	if (state.kind === "error") {
 		model.app.storageError =
 			"Lagret bibliotek er skadet — opprett et nytt eller importer en sikkerhetskopi (kommer i v0.1 task J).";
-	} else {
-		model.app.currentPage = "register";
 	}
+
+	// Everyone lands on the welcome page; it offers both "Create library" and
+	// "Log in" and emphasises the right one based on whether a library exists.
+	model.app.currentPage = "welcome";
 
 	refreshStorageEstimate();
 })();

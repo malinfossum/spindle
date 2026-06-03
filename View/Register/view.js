@@ -74,6 +74,10 @@ function registerPage() {
                 Har du allerede et bibliotek?
                 <a href="#" onclick="changePage('login')">Logg inn</a>
             </p>
+
+            <p class="auth-footer">
+                <a href="#" onclick="changePage('welcome')">← Tilbake til start</a>
+            </p>
         </div>
     </div>
     `;
