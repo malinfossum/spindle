@@ -45,28 +45,33 @@ function submitChanges(isEdit) {
 
 	const info = model.viewState.musicInfo;
 
-	if (!info.artist.trim() || !info.title.trim()) {
-		alert("Artist og tittel må fylles ut.");
+	// Validate every field at once so all problems show together (the old code
+	// fired one alert at a time). Carry over any cover error saveImage already set.
+	const errors = {
+		coverImg: model.viewState.musicForm.errors.coverImg,
+		artist: info.artist.trim() ? "" : "Fyll inn artist.",
+		title: info.title.trim() ? "" : "Fyll inn tittel.",
+		location: info.location.length ? "" : "Velg en lokasjon.",
+		genre: info.genre.length ? "" : "Velg minst én sjanger.",
+		form: "",
+	};
+
+	if (errors.artist || errors.title || errors.location || errors.genre) {
+		model.viewState.musicForm.errors = errors;
+		updateView();
+		focusFirstInvalid();
 		return;
 	}
 
-	if (info.location.length === 0) {
-		alert("Velg en lokasjon.");
-		return;
-	}
-
-	if (info.genre.length === 0) {
-		alert("Velg minst én sjanger.");
+	if (!isEdit && isStorageNearFull()) {
+		errors.form =
+			"Lagringen er nesten full. Slett noen album før du legger til flere.";
+		model.viewState.musicForm.errors = errors;
+		updateView();
 		return;
 	}
 
 	if (!isEdit) {
-		if (isStorageNearFull()) {
-			alert(
-				"Lagringen er nesten full. Slett noen album før du legger til flere.",
-			);
-			return;
-		}
 		model.viewState.musicInfo.id = rng();
 		model.data.musicInfo.push({ ...model.viewState.musicInfo });
 	} else {
@@ -198,16 +203,22 @@ async function saveImage(image) {
 	const file = image.files[0];
 	if (!file) return;
 
+	const errors = model.viewState.musicForm.errors;
+
 	if (file.size > 2 * 1024 * 1024) {
-		alert("Bildet er for stort. Maks 2 MB.");
+		errors.coverImg = "Bildet er for stort. Maks 2 MB.";
 		image.value = "";
+		updateView();
+		focusFirstInvalid();
 		return;
 	}
 
 	const mime = await sniffImageType(file);
 	if (!mime) {
-		alert("Ugyldig bildefil. Bruk JPEG, PNG eller WebP.");
+		errors.coverImg = "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.";
 		image.value = "";
+		updateView();
+		focusFirstInvalid();
 		return;
 	}
 
@@ -215,6 +226,7 @@ async function saveImage(image) {
 	// prefix can't be spoofed. Strip FileReader's own prefix and re-attach ours.
 	const base64 = await readFileAsBase64(file);
 	model.viewState.musicInfo.coverImg = `data:${mime};base64,${base64}`;
+	errors.coverImg = "";
 	updateView();
 }
 
@@ -228,4 +240,32 @@ function readFileAsBase64(file) {
 		reader.onerror = () => reject(reader.error);
 		reader.readAsDataURL(file);
 	});
+}
+
+// Wipes the add/edit form's field errors. Called on navigation (changePage) so a
+// validation error from one visit never lingers into the next — the music-form
+// counterpart to resetAuthFieldErrors.
+function resetMusicFieldErrors() {
+	model.viewState.musicForm.errors = {
+		coverImg: "",
+		artist: "",
+		title: "",
+		location: "",
+		genre: "",
+		form: "",
+	};
+}
+
+// Lokasjon/Sjanger are groups, not single inputs, so clearFieldError (which keys
+// off input.id) can't clear them. Clear the group's error the moment a choice is
+// made, updating the DOM directly to avoid a focus-dropping re-render.
+function clearMusicGroupError(groupName) {
+	const errors = model.viewState.musicForm.errors;
+	if (!errors[groupName]) return;
+
+	errors[groupName] = "";
+	const group = document.getElementById(`music-${groupName}-group`);
+	if (group) group.setAttribute("aria-invalid", "false");
+	const span = document.getElementById(`music-${groupName}-error`);
+	if (span) span.textContent = "";
 }

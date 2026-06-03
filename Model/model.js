@@ -58,6 +58,20 @@ const model = {
 			coverImg: null,
 		},
 
+		// Add/edit-form validation errors. Kept OFF musicInfo on purpose: musicInfo
+		// is spread into the saved album ({ ...musicInfo }), so errors living there
+		// would be persisted as album data.
+		musicForm: {
+			errors: {
+				coverImg: "",
+				artist: "",
+				title: "",
+				location: "",
+				genre: "",
+				form: "",
+			},
+		},
+
 		login: {
 			password: "",
 			errors: { password: "" },

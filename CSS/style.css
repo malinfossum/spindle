@@ -591,6 +591,14 @@ footer {
 	margin-top: 0.2rem;
 }
 
+/* The group becomes programmatically focusable (tabindex="-1") so a failed
+   submit can move focus to it; give that focus a visible indicator. */
+.checkbox-group:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+	border-radius: 6px;
+}
+
 .checkbox-option {
 	display: flex;
 	align-items: center;
