@@ -123,19 +123,24 @@ function newGenre(event) {
 	updateView();
 }
 
-function removeLocation(event) {
+async function removeLocation(event) {
 	event.preventDefault();
 
 	const location = model.viewState.editMusicInfo.location.trim();
 	const locationIdx = model.data.location.indexOf(location);
 
 	if (locationIdx !== -1) {
-		deleteConfirmation();
-		if (model.app.deleteConfirmation === false) {
+		const confirmed = await openDialog({
+			title: "Slette lokasjon?",
+			body: `Vil du slette «${location}» fra lokasjonslisten?`,
+			confirmText: "Slett",
+			danger: true,
+		});
+
+		if (confirmed) {
 			model.data.location.splice(locationIdx, 1);
+			emptyGenreLocationList();
 			persistState();
-		} else {
-			model.app.deleteConfirmation = false;
 		}
 	}
 
@@ -143,19 +148,24 @@ function removeLocation(event) {
 	updateView();
 }
 
-function removeGenre(event) {
+async function removeGenre(event) {
 	event.preventDefault();
 
 	const genre = model.viewState.editMusicInfo.genre.trim();
 	const genreIdx = model.data.genre.indexOf(genre);
 
 	if (genreIdx !== -1) {
-		deleteConfirmation();
-		if (model.app.deleteConfirmation === false) {
+		const confirmed = await openDialog({
+			title: "Slette sjanger?",
+			body: `Vil du slette «${genre}» fra sjangerlisten?`,
+			confirmText: "Slett",
+			danger: true,
+		});
+
+		if (confirmed) {
 			model.data.genre.splice(genreIdx, 1);
+			emptyGenreLocationList();
 			persistState();
-		} else {
-			model.app.deleteConfirmation = false;
 		}
 	}
 
@@ -218,13 +228,4 @@ function readFileAsBase64(file) {
 		reader.onerror = () => reject(reader.error);
 		reader.readAsDataURL(file);
 	});
-}
-
-function deleteConfirmation() {
-	if (confirm("Er du sikker på at du vil slette denne?")) {
-		emptyGenreLocationList();
-		updateView();
-	} else {
-		model.app.deleteConfirmation = true;
-	}
 }

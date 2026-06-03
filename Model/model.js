@@ -32,7 +32,6 @@ const model = {
 		showDeleteGenreInput: true,
 		showDeleteLocationInput: true,
 
-		deleteConfirmation: false,
 		authMessage: "",
 
 		storageUnavailable: false,
