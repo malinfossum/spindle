@@ -2,6 +2,8 @@
 
 A local music library for organizing physical LP and CD collections, built in vanilla JavaScript.
 
+**Status:** v0.1 in progress, paused — development resumes after current projects ship. Remaining for v0.1: bilingual NO/EN interface, encrypted export/import, and multi-tab safety. The app UI is currently in Norwegian.
+
 ## Run locally
 
 Use Live Server in VS Code, or serve the folder over HTTPS.
@@ -45,5 +47,3 @@ Spindle is inspired by a team project Malin Fossum built with Henry Elendheim an
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
-
-> The app UI is currently in Norwegian.
