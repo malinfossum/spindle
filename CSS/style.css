@@ -26,6 +26,9 @@
 	/* Inline form errors need their own red: a dark-bg-safe red is too light for
 	   the light theme's white card, so the value flips with the theme below. */
 	--error-text: #ff8a80;
+	/* Same reason as --error-text: no single green clears AA on both the dark
+	   surface and the light one, so this value flips with the theme too. */
+	--success-text: #7ddba0;
 
 	/* Welcome landing: the frosted card sits over the vinyl, so its background is
 	   translucent; the vinyl is light-on-dark, so its opacity flips per theme. */
@@ -54,6 +57,7 @@ html[data-theme="light"] {
 	--danger: #c0392b;
 	--danger-text: #c0392b;
 	--error-text: #c0392b;
+	--success-text: #166534;
 
 	--welcome-card-bg: rgba(255, 255, 255, 0.65);
 	--welcome-vinyl-opacity: 0.32;
@@ -1026,6 +1030,104 @@ footer {
 	color: var(--text-muted);
 }
 
+/* ── Backup: export / import (task J) ──
+   Shared by the profile settings panel and the welcome page's collapsed panel,
+   so the two placements look and behave the same. */
+
+.backup-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	flex-wrap: wrap;
+	margin-top: 0.9rem;
+}
+
+.backup-label {
+	font-size: 0.85rem;
+	/* Full-contrast rather than --text-muted: these labels sit next to hints that
+	   carry real consequences, and muted grey only just clears AA on light. */
+	color: var(--text);
+}
+
+.backup-hint {
+	margin: 0.3rem 0 0;
+	font-size: 0.8rem;
+	line-height: 1.45;
+	color: var(--text);
+	opacity: 0.85;
+}
+
+/* The plaintext export's hint is a warning, not a caption — it says the file can
+   be read by anyone. --error-text is the theme-aware red that clears AA on both
+   the dark surface and the light card. */
+.backup-hint-warn {
+	color: var(--error-text);
+	opacity: 1;
+}
+
+.backup-message {
+	margin: 0 0 0.9rem;
+	padding: 0.55rem 0.7rem;
+	border-left: 3px solid currentColor;
+	border-radius: 4px;
+	background: var(--surface2);
+	font-size: 0.88rem;
+	line-height: 1.45;
+}
+
+.backup-message-error {
+	color: var(--error-text);
+}
+
+.backup-message-success {
+	color: var(--success-text);
+}
+
+/* A real <input type="file">, not a button wired to a hidden one — the native
+   control brings its own keyboard and screen-reader behaviour. Only its picker
+   button is restyled, to match .btn. */
+.file-input {
+	max-width: 100%;
+	font-family: inherit;
+	font-size: 0.8rem;
+	color: var(--text);
+}
+
+.file-input::file-selector-button {
+	background: var(--btn-bg);
+	border: 1px solid var(--btn-border);
+	color: var(--text);
+	border-radius: 6px;
+	padding: 0.4rem 0.9rem;
+	margin-right: 0.6rem;
+	font-family: inherit;
+	font-size: 0.875rem;
+	cursor: pointer;
+	transition:
+		background 0.15s,
+		border-color 0.15s;
+}
+
+.file-input::file-selector-button:hover {
+	background: var(--surface2);
+	border-color: var(--accent);
+}
+
+.file-input:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+.profile-settings-heading {
+	margin: 1.25rem 0 0;
+	padding-top: 0.9rem;
+	border-top: 1px solid var(--border);
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--text);
+}
+
 /* ============================================================
    DIALOG  (confirm modal — native <dialog>)
    ============================================================ */
@@ -1208,6 +1310,33 @@ body.chrome-hidden > footer {
 
 .welcome-about {
 	margin-top: 0.25rem;
+}
+
+/* Collapsed by default so the landing page stays a landing page. Restoring has
+   to be reachable from here: a corrupt library or a forgotten password means
+   the profile page can never be opened. */
+.welcome-backup {
+	margin-top: 1.1rem;
+	padding-top: 0.9rem;
+	border-top: 1px solid var(--border);
+	text-align: left;
+}
+
+.welcome-backup > summary {
+	cursor: pointer;
+	font-size: 0.85rem;
+	color: var(--text);
+	text-align: center;
+}
+
+.welcome-backup > summary:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+.welcome-backup[open] > summary {
+	margin-bottom: 0.4rem;
 }
 
 .welcome-footer {

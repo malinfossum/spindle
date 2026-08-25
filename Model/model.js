@@ -36,6 +36,11 @@ const model = {
 
 		authMessage: "",
 
+		// Result of the last export / import, shown in the backup block on the
+		// profile and welcome pages. A string key plus a tone, resolved by t() at
+		// render time like every other message on the model.
+		backupMessage: { key: "", tone: "info" },
+
 		storageUnavailable: false,
 		storageQuotaExceeded: false,
 		storageError: "",
@@ -87,6 +92,11 @@ const model = {
 		},
 
 		searchBar: "",
+
+		// The welcome page rebuilds wholesale on every re-render, so the backup
+		// panel would snap shut on a language switch if its open state lived in
+		// the DOM. Anything that must survive a re-render belongs on the model.
+		welcomeBackupOpen: false,
 	},
 
 	data: {

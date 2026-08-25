@@ -15,24 +15,26 @@ function probeStorage() {
 	}
 }
 
-// The single source of truth for the stored envelope's shape. Returns:
-//   null                                  → nothing stored
+// The single source of truth for the envelope's shape. Shared by readEnvelope()
+// — which checks what localStorage holds — and by the backup importer in task J,
+// which checks what a file holds. One checker means the two can never drift into
+// disagreeing about what a valid envelope looks like. Returns:
 //   { ok: false, reason: "old-shape" }    → a pre-task-C plain-JSON save
-//   { ok: false, reason: "corrupt", ... } → unparseable or malformed
+//   { ok: false, reason: "too-new" }      → written by a newer build of Spindle
+//   { ok: false, reason: "corrupt", ... } → malformed
 //   { ok: true, envelope }                → a valid encrypted envelope
-function readEnvelope() {
-	const raw = localStorage.getItem(STORAGE_KEY);
-	if (!raw) return null;
-
-	let parsed;
-	try {
-		parsed = JSON.parse(raw);
-	} catch (err) {
-		return { ok: false, reason: "corrupt", message: "ugyldig JSON" };
-	}
-
+function validateEnvelope(parsed) {
 	if (!parsed || typeof parsed !== "object") {
 		return { ok: false, reason: "corrupt", message: "ugyldig format" };
+	}
+
+	// A newer schema may use fields, or a cipher, that this build does not
+	// implement. Refusing is safer than half-understanding the data.
+	if (
+		typeof parsed.schemaVersion === "number" &&
+		parsed.schemaVersion > SCHEMA_VERSION
+	) {
+		return { ok: false, reason: "too-new", message: "nyere skjemaversjon" };
 	}
 
 	if ("library" in parsed || "app" in parsed) {
@@ -69,12 +71,32 @@ function readEnvelope() {
 	};
 }
 
+// What localStorage holds, run through the shared shape check. Returns null when
+// nothing is stored; otherwise a validateEnvelope() result.
+function readEnvelope() {
+	const raw = localStorage.getItem(STORAGE_KEY);
+	if (!raw) return null;
+
+	let parsed;
+	try {
+		parsed = JSON.parse(raw);
+	} catch (err) {
+		return { ok: false, reason: "corrupt", message: "ugyldig JSON" };
+	}
+
+	return validateEnvelope(parsed);
+}
+
+// `message` on the error branch is an i18n key, ready for the storage banner.
 function loadState() {
 	const result = readEnvelope();
 	if (result === null) return { kind: "none" };
 	if (result.ok) return { kind: "encrypted", envelope: result.envelope };
 	if (result.reason === "old-shape") return { kind: "none" };
-	return { kind: "error", message: result.message };
+	if (result.reason === "too-new") {
+		return { kind: "error", message: "storage.tooNew" };
+	}
+	return { kind: "error", message: "storage.corrupt" };
 }
 
 // persistState() is async and serialized: each call chains onto the previous so
@@ -174,7 +196,7 @@ function formatBytes(bytes) {
 
 	const state = loadState();
 	if (state.kind === "error") {
-		model.app.storageError = "storage.corrupt";
+		model.app.storageError = state.message;
 	}
 
 	// Everyone lands on the welcome page; it offers both "Create library" and

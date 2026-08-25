@@ -66,6 +66,7 @@ function changePage(element) {
 
 	model.app.currentPage = element;
 	clearAuthMessage();
+	clearBackupMessage();
 	resetAuthFieldErrors();
 	resetMusicFieldErrors();
 	updateView();

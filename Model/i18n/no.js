@@ -34,6 +34,7 @@ const STRINGS_NO = {
 	"welcome.about": "Om Spindle",
 	"welcome.credit":
 		"Bygget av Malin Fossum. Opprinnelig et lagprosjekt med Henry Elendheim.",
+	"welcome.backup": "Sikkerhetskopi",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Tilbake",
@@ -148,7 +149,49 @@ const STRINGS_NO = {
 	"storage.needsHttps":
 		"Spindle krever HTTPS eller Live Server for kryptering. Åpne via VS Code Live Server, ikke direkte fra fil-systemet.",
 	"storage.corrupt":
-		"Lagret bibliotek er skadet — opprett et nytt eller importer en sikkerhetskopi (kommer i v0.1 task J).",
+		"Lagret bibliotek er skadet — gjenopprett fra en sikkerhetskopi, eller opprett et nytt bibliotek.",
+	"storage.tooNew":
+		"Det lagrede biblioteket ble laget av en nyere versjon av Spindle. Oppdater til nyeste versjon før du fortsetter.",
+
+	// ---- Backup: export / import --------------------------------------------
+	"backup.title": "Sikkerhetskopi",
+	"backup.export": "Kryptert kopi",
+	"backup.exportBtn": "Eksporter",
+	"backup.exportHint":
+		"Lagrer biblioteket som en kryptert fil. Den åpnes bare med passordet den ble laget med.",
+	"backup.import": "Gjenopprett",
+	"backup.importHint":
+		"Velg en fil du har eksportert tidligere. Den erstatter biblioteket i denne nettleseren, og du logger inn på nytt med passordet filen ble laget med.",
+	"backup.plaintext": "Lesbar kopi",
+	"backup.plaintextBtn": "Eksporter ukryptert",
+	"backup.plaintextHint":
+		"Ukryptert fil. Alle som åpner den, kan lese hele biblioteket. Den kan ikke gjenopprettes — bruk den krypterte kopien til det.",
+	"backup.plaintextTitle": "Eksportere uten kryptering?",
+	"backup.plaintextBody":
+		"Filen lagres i klartekst. Alle som får tak i den, kan lese hele biblioteket ditt uten passord.",
+	"backup.plaintextConfirm": "Eksporter likevel",
+	"backup.importTitle": "Erstatte biblioteket?",
+	"backup.importBody":
+		"Alt som ligger i denne nettleseren blir overskrevet av innholdet i filen. Dette kan ikke angres.",
+	"backup.importConfirm": "Erstatt",
+	"backup.exportDone": "Sikkerhetskopien er lastet ned.",
+	"backup.plaintextDone":
+		"Den ukrypterte filen er lastet ned. Oppbevar den trygt.",
+	"backup.importDone":
+		"Biblioteket er gjenopprettet. Logg inn med passordet som hørte til sikkerhetskopien.",
+	"backup.errNoLibrary": "Det finnes ikke noe bibliotek å eksportere ennå.",
+	"backup.errCorrupt":
+		"Det lagrede biblioteket er skadet og kan ikke eksporteres.",
+	"backup.errLocked": "Du må være logget inn for å eksportere en lesbar kopi.",
+	"backup.errNotJson": "Filen er ikke en gyldig JSON-fil.",
+	"backup.errNotBackup": "Filen er ikke en Spindle-sikkerhetskopi.",
+	"backup.errTooNew":
+		"Filen ble laget av en nyere versjon av Spindle. Oppdater først.",
+	"backup.errPlaintext":
+		"Dette er en lesbar kopi. Bare krypterte sikkerhetskopier kan gjenopprettes.",
+	"backup.errTooLarge": "Filen er for stor til å være en sikkerhetskopi.",
+	"backup.errReadFailed": "Filen kunne ikke leses.",
+	"backup.errWriteFailed": "Sikkerhetskopien kunne ikke lagres i nettleseren.",
 
 	// ---- Validation errors --------------------------------------------------
 	// Stored as keys on model.viewState.*.errors and resolved at render time, so

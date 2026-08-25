@@ -28,6 +28,7 @@ const STRINGS_EN = {
 	"welcome.about": "About Spindle",
 	"welcome.credit":
 		"Built by Malin Fossum. Originally a team project with Henry Elendheim.",
+	"welcome.backup": "Backup",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Back",
@@ -142,7 +143,48 @@ const STRINGS_EN = {
 	"storage.needsHttps":
 		"Spindle needs HTTPS or Live Server for encryption. Open it through VS Code Live Server, not straight from the file system.",
 	"storage.corrupt":
-		"The stored library is damaged — create a new one or import a backup (coming in v0.1 task J).",
+		"The stored library is damaged — restore from a backup, or create a new library.",
+	"storage.tooNew":
+		"The stored library was created by a newer version of Spindle. Update to the latest version before continuing.",
+
+	// ---- Backup: export / import --------------------------------------------
+	"backup.title": "Backup",
+	"backup.export": "Encrypted copy",
+	"backup.exportBtn": "Export",
+	"backup.exportHint":
+		"Saves your library as an encrypted file. It only opens with the password it was created with.",
+	"backup.import": "Restore",
+	"backup.importHint":
+		"Choose a file you exported earlier. It replaces the library in this browser, and you log in again with the password that file was created with.",
+	"backup.plaintext": "Readable copy",
+	"backup.plaintextBtn": "Export unencrypted",
+	"backup.plaintextHint":
+		"An unencrypted file. Anyone who opens it can read your whole library. It cannot be restored — use the encrypted copy for that.",
+	"backup.plaintextTitle": "Export without encryption?",
+	"backup.plaintextBody":
+		"The file is saved as plain text. Anyone who gets hold of it can read your entire library without a password.",
+	"backup.plaintextConfirm": "Export anyway",
+	"backup.importTitle": "Replace the library?",
+	"backup.importBody":
+		"Everything in this browser will be overwritten by the contents of the file. This cannot be undone.",
+	"backup.importConfirm": "Replace",
+	"backup.exportDone": "Your backup has been downloaded.",
+	"backup.plaintextDone":
+		"The unencrypted file has been downloaded. Keep it somewhere safe.",
+	"backup.importDone":
+		"Library restored. Log in with the password that belongs to that backup.",
+	"backup.errNoLibrary": "There is no library to export yet.",
+	"backup.errCorrupt": "The stored library is damaged and cannot be exported.",
+	"backup.errLocked": "You have to be logged in to export a readable copy.",
+	"backup.errNotJson": "That file is not valid JSON.",
+	"backup.errNotBackup": "That file is not a Spindle backup.",
+	"backup.errTooNew":
+		"That file was created by a newer version of Spindle. Update first.",
+	"backup.errPlaintext":
+		"This is a readable copy. Only encrypted backups can be restored.",
+	"backup.errTooLarge": "That file is too large to be a backup.",
+	"backup.errReadFailed": "The file could not be read.",
+	"backup.errWriteFailed": "The backup could not be saved in this browser.",
 
 	// ---- Validation errors --------------------------------------------------
 	"error.fillUsername": "Enter a username.",

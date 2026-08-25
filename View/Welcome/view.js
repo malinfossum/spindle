@@ -26,6 +26,20 @@ function welcomePage() {
 
 	const actions = hasLibrary ? loginBtn + createBtn : createBtn + loginBtn;
 
+	// Restoring a backup has to work from here, not only from Profile: a corrupt
+	// library or a forgotten password locks you out of the app entirely, and that
+	// is precisely when a backup is worth having. Collapsed by default so the
+	// landing page stays a landing page. Forced open while a message is showing,
+	// so an error can never be hidden inside a closed panel.
+	const backupOpen = model.viewState.welcomeBackupOpen || !!model.app.backupMessage.key;
+
+	const backupPanel = /*HTML*/ `
+        <details class="welcome-backup" ${backupOpen ? "open" : ""}
+                 ontoggle="model.viewState.welcomeBackupOpen = this.open">
+            <summary>${t("welcome.backup")}</summary>
+            ${backupSection({ idPrefix: "welcome", canExport: hasLibrary })}
+        </details>`;
+
 	return /*HTML*/ `
     <section class="welcome" aria-labelledby="welcome-heading">
         <div class="welcome-top">
@@ -53,6 +67,8 @@ function welcomePage() {
             <button class="link-btn welcome-about" type="button" onclick="changePage('about')">
                 ${t("welcome.about")}
             </button>
+
+            ${backupPanel}
         </div>
 
         <p class="welcome-footer">

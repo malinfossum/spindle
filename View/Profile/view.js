@@ -49,13 +49,18 @@ function profilePage() {
 
 	// The welcome page's language switcher is only reachable while logged out, so
 	// the setting needs a home inside the app too. Profile is where the other
-	// account-level controls already live (storage, and export/import in task J).
+	// account-level controls already live — storage, and now backup/restore.
+	// The plaintext export is offered here and nowhere else: it serialises the
+	// decrypted library, so it needs a library that is already unlocked.
 	const settingsBlock = /*HTML*/ `
         <div class="profile-settings">
             <div class="profile-settings-row">
                 <span class="profile-settings-label" id="profile-language-label">${t("profile.language")}</span>
                 ${langSwitcher("", "profile-language-label")}
             </div>
+
+            <h2 class="profile-settings-heading">${t("backup.title")}</h2>
+            ${backupSection({ idPrefix: "profile", allowPlaintext: true })}
         </div>`;
 
 	return /*HTML*/ `
