@@ -76,7 +76,7 @@ function registerPage() {
             </p>
 
             <p class="auth-footer">
-                <a href="#" onclick="changePage('welcome')">${t("auth.backToStart")}</a>
+                <a class="auth-back" href="#" onclick="changePage('welcome')">${t("auth.backToStart")}</a>
             </p>
         </div>
     </div>

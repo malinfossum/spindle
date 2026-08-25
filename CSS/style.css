@@ -105,6 +105,9 @@ body {
 }
 
 .Navbar h1 {
+	display: flex;
+	align-items: center;
+	min-height: 44px;
 	font-size: 1.05rem;
 	font-weight: 700;
 	color: var(--text);
@@ -119,6 +122,12 @@ body {
 	color: var(--text-muted);
 	font-size: 0.875rem;
 	padding: 0.35rem 0.75rem;
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	min-height: 44px;
 	border-radius: 6px;
 	cursor: pointer;
 	transition:
@@ -135,6 +144,7 @@ body {
 .Navbar input {
 	flex: 1;
 	max-width: 100px;
+	min-height: 44px;
 	background: var(--input-bg);
 	border: 1px solid var(--border);
 	border-radius: 6px;
@@ -204,6 +214,8 @@ footer {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.35rem;
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	min-height: 44px;
 	background: var(--btn-bg);
 	border: 1px solid var(--btn-border);
 	color: var(--text);
@@ -538,6 +550,12 @@ footer {
 .form-cover-set-image {
 	font-size: 14px;
 	margin-left: 210px;
+	min-height: 44px;
+}
+
+.form-cover-set-image::file-selector-button {
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	min-height: 44px;
 }
 
 .form-fields {
@@ -560,6 +578,7 @@ footer {
 
 .form-input {
 	width: 100%;
+	min-height: 44px;
 	background: var(--input-bg);
 	border: 1px solid var(--border);
 	border-radius: 6px;
@@ -618,10 +637,36 @@ footer {
 	border-radius: 6px;
 }
 
+/* The ➕ / ✖️ chip toggles and the ✔️ confirm are unclassed <button>s, so they
+   are reached structurally. WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+.checkbox-group > button,
+.form-row > form > button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	min-height: 44px;
+	background: none;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	color: var(--text);
+	font-family: inherit;
+	cursor: pointer;
+	transition: border-color 0.15s;
+}
+
+.checkbox-group > button:hover,
+.form-row > form > button:hover {
+	border-color: var(--accent);
+}
+
 .checkbox-option {
 	display: flex;
 	align-items: center;
 	gap: 0.35rem;
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	min-height: 44px;
+	padding-right: 0.2rem;
 	font-size: 0.875rem;
 	cursor: pointer;
 	color: var(--text);
@@ -639,6 +684,7 @@ footer {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
+	min-height: 44px;
 	font-size: 0.9rem;
 	cursor: pointer;
 	color: var(--text);
@@ -774,6 +820,17 @@ footer {
 	text-decoration: underline;
 }
 
+/* Alone in its own paragraph, so it is a standalone target rather than a link
+   inside a run of text — WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+.auth-back {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	min-height: 44px;
+	padding: 0 0.5rem;
+}
+
 .form-hint {
 	margin-top: 0.4rem;
 	font-size: 0.78rem;
@@ -889,6 +946,7 @@ footer {
 .mobile-menu-show button {
 	width: 100%;
 	text-align: left;
+	justify-content: flex-start;
 	padding: 0.5rem 1rem;
 	border-radius: 0;
 }
@@ -1092,12 +1150,15 @@ footer {
    button is restyled, to match .btn. */
 .file-input {
 	max-width: 100%;
+	min-height: 44px;
 	font-family: inherit;
 	font-size: 0.8rem;
 	color: var(--text);
 }
 
 .file-input::file-selector-button {
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	min-height: 44px;
 	background: var(--btn-bg);
 	border: 1px solid var(--btn-border);
 	color: var(--text);
@@ -1380,7 +1441,13 @@ body.chrome-hidden > footer {
 .link-btn {
 	background: none;
 	border: none;
-	padding: 0.25rem;
+	padding: 0.25rem 0.5rem;
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	min-height: 44px;
 	color: var(--accent);
 	font-family: inherit;
 	font-size: 0.85rem;
