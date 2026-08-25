@@ -2,7 +2,7 @@
 
 A local music library for organizing physical LP and CD collections, built in vanilla JavaScript.
 
-**Status:** v0.1 in progress, paused — development resumes after current projects ship. Remaining for v0.1: bilingual NO/EN interface, encrypted export/import, and multi-tab safety. The app UI is currently in Norwegian.
+**Status:** v0.1 in progress. Remaining for v0.1: encrypted export/import and multi-tab safety.
 
 ## Run locally
 
@@ -18,7 +18,8 @@ Spindle needs a secure context for encryption — opening `index.html` directly 
 - Add new albums with a cover image upload
 - Wishlist for albums you don't own yet
 - A local profile with custom genres and locations
-- Light and dark theme
+- Norwegian and English interface, switchable in the app
+- Light and dark theme, remembered between visits
 - Mobile and desktop layouts
 
 ## Stack

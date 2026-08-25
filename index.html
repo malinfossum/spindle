@@ -5,6 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spindle</title>
+
+    <script>
+        // Apply the stored theme before the stylesheet paints, so a light-theme
+        // user doesn't get a dark flash on every load. Deliberately inline and
+        // duplicating the prefs key: Model/prefs.js has not loaded yet, and
+        // waiting for it would reintroduce the flash this prevents.
+        try {
+            const stored = JSON.parse(localStorage.getItem('spindle:v1:prefs') || '{}');
+            if (stored.theme === 'light' || stored.theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', stored.theme);
+            }
+            if (stored.lang === 'no' || stored.lang === 'en') {
+                document.documentElement.setAttribute('lang', stored.lang);
+            }
+        } catch (err) {
+            /* No stored preferences, or storage is blocked — defaults apply. */
+        }
+    </script>
+
     <link rel="stylesheet" href="CSS/style.css">
 </head>
 
@@ -13,24 +32,24 @@
         <h1 onclick="changePage('homePage')">Spindle</h1>
 
         <div class="nav-desktop">
-            <button onclick="changePage('homePage')">Hjem</button>
-            <button onclick="changePage('wishList')">Ønskeliste</button>
+            <button id="nav-home-desktop" onclick="changePage('homePage')">Hjem</button>
+            <button id="nav-wishlist-desktop" onclick="changePage('wishList')">Ønskeliste</button>
 
-            <input placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
-            <button onclick="changePage('searchPage')">Søk</button>
+            <input class="nav-search-input" placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
+            <button id="nav-search-desktop" onclick="changePage('searchPage')">Søk</button>
 
             <button id="nav-login-desktop" onclick="handleLoginNavClick()">Logg inn</button>
             <button id="nav-profile-desktop" style="display: none;" onclick="handleProfileNavClick()">Profil</button>
         </div>
 
         <div class="nav-mobile" id="mobile-menu">
-            <input placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
-            <button onclick="changePage('searchPage')">Søk</button>
-            <button class="navBurger" onclick="toggleMobileMenu()">☰</button>
+            <input class="nav-search-input" placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
+            <button id="nav-search-mobile" onclick="changePage('searchPage')">Søk</button>
+            <button class="navBurger" id="nav-burger" aria-label="Meny" onclick="toggleMobileMenu()">☰</button>
 
             <div class="mobile-menu-show">
-                <button onclick="changePage('homePage')">Hjem</button>
-                <button onclick="changePage('wishList')">Ønskeliste</button>
+                <button id="nav-home-mobile" onclick="changePage('homePage')">Hjem</button>
+                <button id="nav-wishlist-mobile" onclick="changePage('wishList')">Ønskeliste</button>
 
                 <button id="nav-login-mobile" onclick="handleLoginNavClick()">Logg inn</button>
                 <button id="nav-profile-mobile" style="display: none;" onclick="handleProfileNavClick()">Profil</button>
@@ -39,17 +58,21 @@
         </div>
 
 
-        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn" aria-label="Bytt tema (mørkt eller lyst)">🌙</button>
 
     </header>
 
     <div id="app"></div>
 
     <footer>
-        <p>© 2026 Spindle</p>
+        <p id="footer-copyright">© 2026 Spindle</p>
     </footer>
 
     <script src="Model/model.js"></script>
+    <script src="Model/prefs.js"></script>
+    <script src="Model/i18n/no.js"></script>
+    <script src="Model/i18n/en.js"></script>
+    <script src="Model/i18n/i18n.js"></script>
     <script src="Model/auth.js"></script>
     <script src="Model/persistence.js"></script>
 
@@ -82,20 +105,38 @@
     <script src="Controller/Universal/viewMusicDetails.js"></script>
 
     <script>
-        function toggleTheme() {
-            const html = document.documentElement;
-            const isLight = html.getAttribute('data-theme') === 'light';
-            html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+        function currentTheme() {
+            return document.documentElement.getAttribute('data-theme') === 'light'
+                ? 'light'
+                : 'dark';
+        }
+
+        function themeIcon() {
+            return currentTheme() === 'light' ? '☀️' : '🌙';
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', currentTheme());
             // Update every theme toggle (navbar + welcome). The navbar one is hidden
             // on the logged-out flow, so the welcome page carries its own.
-            const icon = isLight ? '🌙' : '☀️';
+            const icon = themeIcon();
             document.querySelectorAll('.btn-theme').forEach((btn) => {
                 btn.textContent = icon;
             });
         }
 
+        function toggleTheme() {
+            const next = currentTheme() === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            setPref('theme', next);
+            applyTheme();
+        }
+
         // First render runs here — after every view + controller script has loaded —
         // so updateView() can safely call syncNavbar() and syncChrome().
+        document.documentElement.setAttribute('data-theme', getPref('theme'));
+        applyLang();
+        applyTheme();
         updateView();
     </script>
 </body>

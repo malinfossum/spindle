@@ -49,10 +49,10 @@ function submitChanges(isEdit) {
 	// fired one alert at a time). Carry over any cover error saveImage already set.
 	const errors = {
 		coverImg: model.viewState.musicForm.errors.coverImg,
-		artist: info.artist.trim() ? "" : "Fyll inn artist.",
-		title: info.title.trim() ? "" : "Fyll inn tittel.",
-		location: info.location.length ? "" : "Velg en lokasjon.",
-		genre: info.genre.length ? "" : "Velg minst én sjanger.",
+		artist: info.artist.trim() ? "" : "error.fillArtist",
+		title: info.title.trim() ? "" : "error.fillTitle",
+		location: info.location.length ? "" : "error.pickLocation",
+		genre: info.genre.length ? "" : "error.pickGenre",
 		form: "",
 	};
 
@@ -64,8 +64,7 @@ function submitChanges(isEdit) {
 	}
 
 	if (!isEdit && isStorageNearFull()) {
-		errors.form =
-			"Lagringen er nesten full. Slett noen album før du legger til flere.";
+		errors.form = "error.storageNearFull";
 		model.viewState.musicForm.errors = errors;
 		updateView();
 		return;
@@ -136,9 +135,9 @@ async function removeLocation(event) {
 
 	if (locationIdx !== -1) {
 		const confirmed = await openDialog({
-			title: "Slette lokasjon?",
-			body: `Vil du slette «${location}» fra lokasjonslisten?`,
-			confirmText: "Slett",
+			title: t("dialog.deleteLocationTitle"),
+			body: t("dialog.deleteLocationBody", { name: location }),
+			confirmText: t("dialog.delete"),
 			danger: true,
 		});
 
@@ -161,9 +160,9 @@ async function removeGenre(event) {
 
 	if (genreIdx !== -1) {
 		const confirmed = await openDialog({
-			title: "Slette sjanger?",
-			body: `Vil du slette «${genre}» fra sjangerlisten?`,
-			confirmText: "Slett",
+			title: t("dialog.deleteGenreTitle"),
+			body: t("dialog.deleteGenreBody", { name: genre }),
+			confirmText: t("dialog.delete"),
 			danger: true,
 		});
 
@@ -206,7 +205,7 @@ async function saveImage(image) {
 	const errors = model.viewState.musicForm.errors;
 
 	if (file.size > 2 * 1024 * 1024) {
-		errors.coverImg = "Bildet er for stort. Maks 2 MB.";
+		errors.coverImg = "error.imageTooLarge";
 		image.value = "";
 		updateView();
 		focusFirstInvalid();
@@ -215,7 +214,7 @@ async function saveImage(image) {
 
 	const mime = await sniffImageType(file);
 	if (!mime) {
-		errors.coverImg = "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.";
+		errors.coverImg = "error.imageInvalid";
 		image.value = "";
 		updateView();
 		focusFirstInvalid();

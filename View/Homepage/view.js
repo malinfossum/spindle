@@ -4,13 +4,13 @@ function homeView() {
 	if (albums.length === 0) {
 		return /*HTML*/ `
         <div class="page-header">
-            <span class="page-title">Bibliotek</span>
-            <button class="btn btn-accent" onclick="changePage('addDetails')">+ Legg til album</button>
+            <span class="page-title">${t("library.title")}</span>
+            <button class="btn btn-accent" onclick="changePage('addDetails')">${t("music.addAlbum")}</button>
         </div>
 
         <div class="empty-state">
             <div class="empty-state-icon">🎵</div>
-            Ingen album ennå. Legg til ditt første!
+            ${t("library.empty")}
         </div>
         `;
 	}
@@ -19,8 +19,8 @@ function homeView() {
 
 	return /*HTML*/ `
     <div class="page-header">
-        <span class="page-title">Bibliotek (${albums.length})</span>
-        <button class="btn btn-accent" onclick="changePage('addDetails')">+ Legg til album</button>
+        <span class="page-title">${t("library.titleCount", { count: albums.length })}</span>
+        <button class="btn btn-accent" onclick="changePage('addDetails')">${t("music.addAlbum")}</button>
     </div>
 
     ${albumList}

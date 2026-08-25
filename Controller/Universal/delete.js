@@ -4,9 +4,9 @@ async function deleteAlbum(id) {
 	if (!album) return;
 
 	const confirmed = await openDialog({
-		title: "Slette album?",
-		body: `Vil du slette «${album.title}» fra biblioteket?`,
-		confirmText: "Slett",
+		title: t("dialog.deleteAlbumTitle"),
+		body: t("dialog.deleteAlbumBody", { title: album.title }),
+		confirmText: t("dialog.delete"),
 		danger: true,
 	});
 	if (!confirmed) return;

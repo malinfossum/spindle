@@ -9,7 +9,7 @@ function openDialog({
 	title,
 	body,
 	confirmText,
-	cancelText = "Avbryt",
+	cancelText = t("dialog.cancel"),
 	danger = false,
 }) {
 	return new Promise((resolve) => {

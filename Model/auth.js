@@ -173,13 +173,12 @@ async function decryptLibrary(encryptKey, ivBytes, ciphertextBytes) {
 
 function validatePassword(password) {
 	if (password.length < MIN_PASSWORD_LENGTH) {
-		return { ok: false, error: "Passordet må være minst 8 tegn." };
+		return { ok: false, error: "error.passwordTooShort" };
 	}
 	if (WEAK_PASSWORDS.includes(password.toLowerCase())) {
 		return {
 			ok: false,
-			error:
-				"Velg et sterkere passord — dette er på vår liste over svake passord.",
+			error: "error.passwordWeak",
 		};
 	}
 	return { ok: true, error: "" };

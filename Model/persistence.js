@@ -114,8 +114,7 @@ async function actuallyPersist() {
 		if (err.name === "QuotaExceededError" || err.code === 22) {
 			model.app.storageQuotaExceeded = true;
 		} else {
-			model.app.storageError =
-				"Endringen din kunne ikke lagres. Eksporter dataen din snart for å unngå å miste den.";
+			model.app.storageError = "storage.saveFailed";
 		}
 	}
 
@@ -160,8 +159,7 @@ function formatBytes(bytes) {
 	// Web Crypto needs a secure context (https / localhost). Without it we can
 	// neither encrypt nor decrypt, so stop here and explain via the storage banner.
 	if (!isCryptoAvailable()) {
-		model.app.storageError =
-			"Spindle krever HTTPS eller Live Server for kryptering. Åpne via VS Code Live Server, ikke direkte fra fil-systemet.";
+		model.app.storageError = "storage.needsHttps";
 		console.warn(
 			"[persistence] Web Crypto unavailable — needs a secure context.",
 		);
@@ -176,8 +174,7 @@ function formatBytes(bytes) {
 
 	const state = loadState();
 	if (state.kind === "error") {
-		model.app.storageError =
-			"Lagret bibliotek er skadet — opprett et nytt eller importer en sikkerhetskopi (kommer i v0.1 task J).";
+		model.app.storageError = "storage.corrupt";
 	}
 
 	// Everyone lands on the welcome page; it offers both "Create library" and

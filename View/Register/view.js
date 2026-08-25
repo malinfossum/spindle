@@ -9,31 +9,31 @@ function registerPage() {
 	return /*HTML*/ `
     <div class="auth-wrapper">
         <div class="auth-card">
-            <div class="auth-title">Opprett bibliotek</div>
+            <div class="auth-title">${t("auth.createTitle")}</div>
 
             ${
 							model.app.authMessage
-								? `<p class="auth-error" role="alert">${escapeHtml(model.app.authMessage)}</p>`
+								? `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`
 								: ""
 						}
 
             <form onsubmit="event.preventDefault(); register()">
                 <div class="form-row">
-                    <label class="form-label" for="register-username">Brukernavn</label>
+                    <label class="form-label" for="register-username">${t("auth.username")}</label>
                     <input class="form-input"
                            id="register-username"
                            type="text"
                            autocomplete="username"
-                           placeholder="Velg brukernavn"
+                           placeholder="${t("auth.usernamePlaceholder")}"
                            aria-invalid="${errors.username ? "true" : "false"}"
                            aria-describedby="register-username-error"
                            value="${escapeHtml(model.viewState.createProfile.username)}"
                            oninput="model.viewState.createProfile.username = this.value; clearFieldError(this, 'createProfile', 'username')">
-                    <span class="field-error" id="register-username-error">${escapeHtml(errors.username)}</span>
+                    <span class="field-error" id="register-username-error">${escapeHtml(t(errors.username))}</span>
                 </div>
 
                 <div class="form-row">
-                    <label class="form-label" for="register-password">Passord</label>
+                    <label class="form-label" for="register-password">${t("auth.password")}</label>
                     <input class="form-input"
                            id="register-password"
                            type="password"
@@ -43,14 +43,14 @@ function registerPage() {
                            aria-describedby="register-password-error password-strength-text"
                            value="${escapeHtml(model.viewState.createProfile.password)}"
                            oninput="model.viewState.createProfile.password = this.value; renderStrength(this.value, 'password-strength-bar'); clearFieldError(this, 'createProfile', 'password')">
-                    <span class="field-error" id="register-password-error">${escapeHtml(errors.password)}</span>
+                    <span class="field-error" id="register-password-error">${escapeHtml(t(errors.password))}</span>
                     <div id="password-strength-bar" class="strength-bar" aria-hidden="true">${bars}</div>
-                    <span class="visually-hidden" id="password-strength-text" aria-live="polite">Passordstyrke: ${strength} av 4</span>
-                    <p class="form-hint">Minst 8 tegn. Husk passordet — biblioteket kan ikke gjenopprettes uten det.</p>
+                    <span class="visually-hidden" id="password-strength-text" aria-live="polite">${t("auth.strength", { level: strength })}</span>
+                    <p class="form-hint">${t("auth.passwordHint")}</p>
                 </div>
 
                 <div class="form-row">
-                    <label class="form-label" for="register-repeat">Gjenta passord</label>
+                    <label class="form-label" for="register-repeat">${t("auth.repeatPassword")}</label>
                     <input class="form-input"
                            id="register-repeat"
                            type="password"
@@ -60,23 +60,23 @@ function registerPage() {
                            aria-describedby="register-repeat-error"
                            value="${escapeHtml(model.viewState.createProfile.repeatPassword)}"
                            oninput="model.viewState.createProfile.repeatPassword = this.value; clearFieldError(this, 'createProfile', 'repeatPassword')">
-                    <span class="field-error" id="register-repeat-error">${escapeHtml(errors.repeatPassword)}</span>
+                    <span class="field-error" id="register-repeat-error">${escapeHtml(t(errors.repeatPassword))}</span>
                 </div>
 
                 <button class="btn btn-accent btn-full"
                         type="submit"
                         ${busy ? 'disabled aria-busy="true"' : 'aria-busy="false"'}>
-                    ${busy ? "Oppretter…" : "Opprett"}
+                    ${busy ? t("auth.creating") : t("auth.create")}
                 </button>
             </form>
 
             <p class="auth-footer">
-                Har du allerede et bibliotek?
-                <a href="#" onclick="changePage('login')">Logg inn</a>
+                ${t("auth.haveLibrary")}
+                <a href="#" onclick="changePage('login')">${t("auth.login")}</a>
             </p>
 
             <p class="auth-footer">
-                <a href="#" onclick="changePage('welcome')">← Tilbake til start</a>
+                <a href="#" onclick="changePage('welcome')">${t("auth.backToStart")}</a>
             </p>
         </div>
     </div>

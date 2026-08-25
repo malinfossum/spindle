@@ -14,14 +14,14 @@ function welcomePage() {
         <button class="btn btn-full ${hasLibrary ? "" : "btn-accent"}"
                 type="button"
                 onclick="changePage('register')">
-            Opprett bibliotek
+            ${t("welcome.createLibrary")}
         </button>`;
 
 	const loginBtn = /*HTML*/ `
         <button class="btn btn-full ${hasLibrary ? "btn-accent" : ""}"
                 type="button"
                 onclick="changePage('login')">
-            Logg inn
+            ${t("welcome.login")}
         </button>`;
 
 	const actions = hasLibrary ? loginBtn + createBtn : createBtn + loginBtn;
@@ -29,15 +29,11 @@ function welcomePage() {
 	return /*HTML*/ `
     <section class="welcome" aria-labelledby="welcome-heading">
         <div class="welcome-top">
-            <div class="welcome-lang" role="group" aria-label="Språk – flere språk kommer senere">
-                <button class="lang-opt is-active" type="button" aria-pressed="true" disabled>NO</button>
-                <button class="lang-opt" type="button" aria-pressed="false" disabled
-                        title="Engelsk kommer senere">EN</button>
-            </div>
+            ${langSwitcher("welcome-lang")}
             <button class="btn-theme welcome-theme"
                     type="button"
                     onclick="toggleTheme()"
-                    aria-label="Bytt tema (mørkt eller lyst)">${themeIcon}</button>
+                    aria-label="${t("nav.themeToggle")}">${themeIcon}</button>
         </div>
 
         <div class="welcome-vinyl" aria-hidden="true">
@@ -47,7 +43,7 @@ function welcomePage() {
         <div class="welcome-card">
             <h1 class="welcome-brand" id="welcome-heading">Spindle</h1>
             <p class="welcome-tagline">
-                Ditt fysiske musikkbibliotek — trygt lagret på din egen enhet.
+                ${t("welcome.tagline")}
             </p>
 
             <div class="welcome-actions">
@@ -55,12 +51,12 @@ function welcomePage() {
             </div>
 
             <button class="link-btn welcome-about" type="button" onclick="changePage('about')">
-                Om Spindle
+                ${t("welcome.about")}
             </button>
         </div>
 
         <p class="welcome-footer">
-            Bygget av Malin Fossum. Opprinnelig et lagprosjekt med Henry Elendheim.
+            ${t("welcome.credit")}
         </p>
     </section>
     `;

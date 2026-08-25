@@ -76,7 +76,7 @@ async function login() {
 
 	const password = model.viewState.login.password;
 	if (!password) {
-		model.viewState.login.errors = { password: "Fyll inn passord." };
+		model.viewState.login.errors = { password: "error.fillPassword" };
 		clearAuthMessage();
 		updateView();
 		focusFirstInvalid();
@@ -88,7 +88,7 @@ async function login() {
 
 	const result = readEnvelope();
 	if (!result || !result.ok) {
-		setAuthMessage("Ingen bibliotek funnet. Opprett ett først.");
+		setAuthMessage("error.noLibraryFound");
 		updateView();
 		return;
 	}
@@ -109,7 +109,7 @@ async function login() {
 		if (!constantTimeEqual(computedHmac, verifyHmacBytes)) {
 			zeroKeys();
 			model.app.authBusy = false;
-			model.viewState.login.errors = { password: "Feil passord." };
+			model.viewState.login.errors = { password: "error.wrongPassword" };
 			updateView();
 			focusFirstInvalid();
 			return;
@@ -122,7 +122,7 @@ async function login() {
 			console.error("[auth] decrypt failed:", err);
 			zeroKeys();
 			model.app.authBusy = false;
-			model.viewState.login.errors = { password: "Feil passord." };
+			model.viewState.login.errors = { password: "error.wrongPassword" };
 			updateView();
 			focusFirstInvalid();
 			return;
@@ -144,7 +144,7 @@ async function login() {
 		console.error("[login] failed:", err);
 		zeroKeys();
 		model.app.authBusy = false;
-		setAuthMessage("En uventet feil oppsto. Prøv igjen.");
+		setAuthMessage("error.unexpected");
 		updateView();
 	}
 }
@@ -204,13 +204,17 @@ function syncNavbar() {
 	const profileDesktop = document.getElementById("nav-profile-desktop");
 	const profileMobile = document.getElementById("nav-profile-mobile");
 
-	if (loginDesktop) loginDesktop.textContent = user ? "Logg ut" : "Logg inn";
-	if (loginMobile) loginMobile.textContent = user ? "Logg ut" : "Logg inn";
+	const loginLabel = t(user ? "nav.logout" : "nav.login");
+	if (loginDesktop) loginDesktop.textContent = loginLabel;
+	if (loginMobile) loginMobile.textContent = loginLabel;
 
+	const profileLabel = t("nav.profile");
 	if (profileDesktop) {
+		profileDesktop.textContent = profileLabel;
 		profileDesktop.style.display = user ? "inline-flex" : "none";
 	}
 	if (profileMobile) {
+		profileMobile.textContent = profileLabel;
 		profileMobile.style.display = user ? "inline-flex" : "none";
 	}
 }

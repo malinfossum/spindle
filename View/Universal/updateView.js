@@ -16,33 +16,36 @@ function updateView() {
 	model.app.app.innerHTML = html;
 	syncNavbar();
 	syncChrome();
+	// The navbar and footer live outside #app, so the re-render above never
+	// reaches them. Re-apply the current language to that static chrome here so
+	// it can't drift out of sync with the page.
+	applyStaticText();
 }
 
 function storageBanner() {
 	if (model.app.storageUnavailable) {
 		return /*HTML*/ `
         <div class="storage-banner storage-banner-error" role="alert">
-            Nettleseren har deaktivert lagring for dette nettstedet. Endringer blir ikke lagret.
-            Aktiver lagring i nettleserinnstillingene og last inn på nytt.
+            ${t("storage.unavailable")}
         </div>`;
 	}
 	if (model.app.storageQuotaExceeded) {
 		return /*HTML*/ `
         <div class="storage-banner storage-banner-error" role="alert">
-            Lagringen er full. Eksporter biblioteket ditt, og slett deretter gamle coverbilder eller album.
+            ${t("storage.quotaExceeded")}
         </div>`;
 	}
 	if (model.app.storageError) {
 		return /*HTML*/ `
         <div class="storage-banner storage-banner-error" role="alert">
-            ${model.app.storageError}
+            ${t(model.app.storageError)}
         </div>`;
 	}
 	const storage = model.app.storage;
 	if (storage && storage.percent >= 80) {
 		return /*HTML*/ `
         <div class="storage-banner storage-banner-warn" role="status">
-            Lagringen er ${storage.percent}% full. Vurder å slette eller eksportere snart.
+            ${t("storage.warn", { percent: storage.percent })}
         </div>`;
 	}
 	return "";

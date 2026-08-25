@@ -7,19 +7,19 @@ async function register() {
 
 	const errors = { username: "", password: "", repeatPassword: "" };
 
-	if (!username) errors.username = "Fyll inn brukernavn.";
+	if (!username) errors.username = "error.fillUsername";
 
 	if (!password) {
-		errors.password = "Fyll inn passord.";
+		errors.password = "error.fillPassword";
 	} else {
 		const check = validatePassword(password);
 		if (!check.ok) errors.password = check.error;
 	}
 
 	if (!repeatPassword) {
-		errors.repeatPassword = "Gjenta passordet.";
+		errors.repeatPassword = "error.repeatPassword";
 	} else if (password && password !== repeatPassword) {
-		errors.repeatPassword = "Passordene er ikke like.";
+		errors.repeatPassword = "error.passwordsDiffer";
 	}
 
 	if (errors.username || errors.password || errors.repeatPassword) {
@@ -45,7 +45,7 @@ async function register() {
 		if (localStorage.getItem(STORAGE_KEY)) {
 			model.app.authBusy = false;
 			setAuthMessage(
-				"Et bibliotek ble opprettet i en annen fane — last inn siden på nytt og logg inn.",
+				"error.libraryInOtherTab",
 			);
 			updateView();
 			return;
@@ -56,8 +56,7 @@ async function register() {
 
 		const newData = {
 			user: { username },
-			genre: ["Rock", "Jazz", "Country", "Pop", "EDM", "Diverse Sjangere"],
-			location: ["Stue", "Loft", "Boden", "Butikk"],
+			...seedData(),
 			musicInfo: [
 				{
 					id: 1,
@@ -120,7 +119,7 @@ async function register() {
 		if (localStorage.getItem(STORAGE_KEY)) {
 			model.app.authBusy = false;
 			setAuthMessage(
-				"Et bibliotek ble opprettet i en annen fane — last inn siden på nytt og logg inn.",
+				"error.libraryInOtherTab",
 			);
 			updateView();
 			return;
@@ -154,8 +153,8 @@ async function register() {
 		model.app.authBusy = false;
 		setAuthMessage(
 			err.name === "QuotaExceededError"
-				? "Ikke nok plass — frigjør lagring og prøv igjen."
-				: "En uventet feil oppsto. Prøv igjen.",
+				? "error.noSpace"
+				: "error.unexpected",
 		);
 		updateView();
 	}

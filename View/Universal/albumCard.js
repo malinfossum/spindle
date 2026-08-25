@@ -3,7 +3,7 @@ function createAlbumCard(album) {
 	const location =
 		album.location.map((i) => model.data.location[i]).join(", ") || "—";
 	const albumCover = album.coverImg
-		? /*HTML*/ `<img src="${escapeHtml(album.coverImg)}" alt="Cover">`
+		? /*HTML*/ `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
 		: "🎵";
 
 	return /*HTML*/ `
@@ -17,13 +17,13 @@ function createAlbumCard(album) {
                 <span class="tag">${escapeHtml(genre)}</span>
                 <span class="tag">📍 ${escapeHtml(location)}</span>
                 <span class="tag">📅 ${album.releaseYear || "—"}</span>
-                ${album.wishlist ? '<span class="tag">⭐ Ønskeliste</span>' : ""}
+                ${album.wishlist ? `<span class="tag">⭐ ${t("music.wishlist")}</span>` : ""}
             </div>
         </div>
 
         <div class="album-actions">
-            <button class="btn btn-ghost" onclick="event.stopPropagation(); viewMusicDetails(${album.id})">Se</button>
-            <button class="btn btn-danger" onclick="event.stopPropagation(); deleteAlbum(${album.id})">Slett</button>
+            <button class="btn btn-ghost" onclick="event.stopPropagation(); viewMusicDetails(${album.id})">${t("music.view")}</button>
+            <button class="btn btn-danger" onclick="event.stopPropagation(); deleteAlbum(${album.id})">${t("music.delete")}</button>
         </div>
     </div>
     `;
