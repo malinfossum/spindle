@@ -29,6 +29,12 @@ function storageBanner() {
             ${t("storage.unavailable")}
         </div>`;
 	}
+	if (model.app.libraryStale) {
+		return /*HTML*/ `
+        <div class="storage-banner storage-banner-error" role="alert">
+            ${t("storage.otherTab")}
+        </div>`;
+	}
 	if (model.app.storageQuotaExceeded) {
 		return /*HTML*/ `
         <div class="storage-banner storage-banner-error" role="alert">

@@ -111,6 +111,9 @@ function persistState() {
 
 async function actuallyPersist() {
 	if (!model.app.crypto.unlocked) return;
+	// Another tab owns the stored library now — see Controller/Universal/storageSync.js.
+	// Writing our copy over it would erase whatever that tab has done since.
+	if (model.app.libraryStale) return;
 
 	const encryptKey = model.app.crypto.encryptKey;
 	const kdfSaltB64 = model.app.crypto.kdfSaltB64;
@@ -119,7 +122,8 @@ async function actuallyPersist() {
 
 	try {
 		const { iv, ciphertext } = await encryptLibrary(encryptKey, plaintext);
-		if (!model.app.crypto.unlocked) return; // logged out mid-encrypt
+		// Logged out, or another tab saved, while we were encrypting.
+		if (!model.app.crypto.unlocked || model.app.libraryStale) return;
 
 		const envelope = {
 			schemaVersion: SCHEMA_VERSION,

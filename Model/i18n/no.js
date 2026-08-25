@@ -150,6 +150,8 @@ const STRINGS_NO = {
 		"Spindle krever HTTPS eller Live Server for kryptering. Åpne via VS Code Live Server, ikke direkte fra fil-systemet.",
 	"storage.corrupt":
 		"Lagret bibliotek er skadet — gjenopprett fra en sikkerhetskopi, eller opprett et nytt bibliotek.",
+	"storage.otherTab":
+		"Biblioteket ble endret i en annen fane. Endringene dine lagres ikke lenger her — last inn siden på nytt for å fortsette.",
 	"storage.tooNew":
 		"Det lagrede biblioteket ble laget av en nyere versjon av Spindle. Oppdater til nyeste versjon før du fortsetter.",
 

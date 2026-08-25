@@ -2,7 +2,7 @@
 
 A local music library for organizing physical LP and CD collections, built in vanilla JavaScript.
 
-**Status:** v0.1 in progress. Remaining for v0.1: multi-tab safety and an unknown-route view.
+**Status:** v0.1 in progress. Remaining for v0.1: an unknown-route view.
 
 ## Run locally
 
@@ -32,7 +32,6 @@ Spindle needs a secure context for encryption — opening `index.html` directly 
 
 ## Roadmap
 
-- Multi-tab safety
 - Hash routing, so pages are linkable and the back button works
 
 ## Privacy
@@ -41,7 +40,7 @@ Your library lives on your device. Spindle does not send any data to a server, d
 
 Your library is encrypted at rest with a key derived from your password using PBKDF2 (600,000 iterations, SHA-256) and HKDF. Without your password the data cannot be read — there is no password reset. Export a backup regularly: **Profile → Backup**, or the backup panel on the welcome screen if you are locked out. The encrypted backup opens only with the password it was created with.
 
-Spindle is designed for one browser tab at a time. Don't run it in two tabs at once on the same device until v0.2 — concurrent edits can overwrite each other.
+Spindle is designed for one browser tab at a time. If you do open a second one, the tab that falls behind notices, stops saving and asks you to reload — so two tabs can no longer quietly overwrite each other. Language and theme changes follow along between tabs immediately.
 
 ## Credits
 

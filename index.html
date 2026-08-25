@@ -105,6 +105,7 @@
     <script src="Controller/Universal/delete.js"></script>
     <script src="Controller/Universal/navbar&Mobile.js"></script>
     <script src="Controller/Universal/save.js"></script>
+    <script src="Controller/Universal/storageSync.js"></script>
     <script src="Controller/Universal/viewMusicDetails.js"></script>
 
     <script>
@@ -128,6 +129,13 @@
             });
         }
 
+        // Applies whatever spindle:v1:prefs holds right now. Used at boot, and
+        // again when another tab changes the theme (task N).
+        function applyStoredTheme() {
+            document.documentElement.setAttribute('data-theme', getPref('theme'));
+            applyTheme();
+        }
+
         function toggleTheme() {
             const next = currentTheme() === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', next);
@@ -137,9 +145,8 @@
 
         // First render runs here — after every view + controller script has loaded —
         // so updateView() can safely call syncNavbar() and syncChrome().
-        document.documentElement.setAttribute('data-theme', getPref('theme'));
+        applyStoredTheme();
         applyLang();
-        applyTheme();
         updateView();
     </script>
 </body>

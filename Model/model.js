@@ -41,6 +41,10 @@ const model = {
 		// render time like every other message on the model.
 		backupMessage: { key: "", tone: "info" },
 
+		// Set when another tab re-encrypted the library: this tab is holding a
+		// stale copy, so it stops saving rather than overwrite the other tab.
+		libraryStale: false,
+
 		storageUnavailable: false,
 		storageQuotaExceeded: false,
 		storageError: "",

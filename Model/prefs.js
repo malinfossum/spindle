@@ -61,6 +61,14 @@ function readPrefs() {
 	return prefsCache;
 }
 
+// Another tab wrote to spindle:v1:prefs. Drop the mirror so the next read comes
+// from storage — without this the stale cached language or theme would win.
+// When localStorage is unavailable the cache IS the store, but then no storage
+// event can reach us either, so there is nothing to invalidate.
+function invalidatePrefsCache() {
+	prefsCache = null;
+}
+
 function getPref(name) {
 	return readPrefs()[name];
 }

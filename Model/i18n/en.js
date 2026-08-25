@@ -144,6 +144,8 @@ const STRINGS_EN = {
 		"Spindle needs HTTPS or Live Server for encryption. Open it through VS Code Live Server, not straight from the file system.",
 	"storage.corrupt":
 		"The stored library is damaged — restore from a backup, or create a new library.",
+	"storage.otherTab":
+		"The library was changed in another tab. Your changes are no longer saved here — reload the page to continue.",
 	"storage.tooNew":
 		"The stored library was created by a newer version of Spindle. Update to the latest version before continuing.",
 
