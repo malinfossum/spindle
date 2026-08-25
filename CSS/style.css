@@ -160,7 +160,14 @@ body {
 	border: 1px solid var(--border) !important;
 	color: var(--text-muted) !important;
 	font-size: 1rem !important;
-	padding: 0.3rem 0.55rem !important;
+	/* Same 44x44 minimum as .lang-opt — it sits directly beside the language
+	   switcher on the welcome page, so it has to match both in size and in reach. */
+	padding: 0 !important;
+	min-width: 44px;
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	border-radius: 6px;
 	cursor: pointer;
 	flex-shrink: 0;
@@ -1225,7 +1232,17 @@ body.chrome-hidden > footer {
 	font-family: inherit;
 	font-size: 0.75rem;
 	font-weight: 600;
-	padding: 0.3rem 0.55rem;
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px, roughly a fingertip. These
+	   two options sit edge to edge, so the usual trick — an invisible, expanded hit
+	   area on a pseudo-element — is not available: the two areas would overlap and
+	   part of the visible NO button would activate EN. A segmented control has to
+	   be genuinely big enough. */
+	min-width: 44px;
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 0.55rem;
 	cursor: pointer;
 }
 
@@ -1331,6 +1348,12 @@ body.chrome-hidden > footer {
 	font-size: 0.85rem;
 	color: var(--text);
 	text-align: center;
+	/* A bare <summary> is only as tall as its line box — 18px here, which misses
+	   even the 24x24 of WCAG 2.5.8 (Minimum, AA). Padding rather than a flex box:
+	   display:flex would drop the disclosure triangle in Chrome, and the triangle
+	   is the only thing saying this row opens. */
+	min-height: 44px;
+	padding: 0.8rem 0.5rem;
 }
 
 .welcome-backup > summary:focus-visible {
@@ -1435,6 +1458,37 @@ body.chrome-hidden > footer {
 }
 
 /* Respect reduced-motion: stop the vinyl from spinning. */
+/* ============================================================
+   NOT FOUND  (task O)
+   ============================================================ */
+
+.notfound {
+	text-align: center;
+	padding: 3rem 1rem;
+}
+
+.notfound-icon {
+	font-size: 2.5rem;
+	margin-bottom: 0.75rem;
+}
+
+.notfound-title {
+	font-size: 1.4rem;
+	font-weight: 700;
+	margin-bottom: 0.6rem;
+}
+
+.notfound-body {
+	max-width: 34rem;
+	/* Not --text-muted: on the light theme that grey lands at roughly 4.3:1 over
+	   --bg, just under AA, and this paragraph is the whole explanation. */
+	margin: 0 auto 1.5rem;
+	color: var(--text);
+	opacity: 0.85;
+	font-size: 0.95rem;
+	line-height: 1.5;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.vinyl-spin {
 		animation: none;

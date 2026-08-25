@@ -12,6 +12,9 @@ function updateView() {
 	else if (model.app.currentPage == "login") html += loginPage();
 	else if (model.app.currentPage == "register") html += registerPage();
 	else if (model.app.currentPage == "about") html += aboutPage();
+	// Catch-all, not just the "notFound" page itself: a page name that reaches
+	// here without a branch would otherwise render as an empty content area.
+	else html += notFoundPage();
 
 	model.app.app.innerHTML = html;
 	syncNavbar();
@@ -58,7 +61,15 @@ function storageBanner() {
 }
 
 function changePage(element) {
-	const publicPages = ["welcome", "login", "register", "about"];
+	const publicPages = ["welcome", "login", "register", "about", "notFound"];
+
+	// changePage() used to trust its argument, so a typo in an onclick handler
+	// set currentPage to a name nothing renders. Unknown names land on the
+	// not-found view instead of a blank page.
+	if (!model.app.allPages.includes(element)) {
+		console.warn(`[router] unknown page: ${element}`);
+		element = "notFound";
+	}
 
 	if (!isLoggedIn() && !publicPages.includes(element)) {
 		model.app.currentPage = "welcome";

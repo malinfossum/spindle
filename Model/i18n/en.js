@@ -149,6 +149,13 @@ const STRINGS_EN = {
 	"storage.tooNew":
 		"The stored library was created by a newer version of Spindle. Update to the latest version before continuing.",
 
+	// ---- Unknown route ------------------------------------------------------
+	"notFound.title": "Page not found",
+	"notFound.body":
+		"The page you tried to open does not exist. It may have been removed, or the link may be wrong.",
+	"notFound.backLibrary": "Back to your library",
+	"notFound.backWelcome": "Back to the start page",
+
 	// ---- Backup: export / import --------------------------------------------
 	"backup.title": "Backup",
 	"backup.export": "Encrypted copy",

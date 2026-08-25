@@ -13,6 +13,7 @@ const model = {
 			"login",
 			"register",
 			"about",
+			"notFound",
 		],
 
 		currentPage: "welcome",

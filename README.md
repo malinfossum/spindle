@@ -2,7 +2,7 @@
 
 A local music library for organizing physical LP and CD collections, built in vanilla JavaScript.
 
-**Status:** v0.1 in progress. Remaining for v0.1: an unknown-route view.
+**Status:** v0.1 feature-complete — every task planned for v0.1 has shipped. Next is v0.2: a build step and hash routing.
 
 ## Run locally
 

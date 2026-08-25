@@ -155,6 +155,13 @@ const STRINGS_NO = {
 	"storage.tooNew":
 		"Det lagrede biblioteket ble laget av en nyere versjon av Spindle. Oppdater til nyeste versjon før du fortsetter.",
 
+	// ---- Unknown route ------------------------------------------------------
+	"notFound.title": "Fant ikke siden",
+	"notFound.body":
+		"Siden du prøvde å åpne finnes ikke. Den kan ha blitt fjernet, eller lenken kan være feil.",
+	"notFound.backLibrary": "Til biblioteket",
+	"notFound.backWelcome": "Til startsiden",
+
 	// ---- Backup: export / import --------------------------------------------
 	"backup.title": "Sikkerhetskopi",
 	"backup.export": "Kryptert kopi",

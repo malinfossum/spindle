@@ -23,6 +23,11 @@ function toggleMobileMenu() {
 // flips a body class; CSS owns the actual hiding.
 function syncChrome() {
 	const loggedOutPages = ["welcome", "login", "register", "about"];
-	const hideChrome = loggedOutPages.includes(model.app.currentPage);
+	// The not-found view is reachable from both sides: keep the chrome hidden in
+	// the logged-out flow, and visible inside the app where the navbar is the way
+	// back out.
+	const hideChrome =
+		loggedOutPages.includes(model.app.currentPage) ||
+		(model.app.currentPage === "notFound" && !isLoggedIn());
 	document.body.classList.toggle("chrome-hidden", hideChrome);
 }
