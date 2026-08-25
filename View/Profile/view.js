@@ -54,6 +54,7 @@ function profilePage() {
 	// decrypted library, so it needs a library that is already unlocked.
 	const settingsBlock = /*HTML*/ `
         <div class="profile-settings">
+            <h2 class="profile-settings-heading">${t("profile.settings")}</h2>
             <div class="profile-settings-row">
                 <span class="profile-settings-label" id="profile-language-label">${t("profile.language")}</span>
                 ${langSwitcher("", "profile-language-label")}

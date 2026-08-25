@@ -1025,9 +1025,12 @@ footer {
 	flex-wrap: wrap;
 }
 
-.profile-settings-label {
+.profile-settings-label,
+.backup-label {
 	font-size: 0.85rem;
-	color: var(--text-muted);
+	/* Full contrast rather than --text-muted, which is only 4.48:1 on the light
+	   theme. These labels name controls that erase or expose a library. */
+	color: var(--text);
 }
 
 /* ── Backup: export / import (task J) ──
@@ -1041,13 +1044,6 @@ footer {
 	gap: 1rem;
 	flex-wrap: wrap;
 	margin-top: 0.9rem;
-}
-
-.backup-label {
-	font-size: 0.85rem;
-	/* Full-contrast rather than --text-muted: these labels sit next to hints that
-	   carry real consequences, and muted grey only just clears AA on light. */
-	color: var(--text);
 }
 
 .backup-hint {
@@ -1126,6 +1122,14 @@ footer {
 	font-size: 0.95rem;
 	font-weight: 600;
 	color: var(--text);
+}
+
+/* The panel opens with one of these, and each later section is separated by
+   the rule above it — so the first heading drops the divider. */
+.profile-settings-heading:first-child {
+	margin-top: 0;
+	padding-top: 0;
+	border-top: none;
 }
 
 /* ============================================================
