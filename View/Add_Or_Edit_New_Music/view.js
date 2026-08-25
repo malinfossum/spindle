@@ -143,8 +143,9 @@ function buildMusicForm(isEdit) {
         </div>
 
         <div class="form-row">
-            <label class="form-label">${t("music.year")}</label>
+            <label class="form-label" for="music-year">${t("music.year")}</label>
             <input class="form-input"
+                   id="music-year"
                    type="number"
                    placeholder="${t("music.yearPlaceholder")}"
                    value="${info.releaseYear || ""}"
@@ -198,8 +199,9 @@ function buildMusicForm(isEdit) {
         </div>
 
         <div class="form-row">
-            <label class="form-label">${t("music.notes")}</label>
+            <label class="form-label" for="music-notes">${t("music.notes")}</label>
             <textarea class="form-textarea"
+                      id="music-notes"
                       placeholder="${t("music.notesPlaceholder")}"
                       oninput="model.viewState.musicInfo.notes = this.value">${escapeHtml(info.notes)}</textarea>
         </div>
