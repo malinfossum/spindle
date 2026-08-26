@@ -1,10 +1,11 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
+import { isLoggedIn } from "../../Model/selectors.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
 import { changePage, updateView } from "../../View/Universal/updateView.js";
-import { clearAuthMessage, focusFirstInvalid, isLoggedIn } from "../Login/login.js";
+import { clearAuthMessage, focusFirstInvalid } from "../Login/login.js";
 
 export function toggleLocationCheckbox(checkbox, index) {
 	const locations = model.viewState.musicInfo.location;

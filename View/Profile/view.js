@@ -1,7 +1,7 @@
-import { getLoggedInUser, getProfileAlbums } from "../../Controller/Login/login.js";
 import { langSwitcher, t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { formatBytes } from "../../Model/persistence.js";
+import { getLoggedInUser, getProfileAlbums } from "../../Model/selectors.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 

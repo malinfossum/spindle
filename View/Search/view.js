@@ -1,6 +1,6 @@
-import { getSearchResults } from "../../Controller/Search/search.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { getSearchResults } from "../../Model/selectors.js";
 import { createAlbumCard } from "../Universal/albumCard.js";
 import { escapeHtml } from "../Universal/escape.js";
 

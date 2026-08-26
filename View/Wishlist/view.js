@@ -1,5 +1,5 @@
-import { getAccessibleAlbums } from "../../Controller/Login/login.js";
 import { t } from "../../Model/i18n/i18n.js";
+import { getAccessibleAlbums } from "../../Model/selectors.js";
 import { createAlbumCard } from "../Universal/albumCard.js";
 
 export function wishListPage() {

@@ -10,8 +10,8 @@
 // Static content only — nothing user-entered is interpolated, so nothing needs
 // escaping.
 
-import { isLoggedIn } from "../../Controller/Login/login.js";
 import { t } from "../../Model/i18n/i18n.js";
+import { isLoggedIn } from "../../Model/selectors.js";
 
 export function notFoundPage() {
 	const loggedIn = isLoggedIn();

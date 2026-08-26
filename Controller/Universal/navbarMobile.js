@@ -1,5 +1,5 @@
 import { model } from "../../Model/model.js";
-import { isLoggedIn } from "../Login/login.js";
+import { isLoggedIn } from "../../Model/selectors.js";
 
 export function toggleMobileMenu() {
 	const menu = document.getElementById("mobile-menu");

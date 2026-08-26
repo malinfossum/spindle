@@ -9,24 +9,8 @@ import {
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { readEnvelope } from "../../Model/persistence.js";
+import { getLoggedInUser, isLoggedIn } from "../../Model/selectors.js";
 import { changePage, updateView } from "../../View/Universal/updateView.js";
-
-export function getLoggedInUser() {
-	return isLoggedIn() ? model.data.user : null;
-}
-
-export function isLoggedIn() {
-	return model.app.crypto.unlocked === true;
-}
-
-export function getAccessibleAlbums() {
-	if (!isLoggedIn()) return [];
-	return model.data.musicInfo;
-}
-
-export function getProfileAlbums() {
-	return getAccessibleAlbums();
-}
 
 export function clearAuthMessage() {
 	model.app.authMessage = "";

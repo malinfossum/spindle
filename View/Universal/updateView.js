@@ -4,7 +4,6 @@ import {
 } from "../../Controller/Edit_Music_Details/editMusic.js";
 import {
 	clearAuthMessage,
-	isLoggedIn,
 	resetAuthFieldErrors,
 	syncNavbar,
 } from "../../Controller/Login/login.js";
@@ -13,6 +12,7 @@ import { syncChrome } from "../../Controller/Universal/navbarMobile.js";
 import { applyStaticText, t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { QUOTA_WARN_PERCENT } from "../../Model/persistence.js";
+import { isLoggedIn } from "../../Model/selectors.js";
 import { aboutPage } from "../About/view.js";
 import { addDetailsPage, editDetailsPage } from "../Add_Or_Edit_New_Music/view.js";
 import { homeView } from "../Homepage/view.js";
