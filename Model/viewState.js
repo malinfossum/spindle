@@ -34,7 +34,7 @@ export function resetAuthFieldErrors() {
 	};
 }
 
-// Wipes the add/edit form's field errors. Called on navigation (changePage) so a
+// Wipes the add/edit form's field errors. Called on navigation so a
 // validation error from one visit never lingers into the next — the music-form
 // counterpart to resetAuthFieldErrors.
 export function resetMusicFieldErrors() {

@@ -1,5 +1,5 @@
 import { model } from "../../Model/model.js";
-import { changePage } from "./router.js";
+import { navigate } from "./router.js";
 
 export function viewMusicDetails(id) {
 	const album = model.data.musicInfo.find((a) => a.id === id);
@@ -12,5 +12,5 @@ export function viewMusicDetails(id) {
 		genre: [...album.genre],
 	};
 
-	changePage("viewDetails");
+	navigate("viewDetails");
 }

@@ -8,7 +8,7 @@
 // Arguments travel as data-* attributes next to the action name. They are
 // written by our own render functions, never by the user, and the two that
 // reach further into the app are validated where they land anyway:
-// changePage() checks against model.app.allPages, setLang() against LANGUAGES.
+// navigate() checks against model.app.allPages, setLang() against LANGUAGES.
 
 // The add/edit form's four chip panels. A lookup rather than reading the model
 // key straight out of the attribute, so markup can only reach these four flags.
@@ -40,7 +40,7 @@ import { register } from "../Register/register.js";
 import { exportEncryptedBackup, exportPlaintextBackup, importBackupFile } from "./backup.js";
 import { deleteAlbum } from "./delete.js";
 import { toggleMobileMenu } from "./navbarMobile.js";
-import { changePage } from "./router.js";
+import { navigate } from "./router.js";
 import { toggleWishlist } from "./save.js";
 import { toggleTheme } from "./theme.js";
 import { viewMusicDetails } from "./viewMusicDetails.js";
@@ -54,7 +54,7 @@ const FORM_PANELS = {
 
 const ACTIONS = {
 	// --- Navigation and chrome -------------------------------------------
-	nav: (_event, target) => changePage(target.dataset.page),
+	nav: (_event, target) => navigate(target.dataset.page),
 	"nav-login": () => handleLoginNavClick(),
 	"nav-profile": () => handleProfileNavClick(),
 	"toggle-menu": () => toggleMobileMenu(),

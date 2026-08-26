@@ -1,5 +1,5 @@
 import { model } from "../../Model/model.js";
-import { changePage } from "../Universal/router.js";
+import { navigate } from "../Universal/router.js";
 
 export function editAlbum(id) {
 	const album = model.data.musicInfo.find((a) => a.id === id);
@@ -12,5 +12,5 @@ export function editAlbum(id) {
 		genre: [...album.genre],
 	};
 
-	changePage("editDetails");
+	navigate("editDetails");
 }

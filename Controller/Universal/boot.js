@@ -12,12 +12,15 @@
 // would simply never be evaluated.
 
 import { applyLang } from "../../Model/i18n/i18n.js";
-import { updateView } from "../../View/Universal/updateView.js";
 import { initActions } from "./actions.js";
+import { initRouter } from "./router.js";
 import "./storageSync.js";
 import { applyStoredTheme } from "./theme.js";
 
 initActions();
 applyStoredTheme();
 applyLang();
-updateView();
+// Last, and it is what paints the first frame: the address bar decides which
+// page opens, so this used to be a bare updateView() on whatever currentPage
+// happened to start as.
+initRouter();

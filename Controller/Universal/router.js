@@ -1,4 +1,4 @@
-// Navigation (v0.2).
+// Routing (v0.2).
 //
 // changePage() lived in View/Universal/updateView.js, next to the function it
 // calls last. The module conversion showed the cost of that: a View file was
@@ -7,40 +7,151 @@
 // against auth state, seeds the add form and clears what the last page left
 // behind. That is behaviour, so it lives in the Controller.
 //
-// This is a move, not a rewrite: the body below is the one that shipped in v0.2.
+// v0.2 item 3 put a URL in front of it. The decision half is unchanged and now
+// lives in resolveRoute(); navigate() is the same entry point the app has always
+// called, with a fragment write in front of it, and initRouter() resolves
+// whatever the address bar already says so a pasted link opens on that page.
+//
+// Why navigate() renders instead of waiting for its own hashchange: that event
+// is queued, not synchronous, so a deferred render would make every one of the
+// 13 call sites asynchronous. backup.js is the proof — it calls navigate("login"),
+// then sets an auth message, then renders. With a deferred render it would render
+// the page it was leaving, and the late resolve would then wipe the message it
+// exists to show. So navigate() writes the URL and resolves in the same turn, and
+// the hashchange handler exists for the URL changes the app did not make: back,
+// forward, and a fragment typed into the address bar. Exactly one render per
+// navigation either way — see lastResolvedHash.
 //
 // router.js and editMusic.js import from each other — this file wants
-// initNewAlbum(), and editMusic.js wants changePage(). That cycle is safe only
+// initNewAlbum(), and editMusic.js wants navigate(). That cycle is safe only
 // because every cross-module call here happens inside a function body, long
 // after both modules have finished evaluating. A top-level call to an import
-// from the other side of the cycle would read undefined and break the app.
+// from the other side of the cycle would read undefined and break the app. The
+// addEventListener in initRouter() is not one: it is registered from boot.js,
+// and it calls nothing until an event arrives.
 
 import { model } from "../../Model/model.js";
-import { isLoggedIn } from "../../Model/selectors.js";
+import { hasSelectedAlbum, isLoggedIn } from "../../Model/selectors.js";
 import { resetTransientViewState } from "../../Model/viewState.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { initNewAlbum } from "../Edit_Music_Details/editMusic.js";
 
-export function changePage(element) {
-	// changePage() used to trust its argument, so a typo in an onclick handler
-	// set currentPage to a name nothing renders. Unknown names land on the
-	// not-found view instead of a blank page.
-	if (!model.app.allPages.includes(element)) {
-		console.warn(`[router] unknown page: ${element}`);
-		element = "notFound";
+// What an empty fragment means. `/` with no `#` is the same page the model's
+// currentPage starts on, so the two can't disagree about where the app opens.
+const DEFAULT_PAGE = "welcome";
+
+// The fragment the router last rendered. hashchange fires asynchronously, so the
+// echo of our own write arrives after navigate() has already resolved it; that
+// echo is the one case where location.hash still equals this. Comparing against
+// reality rather than counting suppressions means it cannot drift out of sync —
+// a missed or coalesced event costs nothing, because the next comparison is
+// still made against what the address bar actually says.
+let lastResolvedHash = null;
+
+// The only way the app should change pages. Writes the fragment, then resolves
+// it. Assigning location.hash a value it already holds fires no event and adds
+// no history entry, which is why the resolve below is unconditional: logout()
+// sends you to `login` from `login`, and deleteAlbum() re-enters `homePage` from
+// `homePage` to drop the row it just deleted. Both must still render.
+export function navigate(page) {
+	const target = `#${page}`;
+
+	if (window.location.hash !== target) {
+		window.location.hash = target;
 	}
 
-	if (!isLoggedIn() && !model.app.publicPages.includes(element)) {
+	resolveRoute(page);
+}
+
+// Called once, from boot.js, in place of the bare updateView() that used to end
+// it. Registers the listener first so nothing can be missed, then renders
+// whatever the URL already says — that single call is what makes a deep link work.
+export function initRouter() {
+	window.addEventListener("hashchange", onHashChange);
+	resolveRoute(readPage());
+}
+
+function onHashChange() {
+	// The echo of the router's own write, already rendered by navigate(). Two
+	// navigate() calls in one turn queue two of these, and both land here after
+	// the second one has settled the URL, so both are dropped.
+	if (window.location.hash === lastResolvedHash) return;
+
+	resolveRoute(readPage());
+}
+
+// The fragment as a page name. Everything after `#`, with no leading slash and
+// no second naming scheme: the names in model.app.allPages are the app's own
+// vocabulary, and a mapping table would be one more thing to keep in sync.
+function readPage() {
+	const raw = window.location.hash.slice(1);
+
+	if (!raw) return DEFAULT_PAGE;
+
+	try {
+		return decodeURIComponent(raw);
+	} catch {
+		// A malformed escape like `#%E0%A4%A` throws. The undecoded text is not a
+		// page name either, so it lands on the not-found view a line further down
+		// — which is the point of catching: an uncaught throw in a hashchange
+		// handler leaves the app frozen on the page it was showing.
+		return raw;
+	}
+}
+
+// The decision half, unchanged from the changePage() that shipped in v0.1 apart
+// from the two redirects, which now have to say so in the address bar.
+function resolveRoute(requested) {
+	let page = requested;
+
+	// changePage() used to trust its argument, so a typo in an onclick handler
+	// set currentPage to a name nothing renders. Unknown names land on the
+	// not-found view instead of a blank page — and keep their fragment, on
+	// purpose: someone who mistyped a URL needs to see what they typed. This is
+	// the opposite of the two redirects below, which do rewrite.
+	if (!model.app.allPages.includes(page)) {
+		console.warn(`[router] unknown page: ${page}`);
+		page = "notFound";
+	}
+
+	if (!isLoggedIn() && !model.app.publicPages.includes(page)) {
+		replaceFragment("welcome");
 		model.app.currentPage = "welcome";
-		updateView();
+		renderRoute();
 		return;
 	}
 
-	if (element === "addDetails") {
+	// viewDetails and editDetails render whichever album model.viewState holds,
+	// and a cold deep link has no selection — nothing identifies an album in the
+	// URL. Carrying an id there would mean giving albums stable public
+	// identifiers, which is a product decision nobody has made, so these two are
+	// routable by name and fall back to the library when entered without one.
+	// Known boundary, not an oversight.
+	if ((page === "viewDetails" || page === "editDetails") && !hasSelectedAlbum()) {
+		page = "homePage";
+		replaceFragment(page);
+	}
+
+	if (page === "addDetails") {
 		initNewAlbum();
 	}
 
-	model.app.currentPage = element;
+	model.app.currentPage = page;
 	resetTransientViewState();
+	renderRoute();
+}
+
+// Corrects the address bar without adding a history entry, and without firing
+// hashchange — replaceState does neither. Pushing here would trap the visitor:
+// Back would return to the URL that redirects, which would redirect forward
+// again, and the Back button would stop being a way out.
+function replaceFragment(page) {
+	window.history.replaceState(null, "", `#${page}`);
+}
+
+// Records what the address bar settled on before painting, so onHashChange can
+// tell the echo of our own write from a real back or forward.
+function renderRoute() {
+	lastResolvedHash = window.location.hash;
 	updateView();
 }

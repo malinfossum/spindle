@@ -24,7 +24,7 @@ import { setAuthMessage } from "../../Model/viewState.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { logout } from "../Login/login.js";
-import { changePage } from "./router.js";
+import { navigate } from "./router.js";
 
 const IMPORT_MAX_BYTES = 10 * 1024 * 1024;
 
@@ -169,8 +169,8 @@ export async function importBackupFile(input) {
 	model.app.storageQuotaExceeded = false;
 
 	logout();
-	changePage("login");
-	// After changePage, which clears it — the message has to survive the move.
+	navigate("login");
+	// After navigate, which clears it — the message has to survive the move.
 	setAuthMessage("backup.importDone");
 	updateView();
 }

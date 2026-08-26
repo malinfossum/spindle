@@ -7,7 +7,7 @@ import { openDialog } from "../../View/Universal/dialog.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { focusFirstInvalid } from "../Login/login.js";
-import { changePage } from "../Universal/router.js";
+import { navigate } from "../Universal/router.js";
 
 export function toggleLocationCheckbox(checkbox, index) {
 	const locations = model.viewState.musicInfo.location;
@@ -50,7 +50,7 @@ export function initNewAlbum() {
 
 export function submitChanges(isEdit) {
 	if (!isLoggedIn()) {
-		changePage("login");
+		navigate("login");
 		return;
 	}
 
@@ -95,7 +95,7 @@ export function submitChanges(isEdit) {
 	}
 
 	persistState();
-	changePage("homePage");
+	navigate("homePage");
 }
 
 export function newLocation(event) {

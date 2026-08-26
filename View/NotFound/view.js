@@ -8,7 +8,9 @@
 // than silently.
 //
 // Static content only — nothing user-entered is interpolated, so nothing needs
-// escaping.
+// escaping. That matters more since v0.2 item 3, because the router reaches this
+// view from a fragment the visitor typed and deliberately leaves that fragment in
+// the address bar. The bad name never leaves the console warning.
 
 import { t } from "../../Model/i18n/i18n.js";
 import { isLoggedIn } from "../../Model/selectors.js";

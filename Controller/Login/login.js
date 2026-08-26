@@ -11,7 +11,7 @@ import { readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
 import { updateView } from "../../View/Universal/updateView.js";
-import { changePage } from "../Universal/router.js";
+import { navigate } from "../Universal/router.js";
 
 function clearLoginForm() {
 	model.viewState.login = {
@@ -118,7 +118,7 @@ export async function login() {
 		model.app.authBusy = false;
 		clearAuthMessage();
 		clearLoginForm();
-		changePage("homePage");
+		navigate("homePage");
 	} catch (err) {
 		console.error("[login] failed:", err);
 		zeroKeys();
@@ -156,7 +156,7 @@ export function logout() {
 	model.viewState.searchBar = "";
 
 	clearAuthMessage();
-	changePage("welcome");
+	navigate("welcome");
 }
 
 export function handleLoginNavClick() {
@@ -164,13 +164,13 @@ export function handleLoginNavClick() {
 		logout();
 		return;
 	}
-	changePage("login");
+	navigate("login");
 }
 
 export function handleProfileNavClick() {
 	if (!isLoggedIn()) {
-		changePage("login");
+		navigate("login");
 		return;
 	}
-	changePage("profile");
+	navigate("profile");
 }

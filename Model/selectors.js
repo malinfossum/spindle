@@ -43,3 +43,12 @@ export function getSearchResults() {
 				.includes(query),
 	);
 }
+
+// True when viewState holds an album the two detail pages can actually render.
+// They read the current selection rather than an id from the URL, so the router
+// asks this before routing to one: a cold deep link, or a selection left
+// pointing at an album that has since been deleted, has nothing to show.
+export function hasSelectedAlbum() {
+	const id = model.viewState.musicInfo.id;
+	return id !== null && getAccessibleAlbums().some((album) => album.id === id);
+}

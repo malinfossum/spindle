@@ -13,7 +13,7 @@ import { SCHEMA_VERSION, STORAGE_KEY } from "../../Model/persistence.js";
 import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { clearRegisterForm, focusFirstInvalid } from "../Login/login.js";
-import { changePage } from "../Universal/router.js";
+import { navigate } from "../Universal/router.js";
 
 export async function register() {
 	if (model.app.authBusy) return;
@@ -153,7 +153,7 @@ export async function register() {
 		model.app.authBusy = false;
 		clearRegisterForm();
 		clearAuthMessage();
-		changePage("homePage");
+		navigate("homePage");
 	} catch (err) {
 		console.error("[register] failed:", err);
 		model.app.authBusy = false;
