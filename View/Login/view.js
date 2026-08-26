@@ -8,10 +8,10 @@ function loginPage() {
             <div class="auth-title">${t("auth.unlockTitle")}</div>
 
             ${
-							model.app.authMessage
-								? `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`
-								: ""
-						}
+				model.app.authMessage
+					? `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`
+					: ""
+			}
 
             <form data-action-submit="login">
                 <div class="form-row">

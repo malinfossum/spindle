@@ -44,9 +44,7 @@ async function register() {
 		// A library already exists (e.g. another tab created one) — don't clobber it.
 		if (localStorage.getItem(STORAGE_KEY)) {
 			model.app.authBusy = false;
-			setAuthMessage(
-				"error.libraryInOtherTab",
-			);
+			setAuthMessage("error.libraryInOtherTab");
 			updateView();
 			return;
 		}
@@ -65,8 +63,7 @@ async function register() {
 					location: [0],
 					releaseYear: 1969,
 					genre: [0],
-					notes:
-						"Released in 1969, recorded at EMI Studios on London's Abbey Road.",
+					notes: "Released in 1969, recorded at EMI Studios on London's Abbey Road.",
 					wishlist: false,
 					coverImg: null,
 				},
@@ -77,21 +74,18 @@ async function register() {
 					location: [2],
 					releaseYear: 1973,
 					genre: [0],
-					notes:
-						"Concept album exploring conflict, greed, time, and mental illness.",
+					notes: "Concept album exploring conflict, greed, time, and mental illness.",
 					wishlist: false,
 					coverImg: null,
 				},
 				{
 					id: 3,
-					title:
-						"The Rise and Fall of Ziggy Stardust and the Spiders from Mars",
+					title: "The Rise and Fall of Ziggy Stardust and the Spiders from Mars",
 					artist: "David Bowie",
 					location: [0],
 					releaseYear: 1972,
 					genre: [0],
-					notes:
-						"Loose concept album about a fictional androgynous rock star.",
+					notes: "Loose concept album about a fictional androgynous rock star.",
 					wishlist: false,
 					coverImg: null,
 				},
@@ -110,17 +104,12 @@ async function register() {
 		};
 
 		const verifyHmacBytes = await computeVerifyHmac(verifyKey);
-		const { iv, ciphertext } = await encryptLibrary(
-			encryptKey,
-			JSON.stringify(newData),
-		);
+		const { iv, ciphertext } = await encryptLibrary(encryptKey, JSON.stringify(newData));
 
 		// Re-check the race window between the first guard and this write.
 		if (localStorage.getItem(STORAGE_KEY)) {
 			model.app.authBusy = false;
-			setAuthMessage(
-				"error.libraryInOtherTab",
-			);
+			setAuthMessage("error.libraryInOtherTab");
 			updateView();
 			return;
 		}
@@ -151,11 +140,7 @@ async function register() {
 	} catch (err) {
 		console.error("[register] failed:", err);
 		model.app.authBusy = false;
-		setAuthMessage(
-			err.name === "QuotaExceededError"
-				? "error.noSpace"
-				: "error.unexpected",
-		);
+		setAuthMessage(err.name === "QuotaExceededError" ? "error.noSpace" : "error.unexpected");
 		updateView();
 	}
 }

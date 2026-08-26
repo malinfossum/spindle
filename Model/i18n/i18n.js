@@ -60,10 +60,7 @@ function setLang(lang) {
 // by a re-render: the lang attribute screen readers use to pick a voice, and
 // the static navbar/footer chrome in index.html.
 function applyLang() {
-	document.documentElement.setAttribute(
-		"lang",
-		LANGUAGES[getLang()].htmlLang,
-	);
+	document.documentElement.setAttribute("lang", LANGUAGES[getLang()].htmlLang);
 	applyStaticText();
 }
 

@@ -10,8 +10,7 @@ function viewDetailsPage() {
 	}
 
 	const genre = album.genre.map((i) => model.data.genre[i]).join(", ") || "—";
-	const location =
-		album.location.map((i) => model.data.location[i]).join(", ") || "—";
+	const location = album.location.map((i) => model.data.location[i]).join(", ") || "—";
 	const albumCover = album.coverImg
 		? `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
 		: "🎵";

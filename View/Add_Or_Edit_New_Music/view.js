@@ -224,10 +224,10 @@ function buildMusicForm(isEdit) {
 
             <div class="form-actions-right">
                 ${
-									isEdit
-										? /*HTML*/ `<button class="btn btn-danger" data-action="music-delete">${t("music.delete")}</button>`
-										: ""
-								}
+					isEdit
+						? /*HTML*/ `<button class="btn btn-danger" data-action="music-delete">${t("music.delete")}</button>`
+						: ""
+				}
                 <button class="btn btn-ghost" data-action="nav" data-page="homePage">${t("music.cancel")}</button>
             </div>
         </div >

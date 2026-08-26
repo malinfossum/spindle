@@ -27,13 +27,11 @@ const STRINGS_NO = {
 	"lang.enFull": "Engelsk",
 
 	// ---- Welcome ------------------------------------------------------------
-	"welcome.tagline":
-		"Ditt fysiske musikkbibliotek — trygt lagret på din egen enhet.",
+	"welcome.tagline": "Ditt fysiske musikkbibliotek — trygt lagret på din egen enhet.",
 	"welcome.createLibrary": "Opprett bibliotek",
 	"welcome.login": "Logg inn",
 	"welcome.about": "Om Spindle",
-	"welcome.credit":
-		"Bygget av Malin Fossum. Opprinnelig et lagprosjekt med Henry Elendheim.",
+	"welcome.credit": "Bygget av Malin Fossum. Opprinnelig et lagprosjekt med Henry Elendheim.",
 	"welcome.backup": "Sikkerhetskopi",
 
 	// ---- About --------------------------------------------------------------
@@ -142,8 +140,7 @@ const STRINGS_NO = {
 		"Nettleseren har deaktivert lagring for dette nettstedet. Endringer blir ikke lagret. Aktiver lagring i nettleserinnstillingene og last inn på nytt.",
 	"storage.quotaExceeded":
 		"Lagringen er full. Eksporter biblioteket ditt, og slett deretter gamle coverbilder eller album.",
-	"storage.warn":
-		"Lagringen er {percent}% full. Vurder å slette eller eksportere snart.",
+	"storage.warn": "Lagringen er {percent}% full. Vurder å slette eller eksportere snart.",
 	"storage.saveFailed":
 		"Endringen din kunne ikke lagres. Eksporter dataen din snart for å unngå å miste den.",
 	"storage.needsHttps":
@@ -184,18 +181,15 @@ const STRINGS_NO = {
 		"Alt som ligger i denne nettleseren blir overskrevet av innholdet i filen. Dette kan ikke angres.",
 	"backup.importConfirm": "Erstatt",
 	"backup.exportDone": "Sikkerhetskopien er lastet ned.",
-	"backup.plaintextDone":
-		"Den ukrypterte filen er lastet ned. Oppbevar den trygt.",
+	"backup.plaintextDone": "Den ukrypterte filen er lastet ned. Oppbevar den trygt.",
 	"backup.importDone":
 		"Biblioteket er gjenopprettet. Logg inn med passordet som hørte til sikkerhetskopien.",
 	"backup.errNoLibrary": "Det finnes ikke noe bibliotek å eksportere ennå.",
-	"backup.errCorrupt":
-		"Det lagrede biblioteket er skadet og kan ikke eksporteres.",
+	"backup.errCorrupt": "Det lagrede biblioteket er skadet og kan ikke eksporteres.",
 	"backup.errLocked": "Du må være logget inn for å eksportere en lesbar kopi.",
 	"backup.errNotJson": "Filen er ikke en gyldig JSON-fil.",
 	"backup.errNotBackup": "Filen er ikke en Spindle-sikkerhetskopi.",
-	"backup.errTooNew":
-		"Filen ble laget av en nyere versjon av Spindle. Oppdater først.",
+	"backup.errTooNew": "Filen ble laget av en nyere versjon av Spindle. Oppdater først.",
 	"backup.errPlaintext":
 		"Dette er en lesbar kopi. Bare krypterte sikkerhetskopier kan gjenopprettes.",
 	"backup.errTooLarge": "Filen er for stor til å være en sikkerhetskopi.",
@@ -210,8 +204,7 @@ const STRINGS_NO = {
 	"error.repeatPassword": "Gjenta passordet.",
 	"error.passwordsDiffer": "Passordene er ikke like.",
 	"error.passwordTooShort": "Passordet må være minst 8 tegn.",
-	"error.passwordWeak":
-		"Velg et sterkere passord — dette er på vår liste over svake passord.",
+	"error.passwordWeak": "Velg et sterkere passord — dette er på vår liste over svake passord.",
 	"error.wrongPassword": "Feil passord.",
 	"error.noLibraryFound": "Ingen bibliotek funnet. Opprett ett først.",
 	"error.libraryInOtherTab":
@@ -222,8 +215,7 @@ const STRINGS_NO = {
 	"error.fillTitle": "Fyll inn tittel.",
 	"error.pickLocation": "Velg en lokasjon.",
 	"error.pickGenre": "Velg minst én sjanger.",
-	"error.storageNearFull":
-		"Lagringen er nesten full. Slett noen album før du legger til flere.",
+	"error.storageNearFull": "Lagringen er nesten full. Slett noen album før du legger til flere.",
 	"error.imageTooLarge": "Bildet er for stort. Maks 2 MB.",
 	"error.imageInvalid": "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.",
 };

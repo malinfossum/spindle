@@ -47,10 +47,10 @@ function profilePage() {
             </div>
             <div class="profile-storage-stats">
                 ${t("profile.storageStats", {
-									used: formatBytes(storage.usage),
-									total: formatBytes(storage.quota),
-									percent: storage.percent,
-								})}
+					used: formatBytes(storage.usage),
+					total: formatBytes(storage.quota),
+					percent: storage.percent,
+				})}
             </div>
         </div>`
 		: "";
@@ -83,9 +83,9 @@ function profilePage() {
     ${settingsBlock}
 
     ${
-			albums.length
-				? `<div class="profile-grid">${gridHTML}</div>`
-				: `<div class="empty-state"><div class="empty-state-icon">🎵</div>${t("profile.noAlbums")}</div>`
-		}
+		albums.length
+			? `<div class="profile-grid">${gridHTML}</div>`
+			: `<div class="empty-state"><div class="empty-state-icon">🎵</div>${t("profile.noAlbums")}</div>`
+	}
     `;
 }

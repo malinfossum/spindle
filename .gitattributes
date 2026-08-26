@@ -1,2 +1,5 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Normalize on commit, and check out with LF so the working tree matches
+# .editorconfig (end_of_line = lf) and Biome's formatter output. Without the
+# explicit eol, core.autocrlf hands back CRLF on Windows and every formatter
+# run rewrites the endings again.
+* text=auto eol=lf

@@ -21,13 +21,11 @@ const STRINGS_EN = {
 	"lang.enFull": "English",
 
 	// ---- Welcome ------------------------------------------------------------
-	"welcome.tagline":
-		"Your physical music library — kept safe on your own device.",
+	"welcome.tagline": "Your physical music library — kept safe on your own device.",
 	"welcome.createLibrary": "Create library",
 	"welcome.login": "Log in",
 	"welcome.about": "About Spindle",
-	"welcome.credit":
-		"Built by Malin Fossum. Originally a team project with Henry Elendheim.",
+	"welcome.credit": "Built by Malin Fossum. Originally a team project with Henry Elendheim.",
 	"welcome.backup": "Backup",
 
 	// ---- About --------------------------------------------------------------
@@ -136,8 +134,7 @@ const STRINGS_EN = {
 		"Your browser has disabled storage for this site. Changes will not be saved. Enable storage in your browser settings and reload.",
 	"storage.quotaExceeded":
 		"Storage is full. Export your library, then delete old cover images or albums.",
-	"storage.warn":
-		"Storage is {percent}% full. Consider deleting or exporting soon.",
+	"storage.warn": "Storage is {percent}% full. Consider deleting or exporting soon.",
 	"storage.saveFailed":
 		"Your change could not be saved. Export your data soon so you don't lose it.",
 	"storage.needsHttps":
@@ -178,19 +175,15 @@ const STRINGS_EN = {
 		"Everything in this browser will be overwritten by the contents of the file. This cannot be undone.",
 	"backup.importConfirm": "Replace",
 	"backup.exportDone": "Your backup has been downloaded.",
-	"backup.plaintextDone":
-		"The unencrypted file has been downloaded. Keep it somewhere safe.",
-	"backup.importDone":
-		"Library restored. Log in with the password that belongs to that backup.",
+	"backup.plaintextDone": "The unencrypted file has been downloaded. Keep it somewhere safe.",
+	"backup.importDone": "Library restored. Log in with the password that belongs to that backup.",
 	"backup.errNoLibrary": "There is no library to export yet.",
 	"backup.errCorrupt": "The stored library is damaged and cannot be exported.",
 	"backup.errLocked": "You have to be logged in to export a readable copy.",
 	"backup.errNotJson": "That file is not valid JSON.",
 	"backup.errNotBackup": "That file is not a Spindle backup.",
-	"backup.errTooNew":
-		"That file was created by a newer version of Spindle. Update first.",
-	"backup.errPlaintext":
-		"This is a readable copy. Only encrypted backups can be restored.",
+	"backup.errTooNew": "That file was created by a newer version of Spindle. Update first.",
+	"backup.errPlaintext": "This is a readable copy. Only encrypted backups can be restored.",
 	"backup.errTooLarge": "That file is too large to be a backup.",
 	"backup.errReadFailed": "The file could not be read.",
 	"backup.errWriteFailed": "The backup could not be saved in this browser.",
@@ -201,20 +194,17 @@ const STRINGS_EN = {
 	"error.repeatPassword": "Repeat your password.",
 	"error.passwordsDiffer": "The passwords do not match.",
 	"error.passwordTooShort": "The password must be at least 8 characters.",
-	"error.passwordWeak":
-		"Choose a stronger password — this one is on our list of weak passwords.",
+	"error.passwordWeak": "Choose a stronger password — this one is on our list of weak passwords.",
 	"error.wrongPassword": "Wrong password.",
 	"error.noLibraryFound": "No library found. Create one first.",
-	"error.libraryInOtherTab":
-		"A library was created in another tab — reload the page and log in.",
+	"error.libraryInOtherTab": "A library was created in another tab — reload the page and log in.",
 	"error.noSpace": "Not enough space — free up storage and try again.",
 	"error.unexpected": "Something went wrong. Please try again.",
 	"error.fillArtist": "Enter an artist.",
 	"error.fillTitle": "Enter a title.",
 	"error.pickLocation": "Choose a location.",
 	"error.pickGenre": "Choose at least one genre.",
-	"error.storageNearFull":
-		"Storage is nearly full. Delete some albums before adding more.",
+	"error.storageNearFull": "Storage is nearly full. Delete some albums before adding more.",
 	"error.imageTooLarge": "The image is too large. Maximum 2 MB.",
 	"error.imageInvalid": "Invalid image file. Use JPEG, PNG or WebP.",
 };

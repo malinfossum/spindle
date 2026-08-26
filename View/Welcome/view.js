@@ -5,10 +5,7 @@ function welcomePage() {
 	// and give the likely action the accent button + first position.
 	const hasLibrary = loadState().kind === "encrypted";
 
-	const themeIcon =
-		document.documentElement.getAttribute("data-theme") === "light"
-			? "☀️"
-			: "🌙";
+	const themeIcon = document.documentElement.getAttribute("data-theme") === "light" ? "☀️" : "🌙";
 
 	const createBtn = /*HTML*/ `
         <button class="btn btn-full ${hasLibrary ? "" : "btn-accent"}"

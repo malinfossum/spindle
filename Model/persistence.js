@@ -30,10 +30,7 @@ function validateEnvelope(parsed) {
 
 	// A newer schema may use fields, or a cipher, that this build does not
 	// implement. Refusing is safer than half-understanding the data.
-	if (
-		typeof parsed.schemaVersion === "number" &&
-		parsed.schemaVersion > SCHEMA_VERSION
-	) {
+	if (typeof parsed.schemaVersion === "number" && parsed.schemaVersion > SCHEMA_VERSION) {
 		return { ok: false, reason: "too-new", message: "nyere skjemaversjon" };
 	}
 
@@ -186,9 +183,7 @@ function formatBytes(bytes) {
 	// neither encrypt nor decrypt, so stop here and explain via the storage banner.
 	if (!isCryptoAvailable()) {
 		model.app.storageError = "storage.needsHttps";
-		console.warn(
-			"[persistence] Web Crypto unavailable — needs a secure context.",
-		);
+		console.warn("[persistence] Web Crypto unavailable — needs a secure context.");
 		return;
 	}
 

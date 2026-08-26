@@ -7,9 +7,7 @@
 // from <head>, long before this file loads.
 
 function currentTheme() {
-	return document.documentElement.getAttribute("data-theme") === "light"
-		? "light"
-		: "dark";
+	return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
 
 function themeIcon() {

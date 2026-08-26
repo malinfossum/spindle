@@ -12,10 +12,10 @@ function registerPage() {
             <div class="auth-title">${t("auth.createTitle")}</div>
 
             ${
-							model.app.authMessage
-								? `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`
-								: ""
-						}
+				model.app.authMessage
+					? `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`
+					: ""
+			}
 
             <form data-action-submit="register">
                 <div class="form-row">

@@ -93,13 +93,9 @@ async function deriveKeys(password, saltBytes) {
 		256,
 	);
 
-	const masterKey = await crypto.subtle.importKey(
-		"raw",
-		masterBits,
-		{ name: "HKDF" },
-		false,
-		["deriveKey"],
-	);
+	const masterKey = await crypto.subtle.importKey("raw", masterBits, { name: "HKDF" }, false, [
+		"deriveKey",
+	]);
 
 	const verifyKey = await crypto.subtle.deriveKey(
 		{
@@ -131,11 +127,7 @@ async function deriveKeys(password, saltBytes) {
 }
 
 async function computeVerifyHmac(verifyKey) {
-	const signature = await crypto.subtle.sign(
-		"HMAC",
-		verifyKey,
-		utf8(HMAC_VERIFY_MESSAGE),
-	);
+	const signature = await crypto.subtle.sign("HMAC", verifyKey, utf8(HMAC_VERIFY_MESSAGE));
 	return new Uint8Array(signature);
 }
 
