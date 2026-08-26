@@ -181,15 +181,17 @@ body {
 	color: var(--text-muted);
 }
 
-/* Theme toggle button in navbar */
+/* Theme toggle button — appears in the navbar and, unscoped, on the welcome
+   page. Base styling here has to work standing alone for the welcome-page
+   instance, so it can't rely on a .Navbar ancestor. */
 .btn-theme {
-	background: none !important;
-	border: 1px solid var(--border) !important;
-	color: var(--text-muted) !important;
-	font-size: 1rem !important;
+	background: none;
+	border: 1px solid var(--border);
+	color: var(--text-muted);
+	font-size: 1rem;
 	/* Same 44x44 minimum as .lang-opt — it sits directly beside the language
 	   switcher on the welcome page, so it has to match both in size and in reach. */
-	padding: 0 !important;
+	padding: 0;
 	min-width: 44px;
 	min-height: 44px;
 	display: inline-flex;
@@ -201,8 +203,27 @@ body {
 }
 
 .btn-theme:hover {
-	background: var(--surface2) !important;
-	color: var(--text) !important;
+	background: var(--surface2);
+	color: var(--text);
+}
+
+/* Same specificity fight as .Navbar .brand-btn above: .Navbar button is
+   (0,1,1), which outranks a bare .btn-theme at (0,1,0), so inside the navbar
+   the toggle would otherwise fall back to the generic button look. Repeating
+   the class here brings it to (0,2,0)/(0,3,0) — enough to win without
+   !important. The welcome-page instance sits outside .Navbar and never
+   matches this rule, so it keeps using the bare .btn-theme above. */
+.Navbar .btn-theme {
+	background: none;
+	border: 1px solid var(--border);
+	color: var(--text-muted);
+	font-size: 1rem;
+	padding: 0;
+}
+
+.Navbar .btn-theme:hover {
+	background: var(--surface2);
+	color: var(--text);
 }
 
 /* ── Main content area ── */
