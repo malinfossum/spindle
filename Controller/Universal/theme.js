@@ -12,7 +12,7 @@ function currentTheme() {
 	return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
 
-export function themeIcon() {
+function themeIcon() {
 	return currentTheme() === "light" ? "☀️" : "🌙";
 }
 

@@ -208,9 +208,5 @@ export function formatBytes(bytes) {
 		model.app.storageError = state.message;
 	}
 
-	// Everyone lands on the welcome page; it offers both "Create library" and
-	// "Log in" and emphasises the right one based on whether a library exists.
-	model.app.currentPage = "welcome";
-
 	refreshStorageEstimate();
 })();

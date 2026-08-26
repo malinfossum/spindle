@@ -10,6 +10,10 @@ export function welcomePage() {
 	// and give the likely action the accent button + first position.
 	const hasLibrary = loadState().kind === "encrypted";
 
+	// Duplicates the rule in Controller/Universal/theme.js on purpose: importing
+	// themeIcon() from there would put a View file back on the Controller, the
+	// exact edge this branch removed. Two lines of duplication is cheaper than
+	// that edge — do not "fix" this by adding the import back.
 	const themeIcon = document.documentElement.getAttribute("data-theme") === "light" ? "☀️" : "🌙";
 
 	const createBtn = /*HTML*/ `

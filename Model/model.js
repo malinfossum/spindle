@@ -17,9 +17,9 @@ export const model = {
 		],
 
 		// The pages a locked library is allowed to open. navigate() turns every
-		// other page away, and syncChrome() decides from this same list which pages
-		// render without the navbar and footer, so the two can never disagree about
-		// what counts as public.
+		// other page away, and syncChrome() derives from this same list which pages
+		// render without the navbar and footer — with one deliberate exception,
+		// notFound, that syncChrome() documents where it filters it out.
 		publicPages: ["welcome", "login", "register", "about", "notFound"],
 
 		currentPage: "welcome",

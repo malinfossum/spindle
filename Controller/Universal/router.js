@@ -23,10 +23,12 @@
 // navigation either way — see lastResolvedHash.
 //
 // router.js and editMusic.js import from each other — this file wants
-// initNewAlbum(), and editMusic.js wants navigate(). That cycle is safe only
-// because every cross-module call here happens inside a function body, long
-// after both modules have finished evaluating. A top-level call to an import
-// from the other side of the cycle would read undefined and break the app. The
+// initNewAlbum(), and editMusic.js wants navigate() — and there is a second,
+// longer cycle through login.js: router.js -> editMusic.js -> login.js (for
+// focusFirstInvalid()) -> router.js. Both cycles are safe only because every
+// cross-module call here happens inside a function body, long after all three
+// modules have finished evaluating. A top-level call to an import from the
+// other side of either cycle would read undefined and break the app. The
 // addEventListener in initRouter() is not one: it is registered from boot.js,
 // and it calls nothing until an event arrives.
 

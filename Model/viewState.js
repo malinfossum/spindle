@@ -19,13 +19,13 @@ export function setAuthMessage(message) {
 	model.app.authMessage = message;
 }
 
-export function clearBackupMessage() {
+function clearBackupMessage() {
 	model.app.backupMessage = { key: "", tone: "info" };
 }
 
 // Wipes every per-field error on both auth forms. Called on navigation so a
 // validation error from one visit never lingers into the next.
-export function resetAuthFieldErrors() {
+function resetAuthFieldErrors() {
 	model.viewState.login.errors = { password: "" };
 	model.viewState.createProfile.errors = {
 		username: "",
@@ -37,7 +37,7 @@ export function resetAuthFieldErrors() {
 // Wipes the add/edit form's field errors. Called on navigation so a
 // validation error from one visit never lingers into the next — the music-form
 // counterpart to resetAuthFieldErrors.
-export function resetMusicFieldErrors() {
+function resetMusicFieldErrors() {
 	model.viewState.musicForm.errors = {
 		coverImg: "",
 		artist: "",
