@@ -4,8 +4,10 @@
 // dependency visible: five View files were importing from Controller/Login and
 // Controller/Search just to ask the state a question. None of them is behaviour
 // — they touch no DOM, start no timers, fire no events and change nothing. They
-// only read model.data and model.app and derive an answer, which makes them
-// Model, and a view may read them without pointing an import the wrong way.
+// only read model.data, model.app and model.viewState and derive an answer,
+// which makes them Model, and a view may read them without pointing an import
+// the wrong way. Two of them read viewState: getSearchResults() takes the query
+// from it, and hasSelectedAlbum() asks whether the selection it holds is live.
 
 import { model } from "./model.js";
 

@@ -151,6 +151,12 @@ function replaceFragment(page) {
 
 // Records what the address bar settled on before painting, so onHashChange can
 // tell the echo of our own write from a real back or forward.
+//
+// Invariant: this samples location.hash, so it must run *after* any
+// replaceFragment() the route needed — both redirects above call it first. Hoist
+// this above one of them and the sample records the fragment the visitor asked
+// for rather than the one they got; the queued echo then no longer matches, and
+// a redirect renders twice.
 function renderRoute() {
 	lastResolvedHash = window.location.hash;
 	updateView();
