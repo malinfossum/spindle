@@ -17,7 +17,8 @@ function buildMusicForm(isEdit) {
             <input type="radio"
                    name="location"
                    ${info.location.includes(i) ? "checked" : ""}
-                   onchange="toggleLocationCheckbox(this, ${i}); clearMusicGroupError('location')">
+                   data-action-change="music-location"
+                   data-index="${i}">
             ${escapeHtml(loc)}
         </label>
     `,
@@ -31,7 +32,8 @@ function buildMusicForm(isEdit) {
             <input type="checkbox"
                    name="genre"
                    ${info.genre.includes(i) ? "checked" : ""}
-                   onchange="toggleGenreCheckbox(this, ${i}); clearMusicGroupError('genre')">
+                   data-action-change="music-genre"
+                   data-index="${i}">
             ${escapeHtml(loc)}
         </label>
     `,
@@ -63,7 +65,7 @@ function buildMusicForm(isEdit) {
                        accept="image/jpeg,image/png,image/webp"
                        aria-invalid="${errors.coverImg ? "true" : "false"}"
                        aria-describedby="music-cover-error"
-                       onchange="saveImage(this)">
+                       data-action-change="music-cover">
             </div>
 
             <div class="form-fields">
@@ -76,7 +78,7 @@ function buildMusicForm(isEdit) {
                            aria-invalid="${errors.artist ? "true" : "false"}"
                            aria-describedby="music-artist-error"
                            value="${escapeHtml(info.artist)}"
-                           oninput="model.viewState.musicInfo.artist = this.value; clearFieldError(this, 'musicForm', 'artist')">
+                           data-action-input="music-artist">
                     <span class="field-error" id="music-artist-error">${escapeHtml(t(errors.artist))}</span>
                 </div>
 
@@ -89,7 +91,7 @@ function buildMusicForm(isEdit) {
                            aria-invalid="${errors.title ? "true" : "false"}"
                            aria-describedby="music-title-error"
                            value="${escapeHtml(info.title)}"
-                           oninput="model.viewState.musicInfo.title = this.value; clearFieldError(this, 'musicForm', 'title')">
+                           data-action-input="music-title">
                     <span class="field-error" id="music-title-error">${escapeHtml(t(errors.title))}</span>
                 </div>
             </div>
@@ -111,33 +113,33 @@ function buildMusicForm(isEdit) {
                 <button
                 type="button"
                 aria-label="${t("music.addLocationToggle")}"
-                onclick="model.app.showLocationInput=!model.app.showLocationInput;
-                updateView()">➕</button>
+                data-action="toggle-panel"
+                data-panel="location-add">➕</button>
 
                 <button
                 type="button"
                 aria-label="${t("music.removeLocationToggle")}"
-                onclick="model.app.showDeleteLocationInput=!model.app.showDeleteLocationInput;
-                updateView()">✖️</button>
+                data-action="toggle-panel"
+                data-panel="location-remove">✖️</button>
             </div>
 
             <span class="field-error" id="music-location-error">${escapeHtml(t(errors.location))}</span>
 
-            <form onsubmit="newLocation(event)" style="visibility: ${model.app.showLocationInput ? "hidden" : "visible"};">
+            <form data-action-submit="new-location" style="visibility: ${model.app.showLocationInput ? "hidden" : "visible"};">
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.newLocation")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.location)}"
-                       oninput="model.viewState.editMusicInfo.location = this.value">
+                       data-action-input="chip-location">
                 <button aria-label="${t("music.confirmOption")}">✔️</button>
             </form>
 
-            <form onsubmit="removeLocation(event)" style="visibility: ${model.app.showDeleteLocationInput ? "hidden" : "visible"};">
+            <form data-action-submit="remove-location" style="visibility: ${model.app.showDeleteLocationInput ? "hidden" : "visible"};">
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.removeLocation")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.location)}"
-                       oninput="model.viewState.editMusicInfo.location = this.value">
+                       data-action-input="chip-location">
                 <button aria-label="${t("music.confirmOption")}">✔️</button>
             </form>
         </div>
@@ -149,7 +151,7 @@ function buildMusicForm(isEdit) {
                    type="number"
                    placeholder="${t("music.yearPlaceholder")}"
                    value="${info.releaseYear || ""}"
-                   oninput="model.viewState.musicInfo.releaseYear = parseInt(this.value) || null"
+                   data-action-input="music-year"
                    style="max-width: 140px">
         </div>
 
@@ -167,33 +169,33 @@ function buildMusicForm(isEdit) {
                 <button
                 type="button"
                 aria-label="${t("music.addGenreToggle")}"
-                onclick="model.app.showGenreInput=!model.app.showGenreInput;
-                updateView()">➕</button>
+                data-action="toggle-panel"
+                data-panel="genre-add">➕</button>
 
                 <button
                 type="button"
                 aria-label="${t("music.removeGenreToggle")}"
-                onclick="model.app.showDeleteGenreInput=!model.app.showDeleteGenreInput;
-                updateView()">✖️</button>
+                data-action="toggle-panel"
+                data-panel="genre-remove">✖️</button>
             </div>
 
             <span class="field-error" id="music-genre-error">${escapeHtml(t(errors.genre))}</span>
 
-            <form onsubmit="newGenre(event)" style="visibility: ${model.app.showGenreInput ? "hidden" : "visible"};">
+            <form data-action-submit="new-genre" style="visibility: ${model.app.showGenreInput ? "hidden" : "visible"};">
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.newGenre")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.genre)}"
-                       oninput="model.viewState.editMusicInfo.genre = this.value">
+                       data-action-input="chip-genre">
                 <button aria-label="${t("music.confirmOption")}">✔️</button>
             </form>
 
-            <form onsubmit="removeGenre(event)" style="visibility: ${model.app.showDeleteGenreInput ? "hidden" : "visible"};">
+            <form data-action-submit="remove-genre" style="visibility: ${model.app.showDeleteGenreInput ? "hidden" : "visible"};">
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.removeGenre")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.genre)}"
-                       oninput="model.viewState.editMusicInfo.genre = this.value">
+                       data-action-input="chip-genre">
                 <button aria-label="${t("music.confirmOption")}">✔️</button>
             </form>
         </div>
@@ -203,13 +205,13 @@ function buildMusicForm(isEdit) {
             <textarea class="form-textarea"
                       id="music-notes"
                       placeholder="${t("music.notesPlaceholder")}"
-                      oninput="model.viewState.musicInfo.notes = this.value">${escapeHtml(info.notes)}</textarea>
+                      data-action-input="music-notes">${escapeHtml(info.notes)}</textarea>
         </div>
 
         <label class="checkbox-row">
             <input type="checkbox"
                    ${info.wishlist ? "checked" : ""}
-                   onchange="model.viewState.musicInfo.wishlist = this.checked">
+                   data-action-change="music-wishlist">
             ${t("music.wishlist")}
         </label>
 
@@ -217,16 +219,16 @@ function buildMusicForm(isEdit) {
 
         <div class="form-actions">
             <div class="form-actions-left">
-                <button class="btn btn-accent" onclick="submitChanges(${isEdit})">${t("music.save")}</button>
+                <button class="btn btn-accent" data-action="music-save" data-edit="${isEdit}">${t("music.save")}</button>
             </div>
 
             <div class="form-actions-right">
                 ${
 									isEdit
-										? /*HTML*/ `<button class="btn btn-danger" onclick="deleteAlbum(model.viewState.musicInfo.id)">${t("music.delete")}</button>`
+										? /*HTML*/ `<button class="btn btn-danger" data-action="music-delete">${t("music.delete")}</button>`
 										: ""
 								}
-                <button class="btn btn-ghost" onclick="changePage('homePage')">${t("music.cancel")}</button>
+                <button class="btn btn-ghost" data-action="nav" data-page="homePage">${t("music.cancel")}</button>
             </div>
         </div >
     </div >

@@ -7,7 +7,7 @@ function createAlbumCard(album) {
 		: "🎵";
 
 	return /*HTML*/ `
-    <div class="album-card" onclick="viewMusicDetails(${album.id})">
+    <div class="album-card" data-action="view-album" data-id="${album.id}">
         <div class="album-cover">${albumCover}</div>
 
         <div class="album-info">
@@ -22,8 +22,8 @@ function createAlbumCard(album) {
         </div>
 
         <div class="album-actions">
-            <button class="btn btn-ghost" onclick="event.stopPropagation(); viewMusicDetails(${album.id})">${t("music.view")}</button>
-            <button class="btn btn-danger" onclick="event.stopPropagation(); deleteAlbum(${album.id})">${t("music.delete")}</button>
+            <button class="btn btn-ghost" data-action="view-album" data-id="${album.id}">${t("music.view")}</button>
+            <button class="btn btn-danger" data-action="delete-album" data-id="${album.id}">${t("music.delete")}</button>
         </div>
     </div>
     `;

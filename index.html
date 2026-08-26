@@ -29,36 +29,36 @@
 
 <body>
     <header class="Navbar">
-        <h1 onclick="changePage('homePage')">Spindle</h1>
+        <h1 data-action="nav" data-page="homePage">Spindle</h1>
 
         <div class="nav-desktop">
-            <button id="nav-home-desktop" onclick="changePage('homePage')">Hjem</button>
-            <button id="nav-wishlist-desktop" onclick="changePage('wishList')">Ønskeliste</button>
+            <button id="nav-home-desktop" data-action="nav" data-page="homePage">Hjem</button>
+            <button id="nav-wishlist-desktop" data-action="nav" data-page="wishList">Ønskeliste</button>
 
-            <input class="nav-search-input" placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
-            <button id="nav-search-desktop" onclick="changePage('searchPage')">Søk</button>
+            <input class="nav-search-input" placeholder="Søkefelt" data-action-input="search-query">
+            <button id="nav-search-desktop" data-action="nav" data-page="searchPage">Søk</button>
 
-            <button id="nav-login-desktop" onclick="handleLoginNavClick()">Logg inn</button>
-            <button id="nav-profile-desktop" style="display: none;" onclick="handleProfileNavClick()">Profil</button>
+            <button id="nav-login-desktop" data-action="nav-login">Logg inn</button>
+            <button id="nav-profile-desktop" style="display: none;" data-action="nav-profile">Profil</button>
         </div>
 
         <div class="nav-mobile" id="mobile-menu">
-            <input class="nav-search-input" placeholder="Søkefelt" oninput="model.viewState.searchBar = this.value">
-            <button id="nav-search-mobile" onclick="changePage('searchPage')">Søk</button>
-            <button class="navBurger" id="nav-burger" aria-label="Meny" onclick="toggleMobileMenu()">☰</button>
+            <input class="nav-search-input" placeholder="Søkefelt" data-action-input="search-query">
+            <button id="nav-search-mobile" data-action="nav" data-page="searchPage">Søk</button>
+            <button class="navBurger" id="nav-burger" aria-label="Meny" data-action="toggle-menu">☰</button>
 
             <div class="mobile-menu-show">
-                <button id="nav-home-mobile" onclick="changePage('homePage')">Hjem</button>
-                <button id="nav-wishlist-mobile" onclick="changePage('wishList')">Ønskeliste</button>
+                <button id="nav-home-mobile" data-action="nav" data-page="homePage">Hjem</button>
+                <button id="nav-wishlist-mobile" data-action="nav" data-page="wishList">Ønskeliste</button>
 
-                <button id="nav-login-mobile" onclick="handleLoginNavClick()">Logg inn</button>
-                <button id="nav-profile-mobile" style="display: none;" onclick="handleProfileNavClick()">Profil</button>
+                <button id="nav-login-mobile" data-action="nav-login">Logg inn</button>
+                <button id="nav-profile-mobile" style="display: none;" data-action="nav-profile">Profil</button>
             </div>
 
         </div>
 
 
-        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn" aria-label="Bytt tema (mørkt eller lyst)">🌙</button>
+        <button class="btn-theme" data-action="toggle-theme" id="themeBtn" aria-label="Bytt tema (mørkt eller lyst)">🌙</button>
 
     </header>
 
@@ -77,6 +77,7 @@
     <script src="Model/persistence.js"></script>
     <script src="Model/backup.js"></script>
 
+    <script src="View/Universal/bindActions.js"></script>
     <script src="View/Universal/escape.js"></script>
     <script src="View/Universal/sniff.js"></script>
     <script src="View/Universal/dialog.js"></script>
@@ -102,6 +103,7 @@
     <script src="Controller/Music_Details/editBtn.js"></script>
     <script src="Controller/Register/register.js"></script>
     <script src="Controller/Search/search.js"></script>
+    <script src="Controller/Universal/actions.js"></script>
     <script src="Controller/Universal/backup.js"></script>
     <script src="Controller/Universal/delete.js"></script>
     <script src="Controller/Universal/navbar&Mobile.js"></script>
@@ -146,6 +148,7 @@
 
         // First render runs here — after every view + controller script has loaded —
         // so updateView() can safely call syncNavbar() and syncChrome().
+        initActions();
         applyStoredTheme();
         applyLang();
         updateView();

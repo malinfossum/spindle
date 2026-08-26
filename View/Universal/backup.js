@@ -20,7 +20,7 @@ function backupSection({ idPrefix, allowPlaintext = false, canExport = true }) {
             <span class="backup-label">${t("backup.export")}</span>
             <button class="btn" type="button"
                     aria-describedby="${idPrefix}-export-hint"
-                    onclick="exportEncryptedBackup()">${t("backup.exportBtn")}</button>
+                    data-action="export-encrypted">${t("backup.exportBtn")}</button>
         </div>
         <p class="backup-hint" id="${idPrefix}-export-hint">${t("backup.exportHint")}</p>`
 		: "";
@@ -34,7 +34,7 @@ function backupSection({ idPrefix, allowPlaintext = false, canExport = true }) {
                    id="${idPrefix}-import-file"
                    accept="application/json,.json"
                    aria-describedby="${idPrefix}-import-hint"
-                   onchange="importBackupFile(this)">
+                   data-action-change="import-backup">
         </div>
         <p class="backup-hint" id="${idPrefix}-import-hint">${t("backup.importHint")}</p>`;
 
@@ -46,7 +46,7 @@ function backupSection({ idPrefix, allowPlaintext = false, canExport = true }) {
             <span class="backup-label">${t("backup.plaintext")}</span>
             <button class="btn" type="button"
                     aria-describedby="${idPrefix}-plaintext-hint"
-                    onclick="exportPlaintextBackup()">${t("backup.plaintextBtn")}</button>
+                    data-action="export-plaintext">${t("backup.plaintextBtn")}</button>
         </div>
         <p class="backup-hint backup-hint-warn" id="${idPrefix}-plaintext-hint">${t("backup.plaintextHint")}</p>`
 		: "";

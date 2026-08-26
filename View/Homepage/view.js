@@ -5,7 +5,7 @@ function homeView() {
 		return /*HTML*/ `
         <div class="page-header">
             <span class="page-title">${t("library.title")}</span>
-            <button class="btn btn-accent" onclick="changePage('addDetails')">${t("music.addAlbum")}</button>
+            <button class="btn btn-accent" data-action="nav" data-page="addDetails">${t("music.addAlbum")}</button>
         </div>
 
         <div class="empty-state">
@@ -20,7 +20,7 @@ function homeView() {
 	return /*HTML*/ `
     <div class="page-header">
         <span class="page-title">${t("library.titleCount", { count: albums.length })}</span>
-        <button class="btn btn-accent" onclick="changePage('addDetails')">${t("music.addAlbum")}</button>
+        <button class="btn btn-accent" data-action="nav" data-page="addDetails">${t("music.addAlbum")}</button>
     </div>
 
     ${albumList}

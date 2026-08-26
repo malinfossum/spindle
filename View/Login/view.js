@@ -13,7 +13,7 @@ function loginPage() {
 								: ""
 						}
 
-            <form onsubmit="event.preventDefault(); login()">
+            <form data-action-submit="login">
                 <div class="form-row">
                     <label class="form-label" for="login-password">${t("auth.password")}</label>
                     <input class="form-input"
@@ -24,7 +24,7 @@ function loginPage() {
                            aria-invalid="${errors.password ? "true" : "false"}"
                            aria-describedby="login-password-error"
                            value="${escapeHtml(model.viewState.login.password)}"
-                           oninput="model.viewState.login.password = this.value; clearFieldError(this, 'login', 'password')">
+                           data-action-input="login-password">
                     <span class="field-error" id="login-password-error">${escapeHtml(t(errors.password))}</span>
                 </div>
 
@@ -37,11 +37,11 @@ function loginPage() {
 
             <p class="auth-footer">
                 ${t("auth.noLibrary")}
-                <a href="#" onclick="changePage('register')">${t("auth.createTitle")}</a>
+                <a href="#" data-action="nav" data-page="register">${t("auth.createTitle")}</a>
             </p>
 
             <p class="auth-footer">
-                <a class="auth-back" href="#" onclick="changePage('welcome')">${t("auth.backToStart")}</a>
+                <a class="auth-back" href="#" data-action="nav" data-page="welcome">${t("auth.backToStart")}</a>
             </p>
         </div>
     </div>

@@ -17,7 +17,7 @@ function registerPage() {
 								: ""
 						}
 
-            <form onsubmit="event.preventDefault(); register()">
+            <form data-action-submit="register">
                 <div class="form-row">
                     <label class="form-label" for="register-username">${t("auth.username")}</label>
                     <input class="form-input"
@@ -28,7 +28,7 @@ function registerPage() {
                            aria-invalid="${errors.username ? "true" : "false"}"
                            aria-describedby="register-username-error"
                            value="${escapeHtml(model.viewState.createProfile.username)}"
-                           oninput="model.viewState.createProfile.username = this.value; clearFieldError(this, 'createProfile', 'username')">
+                           data-action-input="register-username">
                     <span class="field-error" id="register-username-error">${escapeHtml(t(errors.username))}</span>
                 </div>
 
@@ -42,7 +42,7 @@ function registerPage() {
                            aria-invalid="${errors.password ? "true" : "false"}"
                            aria-describedby="register-password-error password-strength-text"
                            value="${escapeHtml(model.viewState.createProfile.password)}"
-                           oninput="model.viewState.createProfile.password = this.value; renderStrength(this.value, 'password-strength-bar'); clearFieldError(this, 'createProfile', 'password')">
+                           data-action-input="register-password">
                     <span class="field-error" id="register-password-error">${escapeHtml(t(errors.password))}</span>
                     <div id="password-strength-bar" class="strength-bar" aria-hidden="true">${bars}</div>
                     <span class="visually-hidden" id="password-strength-text" aria-live="polite">${t("auth.strength", { level: strength })}</span>
@@ -59,7 +59,7 @@ function registerPage() {
                            aria-invalid="${errors.repeatPassword ? "true" : "false"}"
                            aria-describedby="register-repeat-error"
                            value="${escapeHtml(model.viewState.createProfile.repeatPassword)}"
-                           oninput="model.viewState.createProfile.repeatPassword = this.value; clearFieldError(this, 'createProfile', 'repeatPassword')">
+                           data-action-input="register-repeat">
                     <span class="field-error" id="register-repeat-error">${escapeHtml(t(errors.repeatPassword))}</span>
                 </div>
 
@@ -72,11 +72,11 @@ function registerPage() {
 
             <p class="auth-footer">
                 ${t("auth.haveLibrary")}
-                <a href="#" onclick="changePage('login')">${t("auth.login")}</a>
+                <a href="#" data-action="nav" data-page="login">${t("auth.login")}</a>
             </p>
 
             <p class="auth-footer">
-                <a class="auth-back" href="#" onclick="changePage('welcome')">${t("auth.backToStart")}</a>
+                <a class="auth-back" href="#" data-action="nav" data-page="welcome">${t("auth.backToStart")}</a>
             </p>
         </div>
     </div>

@@ -116,7 +116,7 @@ function langSwitcher(extraClass = "", labelledById = "") {
                 aria-pressed="${current === code}"
                 lang="${LANGUAGES[code].htmlLang}"
                 title="${t(fullKey)}"
-                onclick="setLang('${code}')">${t(labelKey)}</button>`;
+                data-action="set-lang" data-lang="${code}">${t(labelKey)}</button>`;
 
 	return /*HTML*/ `
     <div class="lang-switch ${extraClass}" role="group" ${groupLabel}>

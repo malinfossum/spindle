@@ -13,14 +13,14 @@ function welcomePage() {
 	const createBtn = /*HTML*/ `
         <button class="btn btn-full ${hasLibrary ? "" : "btn-accent"}"
                 type="button"
-                onclick="changePage('register')">
+                data-action="nav" data-page="register">
             ${t("welcome.createLibrary")}
         </button>`;
 
 	const loginBtn = /*HTML*/ `
         <button class="btn btn-full ${hasLibrary ? "btn-accent" : ""}"
                 type="button"
-                onclick="changePage('login')">
+                data-action="nav" data-page="login">
             ${t("welcome.login")}
         </button>`;
 
@@ -35,7 +35,7 @@ function welcomePage() {
 
 	const backupPanel = /*HTML*/ `
         <details class="welcome-backup" ${backupOpen ? "open" : ""}
-                 ontoggle="model.viewState.welcomeBackupOpen = this.open">
+                 data-action-toggle="welcome-backup-toggle">
             <summary>${t("welcome.backup")}</summary>
             ${backupSection({ idPrefix: "welcome", canExport: hasLibrary })}
         </details>`;
@@ -46,7 +46,7 @@ function welcomePage() {
             ${langSwitcher("welcome-lang")}
             <button class="btn-theme welcome-theme"
                     type="button"
-                    onclick="toggleTheme()"
+                    data-action="toggle-theme"
                     aria-label="${t("nav.themeToggle")}">${themeIcon}</button>
         </div>
 
@@ -64,7 +64,7 @@ function welcomePage() {
                 ${actions}
             </div>
 
-            <button class="link-btn welcome-about" type="button" onclick="changePage('about')">
+            <button class="link-btn welcome-about" type="button" data-action="nav" data-page="about">
                 ${t("welcome.about")}
             </button>
 

@@ -7,7 +7,7 @@ function aboutPage() {
 	return /*HTML*/ `
     <section class="about" aria-labelledby="about-heading">
         <div class="about-top">
-            <button class="btn btn-ghost" type="button" onclick="changePage('welcome')">
+            <button class="btn btn-ghost" type="button" data-action="nav" data-page="welcome">
                 ${t("about.back")}
             </button>
         </div>

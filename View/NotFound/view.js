@@ -19,7 +19,7 @@ function notFoundPage() {
         <div class="notfound-icon" aria-hidden="true">🔍</div>
         <h1 class="notfound-title" id="notfound-heading">${t("notFound.title")}</h1>
         <p class="notfound-body">${t("notFound.body")}</p>
-        <button class="btn btn-accent" type="button" onclick="changePage('${target}')">
+        <button class="btn btn-accent" type="button" data-action="nav" data-page="${target}">
             ${t(backKey)}
         </button>
     </section>

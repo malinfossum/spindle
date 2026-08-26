@@ -5,7 +5,7 @@ function viewDetailsPage() {
 	if (!album) {
 		return /*HTML*/ `
         <p style="color: var(--text-muted)">${t("music.notFound")}</p>
-        <button class="btn btn-ghost" onclick="changePage('homePage')">${t("music.back")}</button>
+        <button class="btn btn-ghost" data-action="nav" data-page="homePage">${t("music.back")}</button>
         `;
 	}
 
@@ -61,14 +61,15 @@ function viewDetailsPage() {
         <label class="checkbox-row">
             <input type="checkbox"
                    ${album.wishlist ? "checked" : ""}
-                   onchange="toggleWishlist(${album.id}, this.checked)">
+                   data-action-change="toggle-wishlist"
+                   data-id="${album.id}">
             ${t("music.wishlist")}
         </label>
 
         <div class="detail-actions">
-            <button class="btn btn-accent" onclick="editAlbum(${album.id})">${t("music.edit")}</button>
-            <button class="btn btn-danger" onclick="deleteAlbum(${album.id})">${t("music.delete")}</button>
-            <button class="btn btn-ghost" onclick="changePage('homePage')">${t("music.cancel")}</button>
+            <button class="btn btn-accent" data-action="edit-album" data-id="${album.id}">${t("music.edit")}</button>
+            <button class="btn btn-danger" data-action="delete-album" data-id="${album.id}">${t("music.delete")}</button>
+            <button class="btn btn-ghost" data-action="nav" data-page="homePage">${t("music.cancel")}</button>
         </div>
     </div>
     `;

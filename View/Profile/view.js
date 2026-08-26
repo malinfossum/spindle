@@ -18,7 +18,7 @@ function profilePage() {
 				: "🎵";
 
 			return /*HTML*/ `
-            <div class="profile-album-card" onclick="viewMusicDetails(${album.id})">
+            <div class="profile-album-card" data-action="view-album" data-id="${album.id}">
                 <div class="profile-album-img">${albumCover}</div>
                 <div class="profile-album-info">
                     <div class="profile-album-title">${escapeHtml(album.title)}</div>
