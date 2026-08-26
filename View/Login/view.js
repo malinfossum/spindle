@@ -37,11 +37,11 @@ function loginPage() {
 
             <p class="auth-footer">
                 ${t("auth.noLibrary")}
-                <a href="#" data-action="nav" data-page="register">${t("auth.createTitle")}</a>
+                <button class="link-inline" type="button" data-action="nav" data-page="register">${t("auth.createTitle")}</button>
             </p>
 
             <p class="auth-footer">
-                <a class="auth-back" href="#" data-action="nav" data-page="welcome">${t("auth.backToStart")}</a>
+                <button class="auth-back" type="button" data-action="nav" data-page="welcome">${t("auth.backToStart")}</button>
             </p>
         </div>
     </div>

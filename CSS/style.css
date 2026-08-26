@@ -93,7 +93,9 @@ body {
 .Navbar {
 	background: var(--nav-bg);
 	border-bottom: 1px solid var(--border);
-	padding: 0 1.5rem;
+	/* 1.5rem of side padding costs 48px of a 375px screen, which the English
+	   navbar does not have to spare. Restored at the tablet breakpoint. */
+	padding: 0 0.75rem;
 	height: 56px;
 	display: flex;
 	align-items: center;
@@ -114,6 +116,19 @@ body {
 	white-space: nowrap;
 	margin-right: 0.5rem;
 	flex-shrink: 0;
+}
+
+/* The brand doubles as "go home", so the clickable part is a real <button>
+   inside the <h1> — an <h1> with a click handler is invisible to the keyboard.
+   No horizontal padding, unlike every other .Navbar button: at 375px the navbar
+   row has no slack left, and 16px of padding here pushes the theme toggle off
+   the right edge in English. The text is 51px wide, so the 44x44 floor still
+   holds without it. */
+.Navbar .brand-btn {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: var(--text);
+	padding: 0;
 }
 
 .Navbar button {
@@ -144,6 +159,8 @@ body {
 .Navbar input {
 	flex: 1;
 	max-width: 100px;
+	/* Same reason as .nav-mobile — this is the field that gives up the space. */
+	min-width: 0;
 	min-height: 44px;
 	background: var(--input-bg);
 	border: 1px solid var(--border);
@@ -306,6 +323,7 @@ footer {
    ============================================================ */
 
 .album-card {
+	position: relative;
 	background: var(--card-bg);
 	border: 1px solid var(--border);
 	border-radius: 10px;
@@ -351,12 +369,41 @@ footer {
 	min-width: 0;
 }
 
+/* The card cannot be a <button> — it contains two. So the title is the real
+   control, and .album-open stretches its hit area over the whole card. */
 .album-title {
+	display: block;
+	width: 100%;
+	background: none;
+	border: none;
+	padding: 0;
+	font-family: inherit;
 	font-weight: 600;
 	font-size: 0.95rem;
+	color: var(--text);
+	text-align: left;
+	cursor: pointer;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.album-open::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: 10px;
+}
+
+.album-open:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+/* The ring lands on the title text alone, so mark the whole card too — that is
+   the area the button actually activates. */
+.album-card:has(.album-open:focus-visible) {
+	border-color: var(--accent);
 }
 
 .album-artist {
@@ -372,7 +419,10 @@ footer {
 	flex-wrap: wrap;
 }
 
+/* Raised back above .album-open::after so these keep their own clicks. */
 .album-actions {
+	position: relative;
+	z-index: 1;
 	display: flex;
 	flex-direction: column;
 	gap: 0.4rem;
@@ -728,7 +778,14 @@ footer {
 	gap: 0.75rem;
 }
 
+/* No nested buttons in this one, so the whole tile simply IS the button. */
 .profile-album-card {
+	display: block;
+	width: 100%;
+	padding: 0;
+	text-align: left;
+	font-family: inherit;
+	color: var(--text);
 	background: var(--card-bg);
 	border: 1px solid var(--border);
 	border-radius: 8px;
@@ -762,11 +819,20 @@ footer {
 	object-fit: cover;
 }
 
+.profile-album-card:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+/* <button> only takes phrasing content, so the innards are spans. Give them
+   their block layout back or the ellipsis truncation stops working. */
 .profile-album-info {
+	display: block;
 	padding: 0.55rem 0.7rem;
 }
 
 .profile-album-title {
+	display: block;
 	font-size: 0.82rem;
 	font-weight: 600;
 	white-space: nowrap;
@@ -775,6 +841,7 @@ footer {
 }
 
 .profile-album-artist {
+	display: block;
 	font-size: 0.75rem;
 	color: var(--text-muted);
 	white-space: nowrap;
@@ -811,18 +878,39 @@ footer {
 	color: var(--text-muted);
 }
 
-.auth-footer a {
+/* These move between pages of a single-page app, so they are buttons, not
+   links — there is no URL to follow, and href="#" only ever pushed a stray
+   fragment onto the URL. Styled as links because that is the right affordance.
+   This one sits inside a run of text, so it takes WCAG 2.5.5's inline
+   exception rather than a 44x44 box. */
+.auth-footer .link-inline {
+	background: none;
+	border: none;
+	padding: 0;
+	font: inherit;
 	color: var(--accent);
-	text-decoration: none;
+	cursor: pointer;
 }
 
-.auth-footer a:hover {
+.auth-footer .link-inline:hover {
 	text-decoration: underline;
+}
+
+.auth-footer .link-inline:focus-visible,
+.auth-back:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 4px;
 }
 
 /* Alone in its own paragraph, so it is a standalone target rather than a link
    inside a run of text — WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
 .auth-back {
+	background: none;
+	border: none;
+	font: inherit;
+	color: var(--accent);
+	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -926,6 +1014,10 @@ footer {
 	align-items: center;
 	gap: 0.5rem;
 	flex: 1;
+	/* Without this a flex item cannot shrink below its content width, so a
+	   longer label (English "Search" against Norwegian "Søk") pushed the theme
+	   toggle off the right edge instead of narrowing the search box. */
+	min-width: 0;
 }
 
 .mobile-menu-show {
@@ -966,6 +1058,10 @@ footer {
    ============================================================ */
 
 @media (min-width: 768px) {
+	.Navbar {
+		padding: 0 1.5rem;
+	}
+
 	.nav-desktop {
 		display: flex;
 		align-items: center;

@@ -17,14 +17,22 @@ function profilePage() {
 				? `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
 				: "🎵";
 
+			// Unlike the album card this one holds no nested buttons, so the whole
+			// card can simply BE the button — one tab stop, named after the album,
+			// and the entire tile is the target. Inner elements are spans because
+			// <button> only takes phrasing content; the stylesheet gives them back
+			// their block layout.
 			return /*HTML*/ `
-            <div class="profile-album-card" data-action="view-album" data-id="${album.id}">
-                <div class="profile-album-img">${albumCover}</div>
-                <div class="profile-album-info">
-                    <div class="profile-album-title">${escapeHtml(album.title)}</div>
-                    <div class="profile-album-artist">${escapeHtml(album.artist)}</div>
-                </div>
-            </div>
+            <button class="profile-album-card"
+                    type="button"
+                    data-action="view-album"
+                    data-id="${album.id}">
+                <span class="profile-album-img">${albumCover}</span>
+                <span class="profile-album-info">
+                    <span class="profile-album-title">${escapeHtml(album.title)}</span>
+                    <span class="profile-album-artist">${escapeHtml(album.artist)}</span>
+                </span>
+            </button>
             `;
 		})
 		.join("");

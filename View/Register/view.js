@@ -72,11 +72,11 @@ function registerPage() {
 
             <p class="auth-footer">
                 ${t("auth.haveLibrary")}
-                <a href="#" data-action="nav" data-page="login">${t("auth.login")}</a>
+                <button class="link-inline" type="button" data-action="nav" data-page="login">${t("auth.login")}</button>
             </p>
 
             <p class="auth-footer">
-                <a class="auth-back" href="#" data-action="nav" data-page="welcome">${t("auth.backToStart")}</a>
+                <button class="auth-back" type="button" data-action="nav" data-page="welcome">${t("auth.backToStart")}</button>
             </p>
         </div>
     </div>
