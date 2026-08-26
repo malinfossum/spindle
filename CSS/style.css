@@ -182,9 +182,18 @@ body {
 }
 
 /* Theme toggle button — appears in the navbar and, unscoped, on the welcome
-   page. Base styling here has to work standing alone for the welcome-page
-   instance, so it can't rely on a .Navbar ancestor. */
-.btn-theme {
+   page. The second selector in each list below exists purely to outrank
+   .Navbar button (0,1,1): a bare .btn-theme is only (0,1,0), so inside the
+   navbar .Navbar button would otherwise win the border, font-size and
+   padding declarations and the toggle would fall back to the generic button
+   look. Selectors in a comma list are matched independently — the
+   welcome-page instance has no .Navbar ancestor, so it matches only
+   .btn-theme at (0,1,0); the navbar instance matches both and cascades on
+   .Navbar .btn-theme at (0,2,0), which beats .Navbar button. Same
+   declaration block for both selectors, so there's nothing to keep in sync
+   by hand. */
+.btn-theme,
+.Navbar .btn-theme {
 	background: none;
 	border: 1px solid var(--border);
 	color: var(--text-muted);
@@ -202,25 +211,11 @@ body {
 	flex-shrink: 0;
 }
 
-.btn-theme:hover {
-	background: var(--surface2);
-	color: var(--text);
-}
-
-/* Same specificity fight as .Navbar .brand-btn above: .Navbar button is
-   (0,1,1), which outranks a bare .btn-theme at (0,1,0), so inside the navbar
-   the toggle would otherwise fall back to the generic button look. Repeating
-   the class here brings it to (0,2,0)/(0,3,0) — enough to win without
-   !important. The welcome-page instance sits outside .Navbar and never
-   matches this rule, so it keeps using the bare .btn-theme above. */
-.Navbar .btn-theme {
-	background: none;
-	border: 1px solid var(--border);
-	color: var(--text-muted);
-	font-size: 1rem;
-	padding: 0;
-}
-
+/* Unlike the base rule above, this pair was never actually contested:
+   .Navbar button:hover (line 154) already sets the same background and
+   color as .btn-theme:hover. The .Navbar .btn-theme:hover selector is kept
+   only so this rule mirrors the base rule's shape, not to win a fight. */
+.btn-theme:hover,
 .Navbar .btn-theme:hover {
 	background: var(--surface2);
 	color: var(--text);
