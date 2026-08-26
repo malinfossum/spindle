@@ -11,7 +11,7 @@
 // `storage` listener and exports nothing, so without this line the module
 // would simply never be evaluated.
 
-import { applyLang } from "../../Model/i18n/i18n.js";
+import { applyLang } from "../../View/Universal/chrome.js";
 import { initActions } from "./actions.js";
 import { initRouter } from "./router.js";
 import "./storageSync.js";

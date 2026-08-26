@@ -1,7 +1,8 @@
-import { langSwitcher, t } from "../../Model/i18n/i18n.js";
+import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";
 import { backupSection } from "../Universal/backup.js";
+import { langSwitcher } from "../Universal/langSwitcher.js";
 
 export function welcomePage() {
 	// First-time visitors should be nudged toward "Create library", returning ones

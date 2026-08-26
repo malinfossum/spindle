@@ -1,4 +1,5 @@
-// Translation lookup. Loaded after no.js and en.js, before any view script.
+// Translation lookup: string tables in, strings out. No DOM in this file — the
+// language-driven DOM patching it used to carry moved to View/Universal/.
 //
 // Views call t("some.key") inline and are re-rendered wholesale by updateView(),
 // so switching language is just: store the choice, re-render, done. There is no
@@ -53,75 +54,18 @@ export function seedData() {
 	return { genre: [...seed.genre], location: [...seed.location] };
 }
 
+// Writes the preference and stops there. Applying the choice — the <html lang>
+// attribute, the static chrome, the re-render — is the Controller's call to
+// make, and the DOM patching it asks for lives in View/Universal/chrome.js.
 export function setLang(lang) {
 	if (!LANGUAGES[lang] || lang === getLang()) return;
 
 	setPref("lang", lang);
-	applyLang();
 }
 
-// Everything about the document that lives outside #app and so is not covered
-// by a re-render: the lang attribute screen readers use to pick a voice, and
-// the static navbar/footer chrome in index.html.
-export function applyLang() {
-	document.documentElement.setAttribute("lang", LANGUAGES[getLang()].htmlLang);
-	applyStaticText();
-}
-
-// The navbar and footer are hand-written in index.html rather than rendered
-// from state, so updateView() never touches them. Push the current language
-// into them by hand. Called from updateView() so the two can never drift.
-export function applyStaticText() {
-	const setText = (id, key) => {
-		const el = document.getElementById(id);
-		if (el) el.textContent = t(key);
-	};
-
-	setText("nav-home-desktop", "nav.home");
-	setText("nav-home-mobile", "nav.home");
-	setText("nav-wishlist-desktop", "nav.wishlist");
-	setText("nav-wishlist-mobile", "nav.wishlist");
-	setText("nav-search-desktop", "nav.search");
-	setText("nav-search-mobile", "nav.search");
-	setText("footer-copyright", "footer.copyright");
-
-	for (const input of document.querySelectorAll(".nav-search-input")) {
-		input.placeholder = t("nav.searchPlaceholder");
-	}
-
-	const burger = document.getElementById("nav-burger");
-	if (burger) burger.setAttribute("aria-label", t("nav.menuToggle"));
-
-	for (const btn of document.querySelectorAll(".btn-theme")) {
-		btn.setAttribute("aria-label", t("nav.themeToggle"));
-	}
-
-	// syncNavbar() owns the login/logout and profile buttons — their text depends
-	// on auth state as well as language, so it stays the single writer for those.
-}
-
-// Segmented NO / EN control. Shared by the welcome page and the profile
-// settings block so the two can't drift apart.
-// Pass labelledById when the control already sits next to a visible label, so
-// the group is named once rather than twice.
-export function langSwitcher(extraClass = "", labelledById = "") {
-	const current = getLang();
-
-	const groupLabel = labelledById
-		? `aria-labelledby="${labelledById}"`
-		: `aria-label="${t("lang.group")}"`;
-
-	const option = (code, labelKey, fullKey) => /*HTML*/ `
-        <button class="lang-opt ${current === code ? "is-active" : ""}"
-                type="button"
-                aria-pressed="${current === code}"
-                lang="${LANGUAGES[code].htmlLang}"
-                title="${t(fullKey)}"
-                data-action="set-lang" data-lang="${code}">${t(labelKey)}</button>`;
-
-	return /*HTML*/ `
-    <div class="lang-switch ${extraClass}" role="group" ${groupLabel}>
-        ${option("no", "lang.no", "lang.noFull")}
-        ${option("en", "lang.en", "lang.enFull")}
-    </div>`;
+// The BCP-47 tag for a language code: what <html lang> and the switcher's
+// per-option lang attribute both need. A narrow accessor rather than exporting
+// LANGUAGES, so the strings and seed lists behind it stay in the Model.
+export function getHtmlLang(lang = getLang()) {
+	return (LANGUAGES[lang] ?? LANGUAGES[FALLBACK_LANG]).htmlLang;
 }

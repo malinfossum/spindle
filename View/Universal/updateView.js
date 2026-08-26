@@ -1,4 +1,4 @@
-import { applyStaticText, t } from "../../Model/i18n/i18n.js";
+import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { QUOTA_WARN_PERCENT } from "../../Model/persistence.js";
 import { aboutPage } from "../About/view.js";
@@ -12,7 +12,7 @@ import { registerPage } from "../Register/view.js";
 import { searchPage } from "../Search/view.js";
 import { welcomePage } from "../Welcome/view.js";
 import { wishListPage } from "../Wishlist/view.js";
-import { syncChrome, syncNavbar } from "./chrome.js";
+import { applyStaticText, syncChrome, syncNavbar } from "./chrome.js";
 
 export function updateView() {
 	let html = storageBanner();

@@ -17,6 +17,7 @@ import { getLang, setLang } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { renderStrength } from "../../View/Register/view.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
+import { applyLang } from "../../View/Universal/chrome.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import {
 	clearMusicGroupError,
@@ -59,14 +60,15 @@ const ACTIONS = {
 	"nav-profile": () => handleProfileNavClick(),
 	"toggle-menu": () => toggleMobileMenu(),
 	"toggle-theme": () => toggleTheme(),
-	// setLang() writes the preference and re-applies the static chrome; asking for
-	// the re-render is the Controller's job, not the Model's — including deciding
-	// not to. Activating the option that is already selected must not re-render:
-	// the switcher is inside #app, so the button the user just pressed would be
-	// destroyed and focus would drop to <body> with nothing to announce.
+	// setLang() only writes the preference. Applying it to the document and asking
+	// for the re-render are the Controller's job, not the Model's — including
+	// deciding not to. Activating the option that is already selected must not
+	// re-render: the switcher is inside #app, so the button the user just pressed
+	// would be destroyed and focus would drop to <body> with nothing to announce.
 	"set-lang": (_event, target) => {
 		if (target.dataset.lang === getLang()) return;
 		setLang(target.dataset.lang);
+		applyLang();
 		updateView();
 	},
 

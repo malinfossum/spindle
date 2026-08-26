@@ -8,11 +8,11 @@
 // listener never sees this tab's own writes. Every event here is another tab
 // reporting what it just did.
 
-import { applyLang } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { STORAGE_KEY } from "../../Model/persistence.js";
 import { invalidatePrefsCache, PREFS_KEY } from "../../Model/prefs.js";
 import { isLoggedIn } from "../../Model/selectors.js";
+import { applyLang } from "../../View/Universal/chrome.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { applyStoredTheme } from "./theme.js";
 

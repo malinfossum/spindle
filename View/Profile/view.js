@@ -1,9 +1,10 @@
-import { langSwitcher, t } from "../../Model/i18n/i18n.js";
+import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { formatBytes } from "../../Model/persistence.js";
 import { getLoggedInUser, getProfileAlbums } from "../../Model/selectors.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
+import { langSwitcher } from "../Universal/langSwitcher.js";
 
 export function profilePage() {
 	const user = getLoggedInUser();
