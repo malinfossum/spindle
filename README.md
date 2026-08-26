@@ -2,7 +2,7 @@
 
 A local music library for organizing physical LP and CD collections, built in vanilla JavaScript.
 
-**Status:** v0.1.0 released. v0.2 in progress — the build step has landed; hash routing is next.
+**Status:** v0.1.0 released. v0.2 in progress — the build step and hash routing have landed; deploying with real security headers is next.
 
 ## Run locally
 
@@ -38,7 +38,7 @@ Spindle needs a secure context for encryption — opening `index.html` directly 
 
 ## Roadmap
 
-- Hash routing, so pages are linkable and the back button works
+- Deploy, with the security headers a `<meta>` tag cannot carry
 
 ## Privacy
 
