@@ -3,13 +3,24 @@ import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { escapeHtml } from "../Universal/escape.js";
 
+// The strength meter is rendered twice: once as part of the page, and once per
+// keystroke by renderStrength() below. Both go through barClass(), so the
+// lit/unlit rule exists in exactly one place and the two paths cannot drift.
+const BAR_INDEXES = [0, 1, 2, 3, 4];
+
+function barClass(index, score) {
+	return index < score ? "bar-on" : "bar-off";
+}
+
+function strengthBars(score) {
+	return BAR_INDEXES.map((i) => `<span class="${barClass(i, score)}"></span>`).join("");
+}
+
 export function registerPage() {
 	const busy = model.app.authBusy;
 	const errors = model.viewState.createProfile.errors;
 	const strength = passwordStrength(model.viewState.createProfile.password);
-	const bars = [0, 1, 2, 3, 4]
-		.map((i) => `<span class="${i < strength ? "bar-on" : "bar-off"}"></span>`)
-		.join("");
+	const bars = strengthBars(strength);
 
 	return /*HTML*/ `
     <div class="auth-wrapper">
@@ -86,4 +97,22 @@ export function registerPage() {
         </div>
     </div>
     `;
+}
+
+// Patches the strength bar's spans and the screen-reader text in place, on
+// purpose — this runs on every keystroke, and updateView() replaces #app's
+// innerHTML, which would drop focus out of the password field. Same markup as
+// registerPage() renders above, and the same barClass() decides the classes,
+// so the initial render and the live update cannot drift.
+export function renderStrength(password, elementId) {
+	const bar = document.getElementById(elementId);
+	if (!bar) return;
+
+	const score = passwordStrength(password);
+	for (let i = 0; i < bar.children.length; i++) {
+		bar.children[i].className = barClass(i, score);
+	}
+
+	const text = document.getElementById("password-strength-text");
+	if (text) text.textContent = t("auth.strength", { level: score });
 }

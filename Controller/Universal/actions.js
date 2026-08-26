@@ -13,9 +13,9 @@
 // The add/edit form's four chip panels. A lookup rather than reading the model
 // key straight out of the attribute, so markup can only reach these four flags.
 
-import { renderStrength } from "../../Model/auth.js";
 import { getLang, setLang } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { renderStrength } from "../../View/Register/view.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import {

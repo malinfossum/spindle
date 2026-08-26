@@ -188,21 +188,6 @@ export function passwordStrength(password) {
 	return Math.min(score, 4);
 }
 
-// Updates the strength bar's 5 spans and the screen-reader text directly, on
-// purpose — calling updateView() on every keystroke would drop input focus.
-export function renderStrength(password, elementId) {
-	const bar = document.getElementById(elementId);
-	if (!bar) return;
-
-	const score = passwordStrength(password);
-	for (let i = 0; i < bar.children.length; i++) {
-		bar.children[i].className = i < score ? "bar-on" : "bar-off";
-	}
-
-	const text = document.getElementById("password-strength-text");
-	if (text) text.textContent = `Passordstyrke: ${score} av 4`;
-}
-
 export function zeroKeys() {
 	model.app.crypto.encryptKey = null;
 	model.app.crypto.verifyKey = null;
