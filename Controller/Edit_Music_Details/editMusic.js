@@ -83,7 +83,7 @@ export function submitChanges(isEdit) {
 		model.data.musicInfo.push({ ...model.viewState.musicInfo });
 	} else {
 		const index = model.data.musicInfo.findIndex(
-			(item) => item.id == model.viewState.musicInfo.id,
+			(item) => item.id === model.viewState.musicInfo.id,
 		);
 
 		if (index === -1) return;

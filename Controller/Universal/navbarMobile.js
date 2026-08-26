@@ -10,7 +10,7 @@ export function toggleMobileMenu() {
 	//forkortelse
 	const mobileMenu = model.app.mobileMenuToggle;
 
-	if (mobileMenu == true) {
+	if (mobileMenu === true) {
 		menu.classList.toggle("open");
 		console.log(mobileMenu);
 		console.log("On");

@@ -25,6 +25,6 @@ try {
 	if (stored.lang === "no" || stored.lang === "en") {
 		document.documentElement.setAttribute("lang", stored.lang);
 	}
-} catch (err) {
+} catch {
 	/* No stored preferences, or storage is blocked — defaults apply. */
 }

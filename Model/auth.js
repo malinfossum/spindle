@@ -41,7 +41,7 @@ const WEAK_PASSWORDS = [
 ];
 
 export function isCryptoAvailable() {
-	return !!(window.crypto && window.crypto.subtle);
+	return !!window.crypto?.subtle;
 }
 
 function utf8(text) {

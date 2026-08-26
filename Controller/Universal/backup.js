@@ -109,7 +109,7 @@ export async function exportPlaintextBackup() {
 // not whatever is unlocked right now. Reusing the live session keys against
 // someone else's ciphertext would simply fail to decrypt on the next save.
 export async function importBackupFile(input) {
-	const file = input.files && input.files[0];
+	const file = input.files?.[0];
 	if (!file) return;
 
 	// Clear the picker straight away so re-choosing the same file after a

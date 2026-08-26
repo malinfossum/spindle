@@ -1,4 +1,3 @@
-import { themeIcon } from "../../Controller/Universal/theme.js";
 import { langSwitcher, t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";

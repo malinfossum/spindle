@@ -12,6 +12,7 @@ import { clearBackupMessage } from "../../Controller/Universal/backup.js";
 import { syncChrome } from "../../Controller/Universal/navbarMobile.js";
 import { applyStaticText, t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { QUOTA_WARN_PERCENT } from "../../Model/persistence.js";
 import { aboutPage } from "../About/view.js";
 import { addDetailsPage, editDetailsPage } from "../Add_Or_Edit_New_Music/view.js";
 import { homeView } from "../Homepage/view.js";
@@ -27,17 +28,17 @@ import { wishListPage } from "../Wishlist/view.js";
 export function updateView() {
 	let html = storageBanner();
 
-	if (model.app.currentPage == "welcome") html += welcomePage();
-	else if (model.app.currentPage == "homePage") html += homeView();
-	else if (model.app.currentPage == "searchPage") html += searchPage();
-	else if (model.app.currentPage == "wishList") html += wishListPage();
-	else if (model.app.currentPage == "viewDetails") html += viewDetailsPage();
-	else if (model.app.currentPage == "addDetails") html += addDetailsPage();
-	else if (model.app.currentPage == "editDetails") html += editDetailsPage();
-	else if (model.app.currentPage == "profile") html += profilePage();
-	else if (model.app.currentPage == "login") html += loginPage();
-	else if (model.app.currentPage == "register") html += registerPage();
-	else if (model.app.currentPage == "about") html += aboutPage();
+	if (model.app.currentPage === "welcome") html += welcomePage();
+	else if (model.app.currentPage === "homePage") html += homeView();
+	else if (model.app.currentPage === "searchPage") html += searchPage();
+	else if (model.app.currentPage === "wishList") html += wishListPage();
+	else if (model.app.currentPage === "viewDetails") html += viewDetailsPage();
+	else if (model.app.currentPage === "addDetails") html += addDetailsPage();
+	else if (model.app.currentPage === "editDetails") html += editDetailsPage();
+	else if (model.app.currentPage === "profile") html += profilePage();
+	else if (model.app.currentPage === "login") html += loginPage();
+	else if (model.app.currentPage === "register") html += registerPage();
+	else if (model.app.currentPage === "about") html += aboutPage();
 	// Catch-all, not just the "notFound" page itself: a page name that reaches
 	// here without a branch would otherwise render as an empty content area.
 	else html += notFoundPage();
@@ -77,7 +78,7 @@ function storageBanner() {
         </div>`;
 	}
 	const storage = model.app.storage;
-	if (storage && storage.percent >= 80) {
+	if (storage && storage.percent >= QUOTA_WARN_PERCENT) {
 		return /*HTML*/ `
         <div class="storage-banner storage-banner-warn" role="status">
             ${t("storage.warn", { percent: storage.percent })}

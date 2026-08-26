@@ -115,7 +115,7 @@ const ACTIONS = {
 		clearFieldError(target, "musicForm", "title");
 	},
 	"music-year": (_event, target) => {
-		model.viewState.musicInfo.releaseYear = parseInt(target.value) || null;
+		model.viewState.musicInfo.releaseYear = parseInt(target.value, 10) || null;
 	},
 	"music-notes": (_event, target) => {
 		model.viewState.musicInfo.notes = target.value;

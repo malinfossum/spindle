@@ -27,9 +27,6 @@
 		"enabled": true,
 		"rules": {
 			"preset": "recommended",
-			"correctness": {
-				"noUnusedVariables": "off"
-			},
 			"suspicious": {
 				"noDuplicateProperties": "off"
 			}

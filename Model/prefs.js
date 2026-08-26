@@ -33,7 +33,7 @@ function readPrefs() {
 	let raw = null;
 	try {
 		raw = localStorage.getItem(PREFS_KEY);
-	} catch (err) {
+	} catch {
 		console.warn("[prefs] localStorage unavailable — using defaults.");
 		return prefsCache;
 	}
@@ -43,7 +43,7 @@ function readPrefs() {
 	let parsed;
 	try {
 		parsed = JSON.parse(raw);
-	} catch (err) {
+	} catch {
 		console.warn("[prefs] stored preferences are unreadable — using defaults.");
 		return prefsCache;
 	}
@@ -74,7 +74,7 @@ export function getPref(name) {
 }
 
 export function setPref(name, value) {
-	if (!PREFS_ALLOWED[name] || !PREFS_ALLOWED[name].includes(value)) return;
+	if (!PREFS_ALLOWED[name]?.includes(value)) return;
 
 	const prefs = readPrefs();
 	prefs[name] = value;

@@ -100,7 +100,7 @@ export async function login() {
 	model.viewState.login.errors = { password: "" };
 
 	const result = readEnvelope();
-	if (!result || !result.ok) {
+	if (!result?.ok) {
 		setAuthMessage("error.noLibraryFound");
 		updateView();
 		return;

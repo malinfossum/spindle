@@ -76,7 +76,7 @@ export function parseBackup(text) {
 	let parsed;
 	try {
 		parsed = JSON.parse(text);
-	} catch (err) {
+	} catch {
 		return { ok: false, reason: "notJson" };
 	}
 

@@ -11,7 +11,7 @@ import { model } from "./model.js";
 export const SCHEMA_VERSION = 1;
 export const STORAGE_KEY = "spindle:v1:state";
 const STORAGE_PROBE_KEY = "__spindle_probe__";
-const QUOTA_WARN_PERCENT = 80;
+export const QUOTA_WARN_PERCENT = 80;
 const QUOTA_HARD_STOP_PERCENT = 95;
 const VERIFY_HMAC_BYTES = 32;
 
@@ -20,7 +20,7 @@ function probeStorage() {
 		localStorage.setItem(STORAGE_PROBE_KEY, "1");
 		localStorage.removeItem(STORAGE_PROBE_KEY);
 		return true;
-	} catch (err) {
+	} catch {
 		return false;
 	}
 }
@@ -62,7 +62,7 @@ export function validateEnvelope(parsed) {
 			return { ok: false, reason: "corrupt", message: "ugyldige feltlengder" };
 		}
 		base64ToBytes(ciphertext);
-	} catch (err) {
+	} catch {
 		return { ok: false, reason: "corrupt", message: "ugyldig base64" };
 	}
 
@@ -87,7 +87,7 @@ export function readEnvelope() {
 	let parsed;
 	try {
 		parsed = JSON.parse(raw);
-	} catch (err) {
+	} catch {
 		return { ok: false, reason: "corrupt", message: "ugyldig JSON" };
 	}
 
@@ -155,7 +155,7 @@ async function actuallyPersist() {
 }
 
 async function refreshStorageEstimate() {
-	if (!navigator.storage || !navigator.storage.estimate) {
+	if (!navigator.storage?.estimate) {
 		model.app.storage = null;
 		return;
 	}
@@ -165,7 +165,7 @@ async function refreshStorageEstimate() {
 		const quota = est.quota || 0;
 		const percent = quota > 0 ? Math.round((usage / quota) * 100) : 0;
 		model.app.storage = { usage, quota, percent };
-	} catch (err) {
+	} catch {
 		model.app.storage = null;
 	}
 }
