@@ -15,7 +15,7 @@ const LANGUAGES = {
 
 const FALLBACK_LANG = "no";
 
-function getLang() {
+export function getLang() {
 	const lang = getPref("lang");
 	return LANGUAGES[lang] ? lang : FALLBACK_LANG;
 }

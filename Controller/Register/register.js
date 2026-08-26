@@ -10,9 +10,9 @@ import {
 import { seedData } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { SCHEMA_VERSION, STORAGE_KEY } from "../../Model/persistence.js";
-import { clearAuthMessage } from "../../Model/viewState.js";
+import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
 import { updateView } from "../../View/Universal/updateView.js";
-import { clearRegisterForm, focusFirstInvalid, setAuthMessage } from "../Login/login.js";
+import { clearRegisterForm, focusFirstInvalid } from "../Login/login.js";
 import { changePage } from "../Universal/router.js";
 
 export async function register() {

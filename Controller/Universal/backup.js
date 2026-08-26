@@ -20,9 +20,10 @@ import {
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { STORAGE_KEY } from "../../Model/persistence.js";
+import { setAuthMessage } from "../../Model/viewState.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { updateView } from "../../View/Universal/updateView.js";
-import { logout, setAuthMessage } from "../Login/login.js";
+import { logout } from "../Login/login.js";
 import { changePage } from "./router.js";
 
 const IMPORT_MAX_BYTES = 10 * 1024 * 1024;

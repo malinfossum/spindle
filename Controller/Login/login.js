@@ -9,13 +9,9 @@ import {
 import { model } from "../../Model/model.js";
 import { readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
-import { clearAuthMessage } from "../../Model/viewState.js";
+import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { changePage } from "../Universal/router.js";
-
-export function setAuthMessage(message) {
-	model.app.authMessage = message;
-}
 
 function clearLoginForm() {
 	model.viewState.login = {

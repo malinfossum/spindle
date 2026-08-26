@@ -22,8 +22,6 @@ import { updateView } from "../../View/Universal/updateView.js";
 import { initNewAlbum } from "../Edit_Music_Details/editMusic.js";
 
 export function changePage(element) {
-	const publicPages = ["welcome", "login", "register", "about", "notFound"];
-
 	// changePage() used to trust its argument, so a typo in an onclick handler
 	// set currentPage to a name nothing renders. Unknown names land on the
 	// not-found view instead of a blank page.
@@ -32,7 +30,7 @@ export function changePage(element) {
 		element = "notFound";
 	}
 
-	if (!isLoggedIn() && !publicPages.includes(element)) {
+	if (!isLoggedIn() && !model.app.publicPages.includes(element)) {
 		model.app.currentPage = "welcome";
 		updateView();
 		return;

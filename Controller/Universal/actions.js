@@ -14,7 +14,7 @@
 // key straight out of the attribute, so markup can only reach these four flags.
 
 import { renderStrength } from "../../Model/auth.js";
-import { setLang } from "../../Model/i18n/i18n.js";
+import { getLang, setLang } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
 import { updateView } from "../../View/Universal/updateView.js";
@@ -59,9 +59,13 @@ const ACTIONS = {
 	"nav-profile": () => handleProfileNavClick(),
 	"toggle-menu": () => toggleMobileMenu(),
 	"toggle-theme": () => toggleTheme(),
-	// setLang() writes the preference and re-applies the static chrome; the
-	// re-render is the Controller's to ask for, not the Model's.
+	// setLang() writes the preference and re-applies the static chrome; asking for
+	// the re-render is the Controller's job, not the Model's — including deciding
+	// not to. Activating the option that is already selected must not re-render:
+	// the switcher is inside #app, so the button the user just pressed would be
+	// destroyed and focus would drop to <body> with nothing to announce.
 	"set-lang": (_event, target) => {
+		if (target.dataset.lang === getLang()) return;
 		setLang(target.dataset.lang);
 		updateView();
 	},

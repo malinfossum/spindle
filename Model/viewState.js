@@ -15,6 +15,10 @@ export function clearAuthMessage() {
 	model.app.authMessage = "";
 }
 
+export function setAuthMessage(message) {
+	model.app.authMessage = message;
+}
+
 export function clearBackupMessage() {
 	model.app.backupMessage = { key: "", tone: "info" };
 }

@@ -4,8 +4,8 @@
 // state, so updateView()'s innerHTML assignment never reaches them. These two
 // push the current state into that static markup by hand, which is the same job
 // every other file in View/ does — build the DOM the state implies. Neither one
-// decides anything, changes state or listens for an event, so neither belonged
-// in the Controller, where updateView() had to import them from.
+// decides anything, changes state or listens for an event, and updateView() had
+// to reach into the Controller for both. They render, so they live here.
 //
 // applyStaticText() in i18n.js owns the parts of the chrome that depend only on
 // language; these two own the parts that depend on auth state and the page.
@@ -41,10 +41,11 @@ export function syncNavbar() {
 // navbar and footer so the welcome landing reads as a clean entry point. This only
 // flips a body class; CSS owns the actual hiding.
 export function syncChrome() {
-	const loggedOutPages = ["welcome", "login", "register", "about"];
-	// The not-found view is reachable from both sides: keep the chrome hidden in
-	// the logged-out flow, and visible inside the app where the navbar is the way
-	// back out.
+	// The not-found view is reachable from both sides, so it is the one public
+	// page this rule treats differently: keep the chrome hidden in the logged-out
+	// flow, and visible inside the app where the navbar is the way back out. Every
+	// other name comes from model.app.publicPages rather than a second list here.
+	const loggedOutPages = model.app.publicPages.filter((page) => page !== "notFound");
 	const hideChrome =
 		loggedOutPages.includes(model.app.currentPage) ||
 		(model.app.currentPage === "notFound" && !isLoggedIn());

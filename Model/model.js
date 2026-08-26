@@ -16,6 +16,12 @@ export const model = {
 			"notFound",
 		],
 
+		// The pages a locked library is allowed to open. changePage() turns every
+		// other page away, and syncChrome() decides from this same list which pages
+		// render without the navbar and footer, so the two can never disagree about
+		// what counts as public.
+		publicPages: ["welcome", "login", "register", "about", "notFound"],
+
 		currentPage: "welcome",
 		mobileMenuToggle: false,
 
