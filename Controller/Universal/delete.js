@@ -2,7 +2,7 @@ import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { persistState } from "../../Model/persistence.js";
 import { openDialog } from "../../View/Universal/dialog.js";
-import { changePage } from "../../View/Universal/updateView.js";
+import { changePage } from "./router.js";
 
 export async function deleteAlbum(id) {
 	const album = model.data.musicInfo.find((a) => a.id === id);

@@ -1,5 +1,5 @@
 import { model } from "../../Model/model.js";
-import { changePage } from "../../View/Universal/updateView.js";
+import { changePage } from "../Universal/router.js";
 
 export function editAlbum(id) {
 	const album = model.data.musicInfo.find((a) => a.id === id);

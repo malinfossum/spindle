@@ -6,15 +6,12 @@ import {
 	deriveKeys,
 	zeroKeys,
 } from "../../Model/auth.js";
-import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { readEnvelope } from "../../Model/persistence.js";
-import { getLoggedInUser, isLoggedIn } from "../../Model/selectors.js";
-import { changePage, updateView } from "../../View/Universal/updateView.js";
-
-export function clearAuthMessage() {
-	model.app.authMessage = "";
-}
+import { isLoggedIn } from "../../Model/selectors.js";
+import { clearAuthMessage } from "../../Model/viewState.js";
+import { updateView } from "../../View/Universal/updateView.js";
+import { changePage } from "../Universal/router.js";
 
 export function setAuthMessage(message) {
 	model.app.authMessage = message;
@@ -33,17 +30,6 @@ export function clearRegisterForm() {
 		password: "",
 		repeatPassword: "",
 		errors: { username: "", password: "", repeatPassword: "" },
-	};
-}
-
-// Wipes every per-field error on both auth forms. Called on navigation so a
-// validation error from one visit never lingers into the next.
-export function resetAuthFieldErrors() {
-	model.viewState.login.errors = { password: "" };
-	model.viewState.createProfile.errors = {
-		username: "",
-		password: "",
-		repeatPassword: "",
 	};
 }
 
@@ -191,27 +177,4 @@ export function handleProfileNavClick() {
 		return;
 	}
 	changePage("profile");
-}
-
-export function syncNavbar() {
-	const user = getLoggedInUser();
-
-	const loginDesktop = document.getElementById("nav-login-desktop");
-	const loginMobile = document.getElementById("nav-login-mobile");
-	const profileDesktop = document.getElementById("nav-profile-desktop");
-	const profileMobile = document.getElementById("nav-profile-mobile");
-
-	const loginLabel = t(user ? "nav.logout" : "nav.login");
-	if (loginDesktop) loginDesktop.textContent = loginLabel;
-	if (loginMobile) loginMobile.textContent = loginLabel;
-
-	const profileLabel = t("nav.profile");
-	if (profileDesktop) {
-		profileDesktop.textContent = profileLabel;
-		profileDesktop.style.display = user ? "inline-flex" : "none";
-	}
-	if (profileMobile) {
-		profileMobile.textContent = profileLabel;
-		profileMobile.style.display = user ? "inline-flex" : "none";
-	}
 }

@@ -1,18 +1,6 @@
-import {
-	initNewAlbum,
-	resetMusicFieldErrors,
-} from "../../Controller/Edit_Music_Details/editMusic.js";
-import {
-	clearAuthMessage,
-	resetAuthFieldErrors,
-	syncNavbar,
-} from "../../Controller/Login/login.js";
-import { clearBackupMessage } from "../../Controller/Universal/backup.js";
-import { syncChrome } from "../../Controller/Universal/navbarMobile.js";
 import { applyStaticText, t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { QUOTA_WARN_PERCENT } from "../../Model/persistence.js";
-import { isLoggedIn } from "../../Model/selectors.js";
 import { aboutPage } from "../About/view.js";
 import { addDetailsPage, editDetailsPage } from "../Add_Or_Edit_New_Music/view.js";
 import { homeView } from "../Homepage/view.js";
@@ -24,6 +12,7 @@ import { registerPage } from "../Register/view.js";
 import { searchPage } from "../Search/view.js";
 import { welcomePage } from "../Welcome/view.js";
 import { wishListPage } from "../Wishlist/view.js";
+import { syncChrome, syncNavbar } from "./chrome.js";
 
 export function updateView() {
 	let html = storageBanner();
@@ -85,33 +74,4 @@ function storageBanner() {
         </div>`;
 	}
 	return "";
-}
-
-export function changePage(element) {
-	const publicPages = ["welcome", "login", "register", "about", "notFound"];
-
-	// changePage() used to trust its argument, so a typo in an onclick handler
-	// set currentPage to a name nothing renders. Unknown names land on the
-	// not-found view instead of a blank page.
-	if (!model.app.allPages.includes(element)) {
-		console.warn(`[router] unknown page: ${element}`);
-		element = "notFound";
-	}
-
-	if (!isLoggedIn() && !publicPages.includes(element)) {
-		model.app.currentPage = "welcome";
-		updateView();
-		return;
-	}
-
-	if (element === "addDetails") {
-		initNewAlbum();
-	}
-
-	model.app.currentPage = element;
-	clearAuthMessage();
-	clearBackupMessage();
-	resetAuthFieldErrors();
-	resetMusicFieldErrors();
-	updateView();
 }

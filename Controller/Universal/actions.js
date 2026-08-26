@@ -17,7 +17,7 @@ import { renderStrength } from "../../Model/auth.js";
 import { setLang } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
-import { changePage, updateView } from "../../View/Universal/updateView.js";
+import { updateView } from "../../View/Universal/updateView.js";
 import {
 	clearMusicGroupError,
 	newGenre,
@@ -40,6 +40,7 @@ import { register } from "../Register/register.js";
 import { exportEncryptedBackup, exportPlaintextBackup, importBackupFile } from "./backup.js";
 import { deleteAlbum } from "./delete.js";
 import { toggleMobileMenu } from "./navbarMobile.js";
+import { changePage } from "./router.js";
 import { toggleWishlist } from "./save.js";
 import { toggleTheme } from "./theme.js";
 import { viewMusicDetails } from "./viewMusicDetails.js";

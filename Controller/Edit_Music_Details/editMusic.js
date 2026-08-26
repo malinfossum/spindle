@@ -2,10 +2,12 @@ import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
+import { clearAuthMessage } from "../../Model/viewState.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
-import { changePage, updateView } from "../../View/Universal/updateView.js";
-import { clearAuthMessage, focusFirstInvalid } from "../Login/login.js";
+import { updateView } from "../../View/Universal/updateView.js";
+import { focusFirstInvalid } from "../Login/login.js";
+import { changePage } from "../Universal/router.js";
 
 export function toggleLocationCheckbox(checkbox, index) {
 	const locations = model.viewState.musicInfo.location;
@@ -248,20 +250,6 @@ function readFileAsBase64(file) {
 		reader.onerror = () => reject(reader.error);
 		reader.readAsDataURL(file);
 	});
-}
-
-// Wipes the add/edit form's field errors. Called on navigation (changePage) so a
-// validation error from one visit never lingers into the next — the music-form
-// counterpart to resetAuthFieldErrors.
-export function resetMusicFieldErrors() {
-	model.viewState.musicForm.errors = {
-		coverImg: "",
-		artist: "",
-		title: "",
-		location: "",
-		genre: "",
-		form: "",
-	};
 }
 
 // Lokasjon/Sjanger are groups, not single inputs, so clearFieldError (which keys

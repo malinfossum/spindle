@@ -21,8 +21,9 @@ import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { STORAGE_KEY } from "../../Model/persistence.js";
 import { openDialog } from "../../View/Universal/dialog.js";
-import { changePage, updateView } from "../../View/Universal/updateView.js";
+import { updateView } from "../../View/Universal/updateView.js";
 import { logout, setAuthMessage } from "../Login/login.js";
+import { changePage } from "./router.js";
 
 const IMPORT_MAX_BYTES = 10 * 1024 * 1024;
 
@@ -42,10 +43,6 @@ const EXPORT_ERROR_KEYS = {
 
 function setBackupMessage(key, tone) {
 	model.app.backupMessage = { key, tone };
-}
-
-export function clearBackupMessage() {
-	model.app.backupMessage = { key: "", tone: "info" };
 }
 
 function downloadJson(filename, payload) {
