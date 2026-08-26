@@ -59,7 +59,12 @@ const ACTIONS = {
 	"nav-profile": () => handleProfileNavClick(),
 	"toggle-menu": () => toggleMobileMenu(),
 	"toggle-theme": () => toggleTheme(),
-	"set-lang": (_event, target) => setLang(target.dataset.lang),
+	// setLang() writes the preference and re-applies the static chrome; the
+	// re-render is the Controller's to ask for, not the Model's.
+	"set-lang": (_event, target) => {
+		setLang(target.dataset.lang);
+		updateView();
+	},
 
 	// Deliberately no re-render: the search box lives in the static navbar, and
 	// re-rendering on every keystroke would drop its focus. The search page reads

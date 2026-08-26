@@ -4,7 +4,6 @@
 // so switching language is just: store the choice, re-render, done. There is no
 // per-node binding to keep in sync.
 
-import { updateView } from "../../View/Universal/updateView.js";
 import { getPref, setPref } from "../prefs.js";
 import { SEED_EN, STRINGS_EN } from "./en.js";
 import { SEED_NO, STRINGS_NO } from "./no.js";
@@ -59,7 +58,6 @@ export function setLang(lang) {
 
 	setPref("lang", lang);
 	applyLang();
-	updateView();
 }
 
 // Everything about the document that lives outside #app and so is not covered
