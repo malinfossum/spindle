@@ -1,5 +1,15 @@
-const SCHEMA_VERSION = 1;
-const STORAGE_KEY = "spindle:v1:state";
+import {
+	base64ToBytes,
+	bytesToBase64,
+	encryptLibrary,
+	IV_BYTES,
+	isCryptoAvailable,
+	KDF_SALT_BYTES,
+} from "./auth.js";
+import { model } from "./model.js";
+
+export const SCHEMA_VERSION = 1;
+export const STORAGE_KEY = "spindle:v1:state";
 const STORAGE_PROBE_KEY = "__spindle_probe__";
 const QUOTA_WARN_PERCENT = 80;
 const QUOTA_HARD_STOP_PERCENT = 95;
@@ -23,7 +33,7 @@ function probeStorage() {
 //   { ok: false, reason: "too-new" }      → written by a newer build of Spindle
 //   { ok: false, reason: "corrupt", ... } → malformed
 //   { ok: true, envelope }                → a valid encrypted envelope
-function validateEnvelope(parsed) {
+export function validateEnvelope(parsed) {
 	if (!parsed || typeof parsed !== "object") {
 		return { ok: false, reason: "corrupt", message: "ugyldig format" };
 	}
@@ -70,7 +80,7 @@ function validateEnvelope(parsed) {
 
 // What localStorage holds, run through the shared shape check. Returns null when
 // nothing is stored; otherwise a validateEnvelope() result.
-function readEnvelope() {
+export function readEnvelope() {
 	const raw = localStorage.getItem(STORAGE_KEY);
 	if (!raw) return null;
 
@@ -85,7 +95,7 @@ function readEnvelope() {
 }
 
 // `message` on the error branch is an i18n key, ready for the storage banner.
-function loadState() {
+export function loadState() {
 	const result = readEnvelope();
 	if (result === null) return { kind: "none" };
 	if (result.ok) return { kind: "encrypted", envelope: result.envelope };
@@ -101,7 +111,7 @@ function loadState() {
 // actuallyPersist so one rejected save doesn't break the chain for the next.
 let saveChain = Promise.resolve();
 
-function persistState() {
+export function persistState() {
 	saveChain = saveChain.then(actuallyPersist, actuallyPersist);
 	return saveChain;
 }
@@ -160,13 +170,13 @@ async function refreshStorageEstimate() {
 	}
 }
 
-function isStorageNearFull() {
+export function isStorageNearFull() {
 	const storage = model.app.storage;
 	if (!storage) return false;
 	return storage.percent >= QUOTA_HARD_STOP_PERCENT;
 }
 
-function formatBytes(bytes) {
+export function formatBytes(bytes) {
 	if (!bytes || bytes < 0) return "0 B";
 	const units = ["B", "kB", "MB", "GB"];
 	let value = bytes;

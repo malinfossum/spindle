@@ -1,8 +1,12 @@
-function addDetailsPage() {
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { escapeHtml } from "../Universal/escape.js";
+
+export function addDetailsPage() {
 	return buildMusicForm(false);
 }
 
-function editDetailsPage() {
+export function editDetailsPage() {
 	return buildMusicForm(true);
 }
 

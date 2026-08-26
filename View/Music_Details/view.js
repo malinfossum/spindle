@@ -1,4 +1,8 @@
-function viewDetailsPage() {
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { escapeHtml } from "../Universal/escape.js";
+
+export function viewDetailsPage() {
 	const id = model.viewState.musicInfo.id;
 	const album = model.data.musicInfo.find((a) => a.id === id);
 

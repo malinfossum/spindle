@@ -1,4 +1,8 @@
-function loginPage() {
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { escapeHtml } from "../Universal/escape.js";
+
+export function loginPage() {
 	const busy = model.app.authBusy;
 	const errors = model.viewState.login.errors;
 

@@ -1,4 +1,24 @@
-async function register() {
+import {
+	bytesToBase64,
+	computeVerifyHmac,
+	deriveKeys,
+	encryptLibrary,
+	KDF_SALT_BYTES,
+	randomBytes,
+	validatePassword,
+} from "../../Model/auth.js";
+import { seedData } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { SCHEMA_VERSION, STORAGE_KEY } from "../../Model/persistence.js";
+import { changePage, updateView } from "../../View/Universal/updateView.js";
+import {
+	clearAuthMessage,
+	clearRegisterForm,
+	focusFirstInvalid,
+	setAuthMessage,
+} from "../Login/login.js";
+
+export async function register() {
 	if (model.app.authBusy) return;
 
 	const username = model.viewState.createProfile.username.trim();

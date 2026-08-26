@@ -11,7 +11,12 @@
 // controls: there, adjacent expanded areas overlap and steal each other's
 // clicks. Here each overlay is bounded by its own card and the cards are spaced
 // apart, so nothing overlaps.
-function createAlbumCard(album) {
+
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { escapeHtml } from "./escape.js";
+
+export function createAlbumCard(album) {
 	const genre = album.genre.map((i) => model.data.genre[i]).join(", ") || "—";
 	const location = album.location.map((i) => model.data.location[i]).join(", ") || "—";
 	const albumCover = album.coverImg

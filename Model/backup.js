@@ -8,12 +8,16 @@
 //
 // Model layer: builds and validates plain objects only. Blobs, downloads and
 // file pickers belong to Controller/Universal/backup.js.
+
+import { model } from "./model.js";
+import { readEnvelope, validateEnvelope } from "./persistence.js";
+
 const BACKUP_FORMAT = "spindle-backup";
 const BACKUP_APP_VERSION = "0.1";
 
 // Filenames are not UI strings — they stay English in both languages so a file
 // keeps its meaning when it is moved between machines or e-mailed on.
-function backupFilename(kind) {
+export function backupFilename(kind) {
 	const date = new Date().toISOString().slice(0, 10);
 	const suffix = kind === "plaintext" ? "-plaintext" : "";
 	return `spindle-backup-${date}${suffix}.json`;
@@ -21,7 +25,7 @@ function backupFilename(kind) {
 
 // The stored envelope, wrapped in a thin outer object that names the format and
 // the build that wrote it. Works while the library is locked, on purpose.
-function buildEncryptedBackup() {
+export function buildEncryptedBackup() {
 	const result = readEnvelope();
 	if (result === null) return { ok: false, reason: "noLibrary" };
 	if (!result.ok) {
@@ -42,7 +46,7 @@ function buildEncryptedBackup() {
 
 // Serialises the decrypted library, so it needs an unlocked one. Opt-in only —
 // the controller puts an explicit warning in front of this.
-function buildPlaintextBackup() {
+export function buildPlaintextBackup() {
 	if (!model.app.crypto.unlocked) return { ok: false, reason: "locked" };
 
 	return {
@@ -68,7 +72,7 @@ function buildPlaintextBackup() {
 //
 // Returns { ok: true, envelope } or { ok: false, reason } where reason maps to
 // one of the backup.err* strings.
-function parseBackup(text) {
+export function parseBackup(text) {
 	let parsed;
 	try {
 		parsed = JSON.parse(text);

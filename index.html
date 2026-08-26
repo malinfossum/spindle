@@ -37,7 +37,7 @@
 
     <!-- Synchronous and before the stylesheet on purpose: it sets data-theme on
          <html> before anything can paint. See the file for why it is not inline. -->
-    <script src="View/Universal/themePreload.js"></script>
+    <script src="/themePreload.js"></script>
 
     <link rel="stylesheet" href="CSS/style.css">
 </head>
@@ -83,53 +83,13 @@
         <p id="footer-copyright">© 2026 Spindle</p>
     </footer>
 
-    <script src="Model/model.js"></script>
-    <script src="Model/prefs.js"></script>
-    <script src="Model/i18n/no.js"></script>
-    <script src="Model/i18n/en.js"></script>
-    <script src="Model/i18n/i18n.js"></script>
-    <script src="Model/auth.js"></script>
-    <script src="Model/persistence.js"></script>
-    <script src="Model/backup.js"></script>
+    <!-- One entry point. Every other file is reached through its imports —
+         see Controller/Universal/boot.js for why the load order stopped
+         mattering. themePreload.js above stays a classic script on purpose:
+         type="module" is deferred by definition, and a deferred theme is a
+         theme flash. -->
+    <script type="module" src="Controller/Universal/boot.js"></script>
 
-    <script src="View/Universal/bindActions.js"></script>
-    <script src="View/Universal/escape.js"></script>
-    <script src="View/Universal/sniff.js"></script>
-    <script src="View/Universal/dialog.js"></script>
-    <script src="View/Universal/backup.js"></script>
-
-    <script src="View/Add_Or_Edit_New_Music/view.js"></script>
-    <script src="View/Homepage/view.js"></script>
-    <script src="View/Login/view.js"></script>
-    <script src="View/Music_Details/view.js"></script>
-    <script src="View/Profile/view.js"></script>
-    <script src="View/Register/view.js"></script>
-    <script src="View/Search/view.js"></script>
-    <script src="View/Wishlist/view.js"></script>
-    <script src="View/Welcome/view.js"></script>
-    <script src="View/About/view.js"></script>
-    <script src="View/NotFound/view.js"></script>
-
-    <script src="View/Universal/albumCard.js"></script>
-    <script src="Controller/Login/login.js"></script>
-    <script src="View/Universal/updateView.js"></script>
-
-    <script src="Controller/Edit_Music_Details/editMusic.js"></script>
-    <script src="Controller/Music_Details/editBtn.js"></script>
-    <script src="Controller/Register/register.js"></script>
-    <script src="Controller/Search/search.js"></script>
-    <script src="Controller/Universal/actions.js"></script>
-    <script src="Controller/Universal/backup.js"></script>
-    <script src="Controller/Universal/delete.js"></script>
-    <script src="Controller/Universal/navbar&Mobile.js"></script>
-    <script src="Controller/Universal/save.js"></script>
-    <script src="Controller/Universal/storageSync.js"></script>
-    <script src="Controller/Universal/viewMusicDetails.js"></script>
-
-    <script src="Controller/Universal/theme.js"></script>
-
-    <!-- Last on purpose — see the file. -->
-    <script src="Controller/Universal/boot.js"></script>
 </body>
 
 </html>

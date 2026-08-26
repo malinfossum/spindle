@@ -1,4 +1,12 @@
-function toggleLocationCheckbox(checkbox, index) {
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { isStorageNearFull, persistState } from "../../Model/persistence.js";
+import { openDialog } from "../../View/Universal/dialog.js";
+import { sniffImageType } from "../../View/Universal/sniff.js";
+import { changePage, updateView } from "../../View/Universal/updateView.js";
+import { clearAuthMessage, focusFirstInvalid, isLoggedIn } from "../Login/login.js";
+
+export function toggleLocationCheckbox(checkbox, index) {
 	const locations = model.viewState.musicInfo.location;
 
 	if (checkbox.checked) {
@@ -12,7 +20,7 @@ function toggleLocationCheckbox(checkbox, index) {
 	}
 }
 
-function toggleGenreCheckbox(checkbox, index) {
+export function toggleGenreCheckbox(checkbox, index) {
 	const genre = model.viewState.musicInfo.genre;
 
 	if (checkbox.checked) {
@@ -31,13 +39,13 @@ function rng() {
 	return number;
 }
 
-function initNewAlbum() {
+export function initNewAlbum() {
 	emptyList();
 	emptyGenreLocationList();
 	clearAuthMessage();
 }
 
-function submitChanges(isEdit) {
+export function submitChanges(isEdit) {
 	if (!isLoggedIn()) {
 		changePage("login");
 		return;
@@ -87,7 +95,7 @@ function submitChanges(isEdit) {
 	changePage("homePage");
 }
 
-function newLocation(event) {
+export function newLocation(event) {
 	event.preventDefault();
 
 	const location = model.viewState.editMusicInfo.location.trim();
@@ -107,7 +115,7 @@ function newLocation(event) {
 	updateView();
 }
 
-function newGenre(event) {
+export function newGenre(event) {
 	event.preventDefault();
 
 	const genre = model.viewState.editMusicInfo.genre.trim();
@@ -127,7 +135,7 @@ function newGenre(event) {
 	updateView();
 }
 
-async function removeLocation(event) {
+export async function removeLocation(event) {
 	event.preventDefault();
 
 	const location = model.viewState.editMusicInfo.location.trim();
@@ -152,7 +160,7 @@ async function removeLocation(event) {
 	updateView();
 }
 
-async function removeGenre(event) {
+export async function removeGenre(event) {
 	event.preventDefault();
 
 	const genre = model.viewState.editMusicInfo.genre.trim();
@@ -198,7 +206,7 @@ function emptyGenreLocationList() {
 	};
 }
 
-async function saveImage(image) {
+export async function saveImage(image) {
 	const file = image.files[0];
 	if (!file) return;
 
@@ -244,7 +252,7 @@ function readFileAsBase64(file) {
 // Wipes the add/edit form's field errors. Called on navigation (changePage) so a
 // validation error from one visit never lingers into the next — the music-form
 // counterpart to resetAuthFieldErrors.
-function resetMusicFieldErrors() {
+export function resetMusicFieldErrors() {
 	model.viewState.musicForm.errors = {
 		coverImg: "",
 		artist: "",
@@ -258,7 +266,7 @@ function resetMusicFieldErrors() {
 // Lokasjon/Sjanger are groups, not single inputs, so clearFieldError (which keys
 // off input.id) can't clear them. Clear the group's error the moment a choice is
 // made, updating the DOM directly to avoid a focus-dropping re-render.
-function clearMusicGroupError(groupName) {
+export function clearMusicGroupError(groupName) {
 	const errors = model.viewState.musicForm.errors;
 	if (!errors[groupName]) return;
 

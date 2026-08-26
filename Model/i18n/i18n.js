@@ -3,6 +3,12 @@
 // Views call t("some.key") inline and are re-rendered wholesale by updateView(),
 // so switching language is just: store the choice, re-render, done. There is no
 // per-node binding to keep in sync.
+
+import { updateView } from "../../View/Universal/updateView.js";
+import { getPref, setPref } from "../prefs.js";
+import { SEED_EN, STRINGS_EN } from "./en.js";
+import { SEED_NO, STRINGS_NO } from "./no.js";
+
 const LANGUAGES = {
 	no: { strings: STRINGS_NO, seed: SEED_NO, htmlLang: "no" },
 	en: { strings: STRINGS_EN, seed: SEED_EN, htmlLang: "en" },
@@ -20,7 +26,7 @@ function getLang() {
 //
 // A falsy key returns "" so callers can pass a possibly-empty error key straight
 // through: t(errors.artist) renders nothing when there is no error.
-function t(key, params) {
+export function t(key, params) {
 	if (!key) return "";
 
 	const table = LANGUAGES[getLang()].strings;
@@ -43,12 +49,12 @@ function t(key, params) {
 }
 
 // Starter genre/location lists for a brand-new library, in the active language.
-function seedData() {
+export function seedData() {
 	const seed = LANGUAGES[getLang()].seed;
 	return { genre: [...seed.genre], location: [...seed.location] };
 }
 
-function setLang(lang) {
+export function setLang(lang) {
 	if (!LANGUAGES[lang] || lang === getLang()) return;
 
 	setPref("lang", lang);
@@ -59,7 +65,7 @@ function setLang(lang) {
 // Everything about the document that lives outside #app and so is not covered
 // by a re-render: the lang attribute screen readers use to pick a voice, and
 // the static navbar/footer chrome in index.html.
-function applyLang() {
+export function applyLang() {
 	document.documentElement.setAttribute("lang", LANGUAGES[getLang()].htmlLang);
 	applyStaticText();
 }
@@ -67,7 +73,7 @@ function applyLang() {
 // The navbar and footer are hand-written in index.html rather than rendered
 // from state, so updateView() never touches them. Push the current language
 // into them by hand. Called from updateView() so the two can never drift.
-function applyStaticText() {
+export function applyStaticText() {
 	const setText = (id, key) => {
 		const el = document.getElementById(id);
 		if (el) el.textContent = t(key);
@@ -100,7 +106,7 @@ function applyStaticText() {
 // settings block so the two can't drift apart.
 // Pass labelledById when the control already sits next to a visible label, so
 // the group is named once rather than twice.
-function langSwitcher(extraClass = "", labelledById = "") {
+export function langSwitcher(extraClass = "", labelledById = "") {
 	const current = getLang();
 
 	const groupLabel = labelledById

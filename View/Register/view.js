@@ -1,4 +1,9 @@
-function registerPage() {
+import { passwordStrength } from "../../Model/auth.js";
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { escapeHtml } from "../Universal/escape.js";
+
+export function registerPage() {
 	const busy = model.app.authBusy;
 	const errors = model.viewState.createProfile.errors;
 	const strength = passwordStrength(model.viewState.createProfile.password);

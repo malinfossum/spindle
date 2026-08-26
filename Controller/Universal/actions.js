@@ -12,6 +12,38 @@
 
 // The add/edit form's four chip panels. A lookup rather than reading the model
 // key straight out of the attribute, so markup can only reach these four flags.
+
+import { renderStrength } from "../../Model/auth.js";
+import { setLang } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { bindActions } from "../../View/Universal/bindActions.js";
+import { changePage, updateView } from "../../View/Universal/updateView.js";
+import {
+	clearMusicGroupError,
+	newGenre,
+	newLocation,
+	removeGenre,
+	removeLocation,
+	saveImage,
+	submitChanges,
+	toggleGenreCheckbox,
+	toggleLocationCheckbox,
+} from "../Edit_Music_Details/editMusic.js";
+import {
+	clearFieldError,
+	handleLoginNavClick,
+	handleProfileNavClick,
+	login,
+} from "../Login/login.js";
+import { editAlbum } from "../Music_Details/editBtn.js";
+import { register } from "../Register/register.js";
+import { exportEncryptedBackup, exportPlaintextBackup, importBackupFile } from "./backup.js";
+import { deleteAlbum } from "./delete.js";
+import { toggleMobileMenu } from "./navbarMobile.js";
+import { toggleWishlist } from "./save.js";
+import { toggleTheme } from "./theme.js";
+import { viewMusicDetails } from "./viewMusicDetails.js";
+
 const FORM_PANELS = {
 	"location-add": "showLocationInput",
 	"location-remove": "showDeleteLocationInput",
@@ -133,6 +165,6 @@ const ACTIONS = {
 
 // Called once from the boot script in index.html. Binding to the document
 // covers the static navbar, the rendered #app, and the footer in one pass.
-function initActions() {
+export function initActions() {
 	bindActions(document, ACTIONS);
 }

@@ -26,7 +26,7 @@ const ACTION_EVENTS = {
 	toggle: "data-action-toggle",
 };
 
-function bindActions(root, handlers) {
+export function bindActions(root, handlers) {
 	for (const [type, attribute] of Object.entries(ACTION_EVENTS)) {
 		// <details> fires 'toggle' without bubbling, so a listener up on the
 		// document would never see it on the way back up. The capture phase runs

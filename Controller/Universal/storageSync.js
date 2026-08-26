@@ -8,6 +8,14 @@
 // listener never sees this tab's own writes. Every event here is another tab
 // reporting what it just did.
 
+import { applyLang } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { STORAGE_KEY } from "../../Model/persistence.js";
+import { invalidatePrefsCache, PREFS_KEY } from "../../Model/prefs.js";
+import { updateView } from "../../View/Universal/updateView.js";
+import { isLoggedIn } from "../Login/login.js";
+import { applyStoredTheme } from "./theme.js";
+
 function handlePrefsChangedElsewhere() {
 	// prefs.js keeps an in-memory mirror, so re-reading is not enough on its own —
 	// the cache has to be dropped or the old language and theme would win.

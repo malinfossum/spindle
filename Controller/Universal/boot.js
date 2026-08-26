@@ -1,12 +1,21 @@
-// Boot. Loaded LAST in index.html, and that placement is the dependency graph:
-// scripts are plain <script> tags with no modules, so everything called here
-// has to have been defined by an earlier tag. In particular updateView() calls
-// syncNavbar() and syncChrome(), which is why the first render cannot live at
-// the top of View/Universal/updateView.js.
+// Boot — the single entry point index.html loads, and the root of the module
+// graph. Everything else in the app is reachable from these four imports.
 //
-// This was an inline <script> until v0.2. It is a file now for the same reason
-// the theme preload is: no inline script anywhere means the CSP can say
-// script-src 'self' and nothing else.
+// Until v0.2 this file was loaded last by the last of 41 <script> tags, and
+// that ordering *was* the dependency graph: every function was a global, and a
+// call worked only if its tag came earlier in the document. Modules make the
+// graph explicit, so the order below is now just reading order — the imports
+// are resolved before a line of it runs.
+//
+// storageSync is imported for its side effect. It registers the cross-tab
+// `storage` listener and exports nothing, so without this line the module
+// would simply never be evaluated.
+
+import { applyLang } from "../../Model/i18n/i18n.js";
+import { updateView } from "../../View/Universal/updateView.js";
+import { initActions } from "./actions.js";
+import "./storageSync.js";
+import { applyStoredTheme } from "./theme.js";
 
 initActions();
 applyStoredTheme();

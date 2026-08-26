@@ -5,7 +5,7 @@
 // must be neutralised here or the browser runs it as markup. Escapes the five
 // characters that matter in both element text and double-quoted attributes.
 // "&" is replaced first so the entities introduced below aren't re-escaped.
-function escapeHtml(value) {
+export function escapeHtml(value) {
 	return String(value ?? "")
 		.replaceAll("&", "&amp;")
 		.replaceAll("<", "&lt;")

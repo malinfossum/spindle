@@ -2,13 +2,18 @@
 
 A local music library for organizing physical LP and CD collections, built in vanilla JavaScript.
 
-**Status:** v0.1 feature-complete — every task planned for v0.1 has shipped. Next is v0.2: a build step and hash routing.
+**Status:** v0.1.0 released. v0.2 in progress — the build step has landed; hash routing is next.
 
 ## Run locally
 
-Use Live Server in VS Code, or serve the folder over HTTPS.
+```
+npm install
+npm run dev
+```
 
-Spindle needs a secure context for encryption — opening `index.html` directly via `file://` will fail in some browsers because the Web Crypto API is unavailable there.
+`npm run build` writes a production bundle to `dist/`, and `npm run preview` serves it.
+
+Spindle needs a secure context for encryption — opening `index.html` directly via `file://` will fail, because the Web Crypto API is unavailable there.
 
 ## Features
 
@@ -25,8 +30,9 @@ Spindle needs a secure context for encryption — opening `index.html` directly 
 
 ## Stack
 
-- HTML, CSS, vanilla JavaScript
+- HTML, CSS, vanilla JavaScript — ES modules, no framework
 - MVC structure with separate `Model/`, `View/`, and `Controller/` folders
+- Vite for the dev server and the build, Biome for formatting and linting
 - State persisted to `localStorage`
 - Library data encrypted at rest with Web Crypto (PBKDF2 + HKDF + AES-GCM)
 

@@ -5,7 +5,16 @@
 // true on confirm and false on cancel / Esc / backdrop click. The body is
 // written with textContent, never innerHTML, so user-entered names (album
 // titles, genres, locations) can be dropped in without escaping.
-function openDialog({ title, body, confirmText, cancelText = t("dialog.cancel"), danger = false }) {
+
+import { t } from "../../Model/i18n/i18n.js";
+
+export function openDialog({
+	title,
+	body,
+	confirmText,
+	cancelText = t("dialog.cancel"),
+	danger = false,
+}) {
 	return new Promise((resolve) => {
 		const opener = document.activeElement;
 

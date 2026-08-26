@@ -1,4 +1,7 @@
-function toggleMobileMenu() {
+import { model } from "../../Model/model.js";
+import { isLoggedIn } from "../Login/login.js";
+
+export function toggleMobileMenu() {
 	const menu = document.getElementById("mobile-menu");
 
 	// Selve togglen
@@ -21,7 +24,7 @@ function toggleMobileMenu() {
 // The logged-out flow (welcome, login, register, about) is shown without the app
 // navbar and footer so the welcome landing reads as a clean entry point. This only
 // flips a body class; CSS owns the actual hiding.
-function syncChrome() {
+export function syncChrome() {
 	const loggedOutPages = ["welcome", "login", "register", "about"];
 	// The not-found view is reachable from both sides: keep the chrome hidden in
 	// the logged-out flow, and visible inside the app where the navbar is the way

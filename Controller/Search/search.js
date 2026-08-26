@@ -1,4 +1,7 @@
-function getSearchResults() {
+import { model } from "../../Model/model.js";
+import { getAccessibleAlbums } from "../Login/login.js";
+
+export function getSearchResults() {
 	const query = (model.viewState.searchBar || "").toLowerCase().trim();
 	const all = getAccessibleAlbums();
 

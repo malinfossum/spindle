@@ -1,25 +1,38 @@
-function getLoggedInUser() {
+import {
+	base64ToBytes,
+	computeVerifyHmac,
+	constantTimeEqual,
+	decryptLibrary,
+	deriveKeys,
+	zeroKeys,
+} from "../../Model/auth.js";
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { readEnvelope } from "../../Model/persistence.js";
+import { changePage, updateView } from "../../View/Universal/updateView.js";
+
+export function getLoggedInUser() {
 	return isLoggedIn() ? model.data.user : null;
 }
 
-function isLoggedIn() {
+export function isLoggedIn() {
 	return model.app.crypto.unlocked === true;
 }
 
-function getAccessibleAlbums() {
+export function getAccessibleAlbums() {
 	if (!isLoggedIn()) return [];
 	return model.data.musicInfo;
 }
 
-function getProfileAlbums() {
+export function getProfileAlbums() {
 	return getAccessibleAlbums();
 }
 
-function clearAuthMessage() {
+export function clearAuthMessage() {
 	model.app.authMessage = "";
 }
 
-function setAuthMessage(message) {
+export function setAuthMessage(message) {
 	model.app.authMessage = message;
 }
 
@@ -30,7 +43,7 @@ function clearLoginForm() {
 	};
 }
 
-function clearRegisterForm() {
+export function clearRegisterForm() {
 	model.viewState.createProfile = {
 		username: "",
 		password: "",
@@ -41,7 +54,7 @@ function clearRegisterForm() {
 
 // Wipes every per-field error on both auth forms. Called on navigation so a
 // validation error from one visit never lingers into the next.
-function resetAuthFieldErrors() {
+export function resetAuthFieldErrors() {
 	model.viewState.login.errors = { password: "" };
 	model.viewState.createProfile.errors = {
 		username: "",
@@ -53,7 +66,7 @@ function resetAuthFieldErrors() {
 // Clears one field's error the instant the user edits it. Updates the DOM
 // directly instead of re-rendering — exactly like renderStrength — because
 // calling updateView() on every keystroke would drop the input's focus.
-function clearFieldError(input, formName, fieldName) {
+export function clearFieldError(input, formName, fieldName) {
 	const errors = model.viewState[formName].errors;
 	if (!errors[fieldName]) return;
 
@@ -66,12 +79,12 @@ function clearFieldError(input, formName, fieldName) {
 
 // After a failed submit, send focus to the first field flagged invalid so a
 // keyboard or screen-reader user lands on the problem and hears its linked error.
-function focusFirstInvalid() {
+export function focusFirstInvalid() {
 	const field = model.app.app.querySelector('[aria-invalid="true"]');
 	if (field) field.focus();
 }
 
-async function login() {
+export async function login() {
 	if (model.app.authBusy) return;
 
 	const password = model.viewState.login.password;
@@ -149,7 +162,7 @@ async function login() {
 	}
 }
 
-function logout() {
+export function logout() {
 	zeroKeys();
 
 	// Replace the library with an empty shell so a racing re-render can't briefly
@@ -180,7 +193,7 @@ function logout() {
 	changePage("welcome");
 }
 
-function handleLoginNavClick() {
+export function handleLoginNavClick() {
 	if (isLoggedIn()) {
 		logout();
 		return;
@@ -188,7 +201,7 @@ function handleLoginNavClick() {
 	changePage("login");
 }
 
-function handleProfileNavClick() {
+export function handleProfileNavClick() {
 	if (!isLoggedIn()) {
 		changePage("login");
 		return;
@@ -196,7 +209,7 @@ function handleProfileNavClick() {
 	changePage("profile");
 }
 
-function syncNavbar() {
+export function syncNavbar() {
 	const user = getLoggedInUser();
 
 	const loginDesktop = document.getElementById("nav-login-desktop");

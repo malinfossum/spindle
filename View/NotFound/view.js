@@ -9,7 +9,11 @@
 //
 // Static content only — nothing user-entered is interpolated, so nothing needs
 // escaping.
-function notFoundPage() {
+
+import { isLoggedIn } from "../../Controller/Login/login.js";
+import { t } from "../../Model/i18n/i18n.js";
+
+export function notFoundPage() {
 	const loggedIn = isLoggedIn();
 	const target = loggedIn ? "homePage" : "welcome";
 	const backKey = loggedIn ? "notFound.backLibrary" : "notFound.backWelcome";

@@ -1,4 +1,8 @@
-function wishListPage() {
+import { getAccessibleAlbums } from "../../Controller/Login/login.js";
+import { t } from "../../Model/i18n/i18n.js";
+import { createAlbumCard } from "../Universal/albumCard.js";
+
+export function wishListPage() {
 	const wishlist = getAccessibleAlbums().filter((album) => album.wishlist);
 
 	if (wishlist.length === 0) {

@@ -8,7 +8,7 @@
 // an oversight: this blob is readable by anyone with access to the browser
 // profile. Display preferences only. Library data stays in spindle:v1:state,
 // encrypted.
-const PREFS_KEY = "spindle:v1:prefs";
+export const PREFS_KEY = "spindle:v1:prefs";
 
 const PREFS_DEFAULTS = {
 	lang: "no",
@@ -65,15 +65,15 @@ function readPrefs() {
 // from storage — without this the stale cached language or theme would win.
 // When localStorage is unavailable the cache IS the store, but then no storage
 // event can reach us either, so there is nothing to invalidate.
-function invalidatePrefsCache() {
+export function invalidatePrefsCache() {
 	prefsCache = null;
 }
 
-function getPref(name) {
+export function getPref(name) {
 	return readPrefs()[name];
 }
 
-function setPref(name, value) {
+export function setPref(name, value) {
 	if (!PREFS_ALLOWED[name] || !PREFS_ALLOWED[name].includes(value)) return;
 
 	const prefs = readPrefs();

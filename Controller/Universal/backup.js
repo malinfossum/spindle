@@ -9,6 +9,21 @@
 
 // A real backup is a few hundred kB. Anything past this is not one, and reading
 // it as text would only stall the tab.
+
+import { zeroKeys } from "../../Model/auth.js";
+import {
+	backupFilename,
+	buildEncryptedBackup,
+	buildPlaintextBackup,
+	parseBackup,
+} from "../../Model/backup.js";
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { STORAGE_KEY } from "../../Model/persistence.js";
+import { openDialog } from "../../View/Universal/dialog.js";
+import { changePage, updateView } from "../../View/Universal/updateView.js";
+import { logout, setAuthMessage } from "../Login/login.js";
+
 const IMPORT_MAX_BYTES = 10 * 1024 * 1024;
 
 const IMPORT_ERROR_KEYS = {
@@ -29,7 +44,7 @@ function setBackupMessage(key, tone) {
 	model.app.backupMessage = { key, tone };
 }
 
-function clearBackupMessage() {
+export function clearBackupMessage() {
 	model.app.backupMessage = { key: "", tone: "info" };
 }
 
@@ -53,7 +68,7 @@ function downloadJson(filename, payload) {
 }
 
 // Works locked or unlocked: the encrypted envelope is copied out as-is.
-function exportEncryptedBackup() {
+export function exportEncryptedBackup() {
 	const result = buildEncryptedBackup();
 
 	if (!result.ok) {
@@ -68,7 +83,7 @@ function exportEncryptedBackup() {
 }
 
 // Opt-in, and gated behind a dialog that says plainly what the file will be.
-async function exportPlaintextBackup() {
+export async function exportPlaintextBackup() {
 	const confirmed = await openDialog({
 		title: t("backup.plaintextTitle"),
 		body: t("backup.plaintextBody"),
@@ -93,7 +108,7 @@ async function exportPlaintextBackup() {
 // logs out: the imported envelope opens with the password IT was created with,
 // not whatever is unlocked right now. Reusing the live session keys against
 // someone else's ciphertext would simply fail to decrypt on the next save.
-async function importBackupFile(input) {
+export async function importBackupFile(input) {
 	const file = input.files && input.files[0];
 	if (!file) return;
 

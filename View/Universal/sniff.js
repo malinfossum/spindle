@@ -3,7 +3,7 @@
 // MIME for the three allowed raster formats, or null to reject everything else,
 // including SVG (which is executable and a known XSS vector even when renamed).
 // JPEG: FF D8 FF · PNG: 89 50 4E 47 · WebP: "RIFF" .... "WEBP".
-async function sniffImageType(file) {
+export async function sniffImageType(file) {
 	const bytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
 	const startsWith = (sig) => sig.every((b, i) => bytes[i] === b);
 

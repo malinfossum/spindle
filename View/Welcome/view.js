@@ -1,4 +1,10 @@
-function welcomePage() {
+import { themeIcon } from "../../Controller/Universal/theme.js";
+import { langSwitcher, t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+import { loadState } from "../../Model/persistence.js";
+import { backupSection } from "../Universal/backup.js";
+
+export function welcomePage() {
 	// First-time visitors should be nudged toward "Create library", returning ones
 	// toward "Log in". readEnvelope() (via loadState) only reads the stored envelope's
 	// shape — it never decrypts — so we can safely tell which library state we're in

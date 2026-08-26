@@ -6,7 +6,7 @@
 // Values are developer-authored and may contain markup (see about.*), so t()
 // output is inserted unescaped. User input never passes through t() — it comes
 // in as a {param} and is escaped by the caller.
-const STRINGS_NO = {
+export const STRINGS_NO = {
 	// ---- Chrome: navbar, footer, document ----------------------------------
 	"nav.home": "Hjem",
 	"nav.wishlist": "Ønskeliste",
@@ -223,7 +223,7 @@ const STRINGS_NO = {
 // Starter genres and locations written into a brand-new library. Seeded once in
 // whichever language is active at creation time and then owned by the user —
 // switching the UI language later must never rewrite their data.
-const SEED_NO = {
+export const SEED_NO = {
 	genre: ["Rock", "Jazz", "Country", "Pop", "EDM", "Diverse sjangere"],
 	location: ["Stue", "Loft", "Boden", "Butikk"],
 };

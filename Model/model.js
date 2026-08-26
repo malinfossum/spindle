@@ -1,4 +1,4 @@
-const model = {
+export const model = {
 	app: {
 		app: document.getElementById("app"),
 		allPages: [

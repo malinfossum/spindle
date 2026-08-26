@@ -20,9 +20,11 @@
 // platform's audited primitives. The only hand-written security helper is the
 // constant-time comparison used for the HMAC password check.
 
+import { model } from "./model.js";
+
 const PBKDF2_ITERATIONS = 600_000;
-const KDF_SALT_BYTES = 16;
-const IV_BYTES = 12;
+export const KDF_SALT_BYTES = 16;
+export const IV_BYTES = 12;
 const HMAC_VERIFY_MESSAGE = "verify";
 const MIN_PASSWORD_LENGTH = 8;
 const WEAK_PASSWORDS = [
@@ -38,7 +40,7 @@ const WEAK_PASSWORDS = [
 	"spindle12",
 ];
 
-function isCryptoAvailable() {
+export function isCryptoAvailable() {
 	return !!(window.crypto && window.crypto.subtle);
 }
 
@@ -46,11 +48,11 @@ function utf8(text) {
 	return new TextEncoder().encode(text);
 }
 
-function randomBytes(length) {
+export function randomBytes(length) {
 	return crypto.getRandomValues(new Uint8Array(length));
 }
 
-function bytesToBase64(bytes) {
+export function bytesToBase64(bytes) {
 	let binary = "";
 	const chunkSize = 0x8000;
 	for (let i = 0; i < bytes.length; i += chunkSize) {
@@ -59,7 +61,7 @@ function bytesToBase64(bytes) {
 	return btoa(binary);
 }
 
-function base64ToBytes(value) {
+export function base64ToBytes(value) {
 	const binary = atob(value);
 	const bytes = new Uint8Array(binary.length);
 	for (let i = 0; i < binary.length; i++) {
@@ -70,7 +72,7 @@ function base64ToBytes(value) {
 
 // PBKDF2 (slow, salted) → master key → HKDF splits it into two purpose-bound,
 // non-extractable keys: one for the HMAC password check, one for AES-GCM.
-async function deriveKeys(password, saltBytes) {
+export async function deriveKeys(password, saltBytes) {
 	const passwordKey = await crypto.subtle.importKey(
 		"raw",
 		utf8(password),
@@ -126,14 +128,14 @@ async function deriveKeys(password, saltBytes) {
 	return { verifyKey, encryptKey };
 }
 
-async function computeVerifyHmac(verifyKey) {
+export async function computeVerifyHmac(verifyKey) {
 	const signature = await crypto.subtle.sign("HMAC", verifyKey, utf8(HMAC_VERIFY_MESSAGE));
 	return new Uint8Array(signature);
 }
 
 // Compares two byte arrays without short-circuiting, so timing can't leak how
 // many leading bytes matched. Length is not secret, so an early return is fine.
-function constantTimeEqual(a, b) {
+export function constantTimeEqual(a, b) {
 	if (a.length !== b.length) return false;
 	let diff = 0;
 	for (let i = 0; i < a.length; i++) {
@@ -142,7 +144,7 @@ function constantTimeEqual(a, b) {
 	return diff === 0;
 }
 
-async function encryptLibrary(encryptKey, plaintextStr) {
+export async function encryptLibrary(encryptKey, plaintextStr) {
 	const iv = randomBytes(IV_BYTES);
 	const ciphertextBuffer = await crypto.subtle.encrypt(
 		{ name: "AES-GCM", iv },
@@ -154,7 +156,7 @@ async function encryptLibrary(encryptKey, plaintextStr) {
 
 // Throws on a wrong key or tampered ciphertext (AES-GCM auth tag fails).
 // Callers treat any failure as "wrong password" and never leak which check failed.
-async function decryptLibrary(encryptKey, ivBytes, ciphertextBytes) {
+export async function decryptLibrary(encryptKey, ivBytes, ciphertextBytes) {
 	const plaintextBuffer = await crypto.subtle.decrypt(
 		{ name: "AES-GCM", iv: ivBytes },
 		encryptKey,
@@ -163,7 +165,7 @@ async function decryptLibrary(encryptKey, ivBytes, ciphertextBytes) {
 	return new TextDecoder().decode(plaintextBuffer);
 }
 
-function validatePassword(password) {
+export function validatePassword(password) {
 	if (password.length < MIN_PASSWORD_LENGTH) {
 		return { ok: false, error: "error.passwordTooShort" };
 	}
@@ -176,7 +178,7 @@ function validatePassword(password) {
 	return { ok: true, error: "" };
 }
 
-function passwordStrength(password) {
+export function passwordStrength(password) {
 	let score = 0;
 	if (password.length >= MIN_PASSWORD_LENGTH) score++;
 	if (/[a-z]/.test(password)) score++;
@@ -188,7 +190,7 @@ function passwordStrength(password) {
 
 // Updates the strength bar's 5 spans and the screen-reader text directly, on
 // purpose — calling updateView() on every keystroke would drop input focus.
-function renderStrength(password, elementId) {
+export function renderStrength(password, elementId) {
 	const bar = document.getElementById(elementId);
 	if (!bar) return;
 
@@ -201,7 +203,7 @@ function renderStrength(password, elementId) {
 	if (text) text.textContent = `Passordstyrke: ${score} av 4`;
 }
 
-function zeroKeys() {
+export function zeroKeys() {
 	model.app.crypto.encryptKey = null;
 	model.app.crypto.verifyKey = null;
 	model.app.crypto.kdfSaltB64 = null;

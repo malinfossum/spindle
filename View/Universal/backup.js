@@ -7,7 +7,11 @@
 //
 // One function so the two placements cannot drift. They differ only in whether
 // the plaintext export is offered, since that one needs an unlocked library.
-function backupSection({ idPrefix, allowPlaintext = false, canExport = true }) {
+
+import { t } from "../../Model/i18n/i18n.js";
+import { model } from "../../Model/model.js";
+
+export function backupSection({ idPrefix, allowPlaintext = false, canExport = true }) {
 	const message = model.app.backupMessage;
 	const messageBlock = message.key
 		? /*HTML*/ `

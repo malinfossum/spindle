@@ -1,4 +1,7 @@
-function viewMusicDetails(id) {
+import { model } from "../../Model/model.js";
+import { changePage } from "../../View/Universal/updateView.js";
+
+export function viewMusicDetails(id) {
 	const album = model.data.musicInfo.find((a) => a.id === id);
 
 	if (!album) return;

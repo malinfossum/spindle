@@ -1,6 +1,6 @@
 // English strings. Keys mirror no.js exactly — see that file for the rules on
 // markup in values and on {param} placeholders.
-const STRINGS_EN = {
+export const STRINGS_EN = {
 	// ---- Chrome: navbar, footer, document ----------------------------------
 	"nav.home": "Home",
 	"nav.wishlist": "Wishlist",
@@ -210,7 +210,7 @@ const STRINGS_EN = {
 };
 
 // See SEED_NO — seeded once at library creation, then owned by the user.
-const SEED_EN = {
+export const SEED_EN = {
 	genre: ["Rock", "Jazz", "Country", "Pop", "EDM", "Various genres"],
 	location: ["Living room", "Attic", "Storage", "Shop"],
 };

@@ -1,4 +1,6 @@
-function aboutPage() {
+import { t } from "../../Model/i18n/i18n.js";
+
+export function aboutPage() {
 	// Static content only — no user data is interpolated here, so nothing needs
 	// escaping. The about.* strings carry their own <a> markup (external links
 	// open in a new tab with rel="noopener noreferrer" so the opened page can't
