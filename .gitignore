@@ -5,3 +5,7 @@
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Node toolchain
+node_modules/
+dist/
