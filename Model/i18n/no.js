@@ -17,7 +17,7 @@ export const STRINGS_NO = {
 	"nav.profile": "Profil",
 	"nav.themeToggle": "Bytt tema (mørkt eller lyst)",
 	"nav.menuToggle": "Meny",
-	"footer.copyright": "© 2026 Spindle",
+	"footer.copyright": "Spindle ©",
 
 	// ---- Language switcher --------------------------------------------------
 	"lang.group": "Språk",
@@ -31,17 +31,17 @@ export const STRINGS_NO = {
 	"welcome.createLibrary": "Opprett bibliotek",
 	"welcome.login": "Logg inn",
 	"welcome.about": "Om Spindle",
-	"welcome.credit": "Bygget av Malin Fossum. Opprinnelig et lagprosjekt med Henry Elendheim.",
+	"welcome.credit": "Bygget av Malin Fossum.",
 	"welcome.backup": "Sikkerhetskopi",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Tilbake",
 	"about.title": "Om Spindle",
 	"about.lead":
-		"Spindle er et bibliotek for fysisk musikk — CD-er, LP-er og kassetter. Alt lever lokalt i nettleseren din. Ingen konto, ingen sky.",
+		"Spindle er et bibliotek for fysisk musikk: CD-er, LP-er og kassetter. Biblioteket ditt opprettes i denne nettleseren og blir værende der, låst med et passord bare du kjenner.",
 	"about.originsTitle": "Opphav",
 	"about.originsBody":
-		'Spindle begynte som en lagoppgave på GET Academy (Emne 2), laget sammen med <a class="about-link" href="https://github.com/HenryElendheim/Teamoppgaver-Emne-2" target="_blank" rel="noopener noreferrer">Henry Elendheim</a>, med mindre bidrag fra Hans Nilsen. Det er bygget om her som et åpent prosjekt for allmenn bruk — ikke knyttet til én bestemt samling.',
+		"Spindle begynte som en lagoppgave på GET Academy. Det er bygget om her som et åpent prosjekt for allmenn bruk.",
 	"about.privacyTitle": "Personvern",
 	"about.privacyBody":
 		"Ingen server, ingen sporing, ingen tredjeparter. Biblioteket ditt krypteres i ro med en nøkkel utledet fra passordet ditt (PBKDF2 + HKDF). Uten passordet kan dataen ikke leses — det finnes ingen passordgjenoppretting, så eksporter jevnlig.",
