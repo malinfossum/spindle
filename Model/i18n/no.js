@@ -68,7 +68,7 @@ export const STRINGS_NO = {
 	"auth.backToStart": "← Tilbake til start",
 	"auth.passwordHint":
 		"Minst 8 tegn. Husk passordet — biblioteket kan ikke gjenopprettes uten det.",
-	"auth.strength": "Passordstyrke: {level} av 4",
+	"auth.strength": "Passordstyrke: {level} av {max}",
 
 	// ---- Add / edit album ---------------------------------------------------
 	"music.addTitle": "Legg til album",

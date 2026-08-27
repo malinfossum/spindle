@@ -62,7 +62,7 @@ export const STRINGS_EN = {
 	"auth.backToStart": "← Back to start",
 	"auth.passwordHint":
 		"At least 8 characters. Remember it — the library cannot be recovered without it.",
-	"auth.strength": "Password strength: {level} of 4",
+	"auth.strength": "Password strength: {level} of {max}",
 
 	// ---- Add / edit album ---------------------------------------------------
 	"music.addTitle": "Add album",

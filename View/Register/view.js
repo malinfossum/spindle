@@ -1,4 +1,4 @@
-import { passwordStrength } from "../../Model/auth.js";
+import { PASSWORD_STRENGTH_MAX, passwordStrength } from "../../Model/auth.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { escapeHtml } from "../Universal/escape.js";
@@ -6,7 +6,7 @@ import { escapeHtml } from "../Universal/escape.js";
 // The strength meter is rendered twice: once as part of the page, and once per
 // keystroke by renderStrength() below. Both go through barClass(), so the
 // lit/unlit rule exists in exactly one place and the two paths cannot drift.
-const BAR_INDEXES = [0, 1, 2, 3, 4];
+const BAR_INDEXES = Array.from({ length: PASSWORD_STRENGTH_MAX }, (_, i) => i);
 
 function barClass(index, score) {
 	return index < score ? "bar-on" : "bar-off";
@@ -61,7 +61,7 @@ export function registerPage() {
                            data-action-input="register-password">
                     <span class="field-error" id="register-password-error">${escapeHtml(t(errors.password))}</span>
                     <div id="password-strength-bar" class="strength-bar" aria-hidden="true">${bars}</div>
-                    <span class="visually-hidden" id="password-strength-text" aria-live="polite">${t("auth.strength", { level: strength })}</span>
+                    <span class="visually-hidden" id="password-strength-text" aria-live="polite">${t("auth.strength", { level: strength, max: PASSWORD_STRENGTH_MAX })}</span>
                     <p class="form-hint">${t("auth.passwordHint")}</p>
                 </div>
 
@@ -114,5 +114,5 @@ export function renderStrength(password, elementId) {
 	}
 
 	const text = document.getElementById("password-strength-text");
-	if (text) text.textContent = t("auth.strength", { level: score });
+	if (text) text.textContent = t("auth.strength", { level: score, max: PASSWORD_STRENGTH_MAX });
 }

@@ -178,6 +178,12 @@ export function validatePassword(password) {
 	return { ok: true, error: "" };
 }
 
+// One point per criterion in passwordStrength() below, so the meter's bar count
+// and the "{level} of {max}" string both derive from this rather than repeating
+// the number. They used to hardcode it, and disagreed: five bars, a score capped
+// at 4, and a fifth bar that could never light.
+export const PASSWORD_STRENGTH_MAX = 5;
+
 export function passwordStrength(password) {
 	let score = 0;
 	if (password.length >= MIN_PASSWORD_LENGTH) score++;
@@ -185,7 +191,7 @@ export function passwordStrength(password) {
 	if (/[A-Z]/.test(password)) score++;
 	if (/[0-9]/.test(password)) score++;
 	if (/[^a-zA-Z0-9]/.test(password)) score++;
-	return Math.min(score, 4);
+	return score;
 }
 
 export function zeroKeys() {
