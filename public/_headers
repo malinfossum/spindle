@@ -1,0 +1,18 @@
+# Cloudflare Pages reads this file from the root of the build output. It lives in
+# public/ because that is the one directory Vite copies verbatim — anything else
+# would be treated as a module and bundled away.
+#
+# This is the same policy as the <meta> tag in index.html, plus the two parts a
+# <meta> tag cannot carry: frame-ancestors, and every header that is not a CSP.
+# Once this is live the <meta> tag comes out, so there is one policy rather than
+# two that drift.
+#
+# No _redirects file is needed: routing is fragment-based, so every URL is
+# index.html already and there is no path for the server to rewrite.
+
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Referrer-Policy: no-referrer
+  X-Content-Type-Options: nosniff
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
