@@ -27,7 +27,7 @@ export const STRINGS_EN = {
 	"welcome.createLibrary": "Create library",
 	"welcome.login": "Log in",
 	"welcome.about": "About Spindle",
-	"welcome.credit": "Built by Malin Fossum.",
+	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Backup",
 
 	// ---- About --------------------------------------------------------------

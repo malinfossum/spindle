@@ -54,7 +54,7 @@ Spindle is designed for one browser tab at a time. If you do open a second one, 
 
 ## Credits
 
-Spindle began as a team assignment at GET Academy. The original team repository is [on GitHub](https://github.com/HenryElendheim/Teamoppgaver-Emne-2), published by Henry Elendheim. This repository is a separate, independently developed rebuild.
+Spindle began as a team assignment at GET Academy. The original team repository is on [GitHub](https://github.com/HenryElendheim/Teamoppgaver-Emne-2). This repository is a separate, independently developed rebuild.
 
 ## License
 

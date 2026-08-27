@@ -33,7 +33,7 @@ export const STRINGS_NO = {
 	"welcome.createLibrary": "Opprett bibliotek",
 	"welcome.login": "Logg inn",
 	"welcome.about": "Om Spindle",
-	"welcome.credit": "Bygget av Malin Fossum.",
+	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Sikkerhetskopi",
 
 	// ---- About --------------------------------------------------------------
