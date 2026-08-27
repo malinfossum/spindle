@@ -9,9 +9,16 @@
 #
 # No _redirects file is needed: routing is fragment-based, so every URL is
 # index.html already and there is no path for the server to rewrite.
+#
+# HSTS carries no `preload`, deliberately. Preloading is a submission to a list
+# compiled into browsers, slow to enter and slower to leave, and it is not ours
+# to make: pages.dev is on the Public Suffix List, so the promise would be about
+# a hostname Cloudflare owns. includeSubDomains is safe here — the only
+# subdomains are Pages' own preview deployments, HTTPS already.
 
 /*
   Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
   Referrer-Policy: no-referrer
   X-Content-Type-Options: nosniff
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
