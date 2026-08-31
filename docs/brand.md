@@ -55,10 +55,15 @@ Rules that produced those numbers:
 
 - **The light theme is deliberately cool.** Greys mixed near-neutral read warm —
   pink, on a wide-gamut screen — beside a blue accent and a white card. Every
-  light step carries 8–10 more points of blue than red.
+  grey in the light theme carries more blue than red: +8 on the page, +12 on the
+  raised surface, +14 on the border, +19 on the muted text. White is the
+  exception, and it reads as white because everything around it leans.
 - **Three values flip with the theme rather than being shared**: `--error-text`,
   `--success-text` and `--danger-text`. No single red or green clears 4.5:1 on
   both a `#1e1e1e` card and a white one.
+- **Muted text is darker than it looks like it needs to be.** `#5f6672` is 5.78:1
+  on white and 5.11:1 on the page. The obvious `#777777` is 4.48:1 on white,
+  which is under the floor — secondary text is still body text.
 - **The accent is the only saturated colour.** Everything else is grey. A
   collection app is full of album art, and the interface should not compete with
   it.
@@ -75,8 +80,9 @@ network request, and Spindle makes none.
 
 ## Shape and space
 
-- Radius: 6px for controls, 8px for cards and panels, 10px for the largest
-  surfaces. Nothing is fully round.
+- Radius: 6px for controls, 8px for small panels — the cover slot, the
+  suggestion list, the mobile menu — and 10px for cards and the dialog. The
+  storage bar is the one pill in the app; nothing else is fully round.
 - The content column is 880px, centred, with 1rem of page padding on mobile and
   1.5rem from the tablet breakpoint up.
 - Mobile-first, always: base styles target 375px, and layers go up at
