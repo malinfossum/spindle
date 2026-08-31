@@ -36,27 +36,29 @@
 	--welcome-vinyl-opacity: 0.55;
 }
 
-/* Cool greys, and not subtly: a light theme mixed from near-neutral grey reads
-   warm next to a blue accent and a white card — pink, on a wide-gamut screen.
-   Every grey here carries more blue than red, by 8 points on the page and up to
-   19 on the muted text. --surface is the one exception: white has no lean, and
-   reads as white precisely because everything around it does. */
+/* Near-neutral greys with at most a slight cool cast: R <= G <= B, and no grey
+   more than 8 points bluer than it is red — the rule DS 3.4.0 pins for the
+   shared light ramp. An earlier rule leaned every step blue (up to +19 on the
+   muted text) on the belief that near-neutral grey reads pink on a wide-gamut
+   screen; that pink turned out to be a stale display-pipeline colour state on
+   the reference monitor (diagnosed 2026-08-31, cleared by toggling HDR), and a
+   blue-leaning grey is itself what bends pink under a warm display shift. */
 html[data-theme="light"] {
 	--bg: #eef1f6;
 	--surface: #ffffff;
-	--surface2: #e3e8ef;
-	--border: #d5dbe3;
+	--surface2: #e4e7ea;
+	--border: #d6d9dd;
 	--text: #16181b;
-	/* 5.78:1 on white and 5.11:1 on --bg. The old #777777 was 4.48:1 on white,
+	/* 6.15:1 on white and 5.43:1 on --bg. The old #777777 was 4.48:1 on white,
 	   under the 4.5:1 floor for body text. */
-	--text-muted: #5f6672;
+	--text-muted: #5e6266;
 	--accent: #2563eb;
 	--accent-hover: #1d55d5;
 	--btn-bg: #ffffff;
-	--btn-border: #c8d0da;
+	--btn-border: #cbced3;
 	--input-bg: #ffffff;
 	--card-bg: #ffffff;
-	--img-bg: #e6eaf1;
+	--img-bg: #e7e9ec;
 	--tag-bg: #dbeafe;
 	--tag-text: #1d4ed8;
 	--shadow: rgba(0, 0, 0, 0.08);
