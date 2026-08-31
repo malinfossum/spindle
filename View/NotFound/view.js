@@ -14,6 +14,7 @@
 
 import { t } from "../../Model/i18n/i18n.js";
 import { isLoggedIn } from "../../Model/selectors.js";
+import { icon } from "../Universal/icons.js";
 
 export function notFoundPage() {
 	const loggedIn = isLoggedIn();
@@ -22,7 +23,7 @@ export function notFoundPage() {
 
 	return /*HTML*/ `
     <section class="notfound" aria-labelledby="notfound-heading">
-        <div class="notfound-icon" aria-hidden="true">🔍</div>
+        <div class="notfound-icon">${icon("search", { size: 48 })}</div>
         <h1 class="notfound-title" id="notfound-heading">${t("notFound.title")}</h1>
         <p class="notfound-body">${t("notFound.body")}</p>
         <button class="btn btn-accent" type="button" data-action="nav" data-page="${target}">

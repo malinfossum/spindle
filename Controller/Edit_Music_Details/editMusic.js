@@ -98,6 +98,17 @@ export function submitChanges(isEdit) {
 	navigate("homePage");
 }
 
+// updateView() replaces #app wholesale, so whichever control was pressed stops
+// existing and focus falls to <body>. Every path that closes a chip panel ends
+// here instead: focus returns to the panel's toggle, which is both a sensible
+// place to carry on from and the element whose aria-expanded just changed.
+export function focusPanelToggle(panel) {
+	const toggle = model.app.app.querySelector(
+		`[data-action="toggle-panel"][data-panel="${panel}"]`,
+	);
+	if (toggle) toggle.focus();
+}
+
 export function newLocation(event) {
 	event.preventDefault();
 
@@ -116,6 +127,7 @@ export function newLocation(event) {
 	model.viewState.musicForm.panels.locationAdd = false;
 	emptyGenreLocationList();
 	updateView();
+	focusPanelToggle("location-add");
 }
 
 export function newGenre(event) {
@@ -136,6 +148,7 @@ export function newGenre(event) {
 	model.viewState.musicForm.panels.genreAdd = false;
 	emptyGenreLocationList();
 	updateView();
+	focusPanelToggle("genre-add");
 }
 
 export async function removeLocation(event) {
@@ -161,6 +174,7 @@ export async function removeLocation(event) {
 
 	model.viewState.musicForm.panels.locationRemove = false;
 	updateView();
+	focusPanelToggle("location-remove");
 }
 
 export async function removeGenre(event) {
@@ -186,6 +200,7 @@ export async function removeGenre(event) {
 
 	model.viewState.musicForm.panels.genreRemove = false;
 	updateView();
+	focusPanelToggle("genre-remove");
 }
 
 function emptyList() {

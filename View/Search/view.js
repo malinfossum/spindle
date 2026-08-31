@@ -3,6 +3,7 @@ import { model } from "../../Model/model.js";
 import { getSearchResults } from "../../Model/selectors.js";
 import { createAlbumCard } from "../Universal/albumCard.js";
 import { escapeHtml } from "../Universal/escape.js";
+import { icon } from "../Universal/icons.js";
 
 export function searchPage() {
 	const query = (model.viewState.searchBar || "").toLowerCase().trim();
@@ -14,7 +15,7 @@ export function searchPage() {
 
 	const resultHTML = results.length
 		? results.map((album) => createAlbumCard(album)).join("")
-		: `<div class="empty-state"><div class="empty-state-icon">🔍</div>${t("search.noResults", { query: safeQuery })}</div>`;
+		: `<div class="empty-state"><div class="empty-state-icon">${icon("search", { size: 48 })}</div>${t("search.noResults", { query: safeQuery })}</div>`;
 
 	// Norwegian "treff" is the same either way, but English needs the singular.
 	// One extra key beats a plural-rule engine for the one string that needs it.

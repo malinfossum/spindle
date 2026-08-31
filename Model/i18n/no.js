@@ -75,6 +75,7 @@ export const STRINGS_NO = {
 	"music.editTitle": "Rediger album",
 	"music.addAlbum": "+ Legg til album",
 	"music.changeCover": "Endre coverbilde",
+	"music.chooseCover": "Velg bilde",
 	"music.coverAlt": "Cover",
 	"music.artist": "Artist",
 	"music.artistPlaceholder": "Artistnavn",
@@ -110,7 +111,7 @@ export const STRINGS_NO = {
 	"library.empty": "Ingen album ennå. Legg til ditt første!",
 	"wishlist.title": "Ønskeliste",
 	"wishlist.titleCount": "Ønskeliste ({count})",
-	"wishlist.empty": "Ønskelisten er tom. Merk album med ⭐ for å legge dem til.",
+	"wishlist.empty": "Ønskelisten er tom. Kryss av «Ønskeliste» på et album for å legge det til.",
 	"search.noResults": 'Ingen treff for "{query}"',
 	"search.count": 'Søkt: "{query}" — {count} treff',
 	"search.countOne": 'Søkt: "{query}" — 1 treff',
@@ -124,6 +125,10 @@ export const STRINGS_NO = {
 	"profile.noAlbums": "Du har ikke lagt til noen album ennå.",
 	"profile.settings": "Innstillinger",
 	"profile.language": "Språk",
+	"profile.logout": "Logg ut",
+	"profile.logoutBtn": "Logg ut",
+	"profile.logoutHint":
+		"Låser biblioteket i denne nettleseren. Du trenger passordet for å åpne det igjen.",
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Avbryt",
@@ -134,6 +139,10 @@ export const STRINGS_NO = {
 	"dialog.deleteLocationBody": "Vil du slette «{name}» fra lokasjonslisten?",
 	"dialog.deleteGenreTitle": "Slette sjanger?",
 	"dialog.deleteGenreBody": "Vil du slette «{name}» fra sjangerlisten?",
+	"dialog.logoutTitle": "Logge ut?",
+	"dialog.logoutBody":
+		"Biblioteket låses, og du trenger passordet for å åpne det igjen. Alt du har lagret blir liggende kryptert i denne nettleseren.",
+	"dialog.logoutConfirm": "Logg ut",
 
 	// ---- Storage banners ----------------------------------------------------
 	"storage.unavailable":
@@ -166,6 +175,7 @@ export const STRINGS_NO = {
 	"backup.exportHint":
 		"Lagrer biblioteket som en kryptert fil. Den åpnes bare med passordet den ble laget med.",
 	"backup.import": "Gjenopprett",
+	"backup.importBtn": "Velg fil",
 	"backup.importHint":
 		"Velg en fil du har eksportert tidligere. Den erstatter biblioteket i denne nettleseren, og du logger inn på nytt med passordet filen ble laget med.",
 	"backup.plaintext": "Lesbar kopi",

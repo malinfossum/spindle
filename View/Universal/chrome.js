@@ -26,9 +26,19 @@ export function syncNavbar() {
 	const profileDesktop = document.getElementById("nav-profile-desktop");
 	const profileMobile = document.getElementById("nav-profile-mobile");
 
-	const loginLabel = t(user ? "nav.logout" : "nav.login");
-	if (loginDesktop) loginDesktop.textContent = loginLabel;
-	if (loginMobile) loginMobile.textContent = loginLabel;
+	// Login only, and gone once you are in: the log-out control lives on the
+	// Profile page now. One button that changes what it does depending on state,
+	// in the slot beside Search and Profile, is how you log yourself out by
+	// reaching for something else.
+	const loginLabel = t("nav.login");
+	if (loginDesktop) {
+		loginDesktop.textContent = loginLabel;
+		loginDesktop.style.display = user ? "none" : "inline-flex";
+	}
+	if (loginMobile) {
+		loginMobile.textContent = loginLabel;
+		loginMobile.style.display = user ? "none" : "inline-flex";
+	}
 
 	const profileLabel = t("nav.profile");
 	if (profileDesktop) {

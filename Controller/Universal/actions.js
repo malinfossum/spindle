@@ -21,6 +21,7 @@ import { applyLang } from "../../View/Universal/chrome.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import {
 	clearMusicGroupError,
+	focusPanelToggle,
 	newGenre,
 	newLocation,
 	removeGenre,
@@ -32,6 +33,7 @@ import {
 } from "../Edit_Music_Details/editMusic.js";
 import {
 	clearFieldError,
+	confirmLogout,
 	handleLoginNavClick,
 	handleProfileNavClick,
 	login,
@@ -58,6 +60,7 @@ const ACTIONS = {
 	nav: (_event, target) => navigate(target.dataset.page),
 	"nav-login": () => handleLoginNavClick(),
 	"nav-profile": () => handleProfileNavClick(),
+	logout: () => confirmLogout(),
 	"toggle-menu": () => toggleMobileMenu(),
 	"toggle-theme": () => toggleTheme(),
 	// setLang() only writes the preference. Applying it to the document and asking
@@ -151,16 +154,9 @@ const ACTIONS = {
 		const panels = model.viewState.musicForm.panels;
 		panels[panel] = !panels[panel];
 
-		// updateView() replaces #app wholesale, so the button that was just
-		// pressed stops existing. Move focus to its replacement: otherwise focus
-		// falls to <body>, and the aria-expanded state this press just changed is
-		// announced to nobody.
 		const name = target.dataset.panel;
 		updateView();
-		const toggle = model.app.app.querySelector(
-			`[data-action="toggle-panel"][data-panel="${name}"]`,
-		);
-		if (toggle) toggle.focus();
+		focusPanelToggle(name);
 	},
 
 	"chip-location": (_event, target) => {

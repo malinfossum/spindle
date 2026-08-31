@@ -6,10 +6,12 @@ import {
 	deriveKeys,
 	zeroKeys,
 } from "../../Model/auth.js";
+import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
+import { openDialog } from "../../View/Universal/dialog.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { navigate } from "../Universal/router.js";
 
@@ -159,12 +161,24 @@ export function logout() {
 	navigate("welcome");
 }
 
+// The navbar button is login-only: it is hidden while logged in, and logging
+// out now lives on the Profile page behind a confirm. It used to swap its own
+// label to "Log out" in the slot next to Search and Profile, which is how it
+// got pressed by accident.
 export function handleLoginNavClick() {
-	if (isLoggedIn()) {
-		logout();
-		return;
-	}
 	navigate("login");
+}
+
+// Logging out is the one irreversible-feeling action in the app — the library
+// is still there, but it takes the password to see it again — so it asks first.
+export async function confirmLogout() {
+	const confirmed = await openDialog({
+		title: t("dialog.logoutTitle"),
+		body: t("dialog.logoutBody"),
+		confirmText: t("dialog.logoutConfirm"),
+	});
+
+	if (confirmed) logout();
 }
 
 export function handleProfileNavClick() {

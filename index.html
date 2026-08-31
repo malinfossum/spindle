@@ -24,21 +24,31 @@
     <header class="Navbar">
         <h1><button class="brand-btn" type="button" data-action="nav" data-page="homePage">Spindle</button></h1>
 
+        <!-- Three zones, so the search box sits in the middle of the bar instead
+             of drifting with the width of the labels either side of it. The two
+             outer zones both grow, which is what holds the centre still when the
+             language changes. -->
         <div class="nav-desktop">
-            <button id="nav-home-desktop" data-action="nav" data-page="homePage">Hjem</button>
-            <button id="nav-wishlist-desktop" data-action="nav" data-page="wishList">Ønskeliste</button>
+            <div class="nav-links">
+                <button id="nav-home-desktop" data-action="nav" data-page="homePage">Hjem</button>
+                <button id="nav-wishlist-desktop" data-action="nav" data-page="wishList">Ønskeliste</button>
+            </div>
 
-            <input class="nav-search-input" placeholder="Søkefelt" data-action-input="search-query">
-            <button id="nav-search-desktop" data-action="nav" data-page="searchPage">Søk</button>
+            <div class="nav-search">
+                <input class="nav-search-input" placeholder="Søkefelt" data-action-input="search-query">
+                <button id="nav-search-desktop" data-action="nav" data-page="searchPage">Søk</button>
+            </div>
 
-            <button id="nav-login-desktop" data-action="nav-login">Logg inn</button>
-            <button id="nav-profile-desktop" style="display: none;" data-action="nav-profile">Profil</button>
+            <div class="nav-actions">
+                <button id="nav-login-desktop" data-action="nav-login">Logg inn</button>
+                <button id="nav-profile-desktop" style="display: none;" data-action="nav-profile">Profil</button>
+            </div>
         </div>
 
         <div class="nav-mobile" id="mobile-menu">
             <input class="nav-search-input" placeholder="Søkefelt" data-action-input="search-query">
             <button id="nav-search-mobile" data-action="nav" data-page="searchPage">Søk</button>
-            <button class="navBurger" id="nav-burger" aria-label="Meny" data-action="toggle-menu">☰</button>
+            <button class="navBurger" id="nav-burger" aria-label="Meny" data-action="toggle-menu"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 
             <div class="mobile-menu-show">
                 <button id="nav-home-mobile" data-action="nav" data-page="homePage">Hjem</button>
@@ -51,7 +61,13 @@
         </div>
 
 
-        <button class="btn-theme" data-action="toggle-theme" id="themeBtn" aria-label="Bytt tema (mørkt eller lyst)">🌙</button>
+        <!-- The moon is the first-paint placeholder, the same kind of placeholder
+             as the Norwegian navbar labels above: applyStoredTheme() replaces it
+             with the icon the stored theme actually calls for the moment the
+             module graph runs. Drawn here rather than left empty so the button is
+             never a blank box for a frame. Both shapes live in
+             View/Universal/icons.js. -->
+        <button class="btn-theme" data-action="toggle-theme" id="themeBtn" aria-label="Bytt tema (mørkt eller lyst)"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 7.4 7.4 0 1 0 20 14.2z"/></svg></button>
 
     </header>
 

@@ -1,6 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { getAccessibleAlbums } from "../../Model/selectors.js";
 import { createAlbumCard } from "../Universal/albumCard.js";
+import { icon } from "../Universal/icons.js";
 
 export function homeView() {
 	const albums = getAccessibleAlbums();
@@ -13,7 +14,7 @@ export function homeView() {
         </div>
 
         <div class="empty-state">
-            <div class="empty-state-icon">🎵</div>
+            <div class="empty-state-icon">${icon("disc", { size: 48 })}</div>
             ${t("library.empty")}
         </div>
         `;

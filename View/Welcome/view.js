@@ -2,6 +2,7 @@ import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";
 import { backupSection } from "../Universal/backup.js";
+import { icon } from "../Universal/icons.js";
 import { langSwitcher } from "../Universal/langSwitcher.js";
 
 export function welcomePage() {
@@ -15,7 +16,10 @@ export function welcomePage() {
 	// themeIcon() from there would put a View file back on the Controller, the
 	// exact edge this branch removed. Two lines of duplication is cheaper than
 	// that edge — do not "fix" this by adding the import back.
-	const themeIcon = document.documentElement.getAttribute("data-theme") === "light" ? "☀️" : "🌙";
+	const themeIcon =
+		document.documentElement.getAttribute("data-theme") === "light"
+			? icon("sun")
+			: icon("moon");
 
 	const createBtn = /*HTML*/ `
         <button class="btn btn-full ${hasLibrary ? "" : "btn-accent"}"

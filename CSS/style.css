@@ -36,20 +36,26 @@
 	--welcome-vinyl-opacity: 0.55;
 }
 
+/* Cool neutral greys, deliberately: a light theme mixed from a flat grey reads
+   warm — pink, on a wide-gamut screen — beside the blue accent. Every step here
+   carries slightly more blue than red, which is what keeps it looking clean
+   rather than tinted. */
 html[data-theme="light"] {
-	--bg: #f4f4f5;
+	--bg: #f1f3f5;
 	--surface: #ffffff;
-	--surface2: #efefef;
-	--border: #dddddd;
-	--text: #1a1a1a;
-	--text-muted: #777777;
+	--surface2: #e9ecef;
+	--border: #dee2e6;
+	--text: #16181b;
+	/* 5.79:1 on white and 5.16:1 on --bg. The old #777777 was 4.48:1 on white,
+	   under the 4.5:1 floor for body text. */
+	--text-muted: #5f6672;
 	--accent: #2563eb;
 	--accent-hover: #1d55d5;
 	--btn-bg: #ffffff;
-	--btn-border: #cccccc;
+	--btn-border: #ced4da;
 	--input-bg: #ffffff;
 	--card-bg: #ffffff;
-	--img-bg: #e5e5e5;
+	--img-bg: #e9ecef;
 	--tag-bg: #dbeafe;
 	--tag-text: #1d4ed8;
 	--shadow: rgba(0, 0, 0, 0.08);
@@ -170,6 +176,11 @@ body {
 	font-size: 0.875rem;
 	outline: none;
 	transition: border-color 0.15s;
+}
+
+/* Only the mobile bar pushes the field right; the desktop bar centres it in its
+   own zone instead (see .nav-search below). */
+.nav-mobile .nav-search-input {
 	margin-left: auto;
 }
 
@@ -219,6 +230,15 @@ body {
 .Navbar .btn-theme:hover {
 	background: var(--surface2);
 	color: var(--text);
+}
+
+/* ── Icons ──
+   Inline SVG from View/Universal/icons.js. Each one is sized by its own width
+   and height attributes; these rules only stop it behaving like text — a
+   baseline-aligned inline box that a line-height can shift off centre. */
+.icon {
+	display: block;
+	flex-shrink: 0;
 }
 
 /* ── Main content area ── */
@@ -457,6 +477,11 @@ footer {
 	border-radius: 4px;
 	font-weight: 500;
 	white-space: nowrap;
+	/* The icon and its label are one line: inline-flex puts the SVG on the tag's
+	   centre line rather than on the text baseline. */
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
 }
 
 /* ============================================================
@@ -587,6 +612,14 @@ footer {
 	margin-bottom: 0.25rem;
 }
 
+.form-cover {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+}
+
 .form-cover-slot {
 	width: 80px;
 	height: 80px;
@@ -599,29 +632,26 @@ footer {
 	align-items: center;
 	justify-content: center;
 	color: var(--text-muted);
-	font-size: 1.75rem;
 	gap: 0.3rem;
-	cursor: pointer;
+	overflow: hidden;
 	transition: border-color 0.15s;
 }
 
-.form-cover-slot:hover {
+.form-cover:hover .form-cover-slot {
 	border-color: var(--accent);
 }
 
 .form-cover-icon {
-	font-size: 1.5rem;
+	display: flex;
+	opacity: 0.7;
 }
 
-.form-cover-set-image {
-	font-size: 14px;
-	margin-left: 210px;
-	min-height: 44px;
-}
-
-.form-cover-set-image::file-selector-button {
-	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
-	min-height: 44px;
+/* The picker's visible control. Sized like the buttons it sits among rather
+   than like body text, and narrow enough not to widen the cover column. */
+.btn-file {
+	font-size: 0.8rem;
+	padding: 0.4rem 0.7rem;
+	white-space: nowrap;
 }
 
 .form-fields {
@@ -998,8 +1028,12 @@ footer {
 }
 
 .empty-state-icon {
-	font-size: 2.5rem;
-	margin-bottom: 0.6rem;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 0.8rem;
+	/* The icon carries the message's weight without competing with the text
+	   under it, which is what a 48px emoji did. */
+	opacity: 0.55;
 }
 
 /* ============================================================
@@ -1083,6 +1117,29 @@ footer {
 		align-items: center;
 		gap: 0.5rem;
 		flex: 1;
+	}
+
+	/* Both outer zones grow equally, so the middle one stays centred however
+	   wide the links and account buttons happen to be. */
+	.nav-links,
+	.nav-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		flex: 1;
+		min-width: 0;
+	}
+
+	.nav-actions {
+		justify-content: flex-end;
+	}
+
+	.nav-search {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		flex: 0 1 auto;
+		min-width: 0;
 	}
 
 	.nav-mobile {
@@ -1257,32 +1314,35 @@ footer {
 	color: var(--success-text);
 }
 
-/* A real <input type="file">, not a button wired to a hidden one — the native
-   control brings its own keyboard and screen-reader behaviour. Only its picker
-   button is restyled, to match .btn. */
-.file-input {
-	max-width: 100%;
-	min-height: 44px;
-	font-family: inherit;
-	font-size: 0.8rem;
-	color: var(--text);
+/* The file pickers.
+   The <input type="file"> itself is moved off screen rather than hidden: it
+   stays focusable, keeps its native keyboard behaviour, and is still what a
+   screen reader announces. Its <label> is the visible control — that is what a
+   click lands on, and unlike the browser's built-in "Choose File" widget it can
+   be made to match the buttons beside it.
+   display:none and visibility:hidden would both take the input out of the tab
+   order, and the keyboard with it, which is why neither is used here. */
+.file-input-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
 }
 
-.file-input::file-selector-button {
-	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
-	min-height: 44px;
-	background: var(--btn-bg);
-	border: 1px solid var(--btn-border);
-	color: var(--text);
-	border-radius: 6px;
-	padding: 0.4rem 0.9rem;
-	margin-right: 0.6rem;
-	font-family: inherit;
-	font-size: 0.875rem;
+.file-input-label {
 	cursor: pointer;
-	transition:
-		background 0.15s,
-		border-color 0.15s;
+}
+
+/* The focus ring belongs on the visible control, since the element actually
+   focused is off screen. */
+.file-input-hidden:focus-visible + .file-input-label {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
 }
 
 .file-input::file-selector-button:hover {
@@ -1647,8 +1707,10 @@ body.chrome-hidden > footer {
 }
 
 .notfound-icon {
-	font-size: 2.5rem;
-	margin-bottom: 0.75rem;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 0.9rem;
+	opacity: 0.55;
 }
 
 .notfound-title {

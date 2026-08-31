@@ -1,6 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { getAccessibleAlbums } from "../../Model/selectors.js";
 import { createAlbumCard } from "../Universal/albumCard.js";
+import { icon } from "../Universal/icons.js";
 
 export function wishListPage() {
 	const wishlist = getAccessibleAlbums().filter((album) => album.wishlist);
@@ -12,7 +13,7 @@ export function wishListPage() {
         </div>
 
         <div class="empty-state">
-            <div class="empty-state-icon">⭐</div>
+            <div class="empty-state-icon">${icon("star", { size: 48 })}</div>
             ${t("wishlist.empty")}
         </div>
         `;

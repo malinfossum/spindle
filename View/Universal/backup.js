@@ -29,16 +29,22 @@ export function backupSection({ idPrefix, allowPlaintext = false, canExport = tr
         <p class="backup-hint" id="${idPrefix}-export-hint">${t("backup.exportHint")}</p>`
 		: "";
 
-	// A plain visible file input, not a button wired to a hidden one: native
-	// keyboard and screen-reader behaviour, and a real <label> to name it.
+	// The input is a real <input type="file"> still — moved off screen rather
+	// than replaced, so keyboard focus and screen-reader announcement are the
+	// native ones. The <label> beside it is the visible control: clicking it opens
+	// the picker, and it can be styled like the Export button next to it, which
+	// the browser's own "Choose File" widget cannot. aria-labelledby keeps the
+	// input named "Restore" rather than "Choose file".
 	const importRow = /*HTML*/ `
         <div class="backup-row">
-            <label class="backup-label" for="${idPrefix}-import-file">${t("backup.import")}</label>
-            <input class="file-input" type="file"
+            <span class="backup-label" id="${idPrefix}-import-label">${t("backup.import")}</span>
+            <input class="file-input-hidden" type="file"
                    id="${idPrefix}-import-file"
                    accept="application/json,.json"
+                   aria-labelledby="${idPrefix}-import-label"
                    aria-describedby="${idPrefix}-import-hint"
                    data-action-change="import-backup">
+            <label class="btn file-input-label" for="${idPrefix}-import-file">${t("backup.importBtn")}</label>
         </div>
         <p class="backup-hint" id="${idPrefix}-import-hint">${t("backup.importHint")}</p>`;
 

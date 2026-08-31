@@ -7,22 +7,25 @@
 // from <head>, long before this file loads.
 
 import { getPref, setPref } from "../../Model/prefs.js";
+import { icon } from "../../View/Universal/icons.js";
 
 function currentTheme() {
 	return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
 
 function themeIcon() {
-	return currentTheme() === "light" ? "☀️" : "🌙";
+	return currentTheme() === "light" ? icon("sun") : icon("moon");
 }
 
 function applyTheme() {
 	document.documentElement.setAttribute("data-theme", currentTheme());
 	// Update every theme toggle (navbar + welcome). The navbar one is hidden
 	// on the logged-out flow, so the welcome page carries its own.
-	const icon = themeIcon();
+	// innerHTML rather than textContent because the icon is SVG markup now. The
+	// string comes from icons.js and contains nothing user-entered.
+	const markup = themeIcon();
 	for (const btn of document.querySelectorAll(".btn-theme")) {
-		btn.textContent = icon;
+		btn.innerHTML = markup;
 	}
 }
 

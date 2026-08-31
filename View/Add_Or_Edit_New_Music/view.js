@@ -1,6 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { escapeHtml } from "../Universal/escape.js";
+import { icon } from "../Universal/icons.js";
 
 export function addDetailsPage() {
 	return buildMusicForm(false);
@@ -47,7 +48,7 @@ function buildMusicForm(isEdit) {
 
 	const albumCover = info.coverImg
 		? /*HTML*/ `<img src="${escapeHtml(info.coverImg)}" alt="${t("music.coverAlt")}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
-		: /*HTML*/ `<span class="form-cover-icon">🎵</span>`;
+		: /*HTML*/ `<span class="form-cover-icon">${icon("image", { size: 30 })}</span>`;
 
 	const formError = errors.form
 		? /*HTML*/ `<p class="auth-error" role="alert">${escapeHtml(t(errors.form))}</p>`
@@ -62,15 +63,25 @@ function buildMusicForm(isEdit) {
         ${formError}
 
         <div class="form-top">
-            <div class="form-cover-slot" title="${t("music.changeCover")}">
-                ${albumCover}
-                <input class="form-cover-set-image"
+            <!-- The file input is still a real, focusable <input type="file"> —
+                 it is only moved off screen, with the <label> beside it as its
+                 visible control. That keeps the native keyboard and screen-reader
+                 behaviour while dropping the browser's unstyleable "Choose File /
+                 No file chosen" widget, which used to be nudged into place with a
+                 210px margin and landed on top of the cover. -->
+            <div class="form-cover">
+                <div class="form-cover-slot">${albumCover}</div>
+
+                <input class="file-input-hidden"
                        id="music-cover"
                        type="file"
                        accept="image/jpeg,image/png,image/webp"
                        aria-invalid="${errors.coverImg ? "true" : "false"}"
                        aria-describedby="music-cover-error"
                        data-action-change="music-cover">
+                <label class="btn btn-file file-input-label" for="music-cover">${t(
+					isEdit ? "music.changeCover" : "music.chooseCover",
+				)}</label>
             </div>
 
             <div class="form-fields">
@@ -120,14 +131,14 @@ function buildMusicForm(isEdit) {
                 aria-label="${t("music.addLocationToggle")}"
                 aria-expanded="${panels.locationAdd}"
                 data-action="toggle-panel"
-                data-panel="location-add">➕</button>
+                data-panel="location-add">${icon("plus")}</button>
 
                 <button
                 type="button"
                 aria-label="${t("music.removeLocationToggle")}"
                 aria-expanded="${panels.locationRemove}"
                 data-action="toggle-panel"
-                data-panel="location-remove">✖️</button>
+                data-panel="location-remove">${icon("close")}</button>
             </div>
 
             <span class="field-error" id="music-location-error">${escapeHtml(t(errors.location))}</span>
@@ -138,7 +149,7 @@ function buildMusicForm(isEdit) {
                        placeholder="${t("music.newLocation")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.location)}"
                        data-action-input="chip-location">
-                <button aria-label="${t("music.confirmOption")}">✔️</button>
+                <button aria-label="${t("music.confirmOption")}">${icon("check")}</button>
             </form>
 
             <form data-action-submit="remove-location" ${panels.locationRemove ? "" : "hidden"}>
@@ -147,7 +158,7 @@ function buildMusicForm(isEdit) {
                        placeholder="${t("music.removeLocation")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.location)}"
                        data-action-input="chip-location">
-                <button aria-label="${t("music.confirmOption")}">✔️</button>
+                <button aria-label="${t("music.confirmOption")}">${icon("check")}</button>
             </form>
         </div>
 
@@ -178,14 +189,14 @@ function buildMusicForm(isEdit) {
                 aria-label="${t("music.addGenreToggle")}"
                 aria-expanded="${panels.genreAdd}"
                 data-action="toggle-panel"
-                data-panel="genre-add">➕</button>
+                data-panel="genre-add">${icon("plus")}</button>
 
                 <button
                 type="button"
                 aria-label="${t("music.removeGenreToggle")}"
                 aria-expanded="${panels.genreRemove}"
                 data-action="toggle-panel"
-                data-panel="genre-remove">✖️</button>
+                data-panel="genre-remove">${icon("close")}</button>
             </div>
 
             <span class="field-error" id="music-genre-error">${escapeHtml(t(errors.genre))}</span>
@@ -196,7 +207,7 @@ function buildMusicForm(isEdit) {
                        placeholder="${t("music.newGenre")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.genre)}"
                        data-action-input="chip-genre">
-                <button aria-label="${t("music.confirmOption")}">✔️</button>
+                <button aria-label="${t("music.confirmOption")}">${icon("check")}</button>
             </form>
 
             <form data-action-submit="remove-genre" ${panels.genreRemove ? "" : "hidden"}>
@@ -205,7 +216,7 @@ function buildMusicForm(isEdit) {
                        placeholder="${t("music.removeGenre")}"
                        value="${escapeHtml(model.viewState.editMusicInfo.genre)}"
                        data-action-input="chip-genre">
-                <button aria-label="${t("music.confirmOption")}">✔️</button>
+                <button aria-label="${t("music.confirmOption")}">${icon("check")}</button>
             </form>
         </div>
 

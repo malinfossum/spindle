@@ -15,13 +15,14 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { escapeHtml } from "./escape.js";
+import { icon } from "./icons.js";
 
 export function createAlbumCard(album) {
 	const genre = album.genre.map((i) => model.data.genre[i]).join(", ") || "—";
 	const location = album.location.map((i) => model.data.location[i]).join(", ") || "—";
 	const albumCover = album.coverImg
 		? /*HTML*/ `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
-		: "🎵";
+		: icon("disc", { size: 32 });
 
 	return /*HTML*/ `
     <div class="album-card">
@@ -35,9 +36,9 @@ export function createAlbumCard(album) {
             <div class="album-artist">${escapeHtml(album.artist)}</div>
             <div class="album-meta">
                 <span class="tag">${escapeHtml(genre)}</span>
-                <span class="tag">📍 ${escapeHtml(location)}</span>
-                <span class="tag">📅 ${album.releaseYear || "—"}</span>
-                ${album.wishlist ? `<span class="tag">⭐ ${t("music.wishlist")}</span>` : ""}
+                <span class="tag">${icon("pin", { size: 13 })}${escapeHtml(location)}</span>
+                <span class="tag">${icon("calendar", { size: 13 })}${album.releaseYear || "—"}</span>
+                ${album.wishlist ? `<span class="tag">${icon("star", { size: 13 })}${t("music.wishlist")}</span>` : ""}
             </div>
         </div>
 

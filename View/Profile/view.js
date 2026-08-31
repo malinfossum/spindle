@@ -4,6 +4,7 @@ import { formatBytes } from "../../Model/persistence.js";
 import { getLoggedInUser, getProfileAlbums } from "../../Model/selectors.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
+import { icon } from "../Universal/icons.js";
 import { langSwitcher } from "../Universal/langSwitcher.js";
 
 export function profilePage() {
@@ -13,7 +14,7 @@ export function profilePage() {
 	if (!user) {
 		return /*HTML*/ `
         <div class="empty-state">
-            <div class="empty-state-icon">🔒</div>
+            <div class="empty-state-icon">${icon("lock", { size: 48 })}</div>
             ${t("profile.loginRequired")}
         </div>
         `;
@@ -23,7 +24,7 @@ export function profilePage() {
 		.map((album) => {
 			const albumCover = album.coverImg
 				? `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
-				: "🎵";
+				: icon("disc", { size: 40 });
 
 			// Unlike the album card this one holds no nested buttons, so the whole
 			// card can simply BE the button — one tab stop, named after the album,
@@ -78,6 +79,12 @@ export function profilePage() {
 
             <h2 class="profile-settings-heading">${t("backup.title")}</h2>
             ${backupSection({ idPrefix: "profile", allowPlaintext: true })}
+
+            <h2 class="profile-settings-heading">${t("profile.logout")}</h2>
+            <div class="profile-settings-row">
+                <span class="profile-settings-label">${t("profile.logoutHint")}</span>
+                <button class="btn" type="button" data-action="logout">${t("profile.logoutBtn")}</button>
+            </div>
         </div>`;
 
 	return /*HTML*/ `
@@ -93,7 +100,7 @@ export function profilePage() {
     ${
 		albums.length
 			? `<div class="profile-grid">${gridHTML}</div>`
-			: `<div class="empty-state"><div class="empty-state-icon">🎵</div>${t("profile.noAlbums")}</div>`
+			: `<div class="empty-state"><div class="empty-state-icon">${icon("disc", { size: 48 })}</div>${t("profile.noAlbums")}</div>`
 	}
     `;
 }

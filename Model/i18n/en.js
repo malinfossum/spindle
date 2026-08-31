@@ -69,6 +69,7 @@ export const STRINGS_EN = {
 	"music.editTitle": "Edit album",
 	"music.addAlbum": "+ Add album",
 	"music.changeCover": "Change cover image",
+	"music.chooseCover": "Choose image",
 	"music.coverAlt": "Cover",
 	"music.artist": "Artist",
 	"music.artistPlaceholder": "Artist name",
@@ -104,7 +105,7 @@ export const STRINGS_EN = {
 	"library.empty": "No albums yet. Add your first one!",
 	"wishlist.title": "Wishlist",
 	"wishlist.titleCount": "Wishlist ({count})",
-	"wishlist.empty": "Your wishlist is empty. Mark albums with ⭐ to add them.",
+	"wishlist.empty": "Your wishlist is empty. Tick “Wishlist” on an album to add it.",
 	"search.noResults": 'No results for "{query}"',
 	"search.count": 'Searched: "{query}" — {count} results',
 	"search.countOne": 'Searched: "{query}" — 1 result',
@@ -118,6 +119,10 @@ export const STRINGS_EN = {
 	"profile.noAlbums": "You haven't added any albums yet.",
 	"profile.settings": "Settings",
 	"profile.language": "Language",
+	"profile.logout": "Log out",
+	"profile.logoutBtn": "Log out",
+	"profile.logoutHint":
+		"Locks the library in this browser. You need the password to open it again.",
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Cancel",
@@ -128,6 +133,10 @@ export const STRINGS_EN = {
 	"dialog.deleteLocationBody": "Delete “{name}” from the location list?",
 	"dialog.deleteGenreTitle": "Delete genre?",
 	"dialog.deleteGenreBody": "Delete “{name}” from the genre list?",
+	"dialog.logoutTitle": "Log out?",
+	"dialog.logoutBody":
+		"The library locks, and you need the password to open it again. Everything you have saved stays encrypted in this browser.",
+	"dialog.logoutConfirm": "Log out",
 
 	// ---- Storage banners ----------------------------------------------------
 	"storage.unavailable":
@@ -160,6 +169,7 @@ export const STRINGS_EN = {
 	"backup.exportHint":
 		"Saves your library as an encrypted file. It only opens with the password it was created with.",
 	"backup.import": "Restore",
+	"backup.importBtn": "Choose file",
 	"backup.importHint":
 		"Choose a file you exported earlier. It replaces the library in this browser, and you log in again with the password that file was created with.",
 	"backup.plaintext": "Readable copy",
