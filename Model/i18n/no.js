@@ -241,7 +241,7 @@ export const STRINGS_NO = {
 	"error.pickLocation": "Velg en lokasjon.",
 	"error.pickGenre": "Velg minst én sjanger.",
 	"error.storageNearFull": "Lagringen er nesten full. Slett noen album før du legger til flere.",
-	"error.imageTooLarge": "Bildet er for stort. Maks 2 MB.",
+	"error.imageTooLarge": "Bildet er for stort. Maks 12 MB.",
 	"error.imageInvalid": "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.",
 	"error.imageStoreFailed": "Coverbildet kunne ikke lagres. Prøv igjen, eller lagre uten bilde.",
 };

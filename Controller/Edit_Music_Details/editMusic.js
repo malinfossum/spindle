@@ -6,6 +6,7 @@ import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
 import { forgetCover } from "../../View/Universal/cover.js";
 import { openDialog } from "../../View/Universal/dialog.js";
+import { downscaleCover } from "../../View/Universal/downscale.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { focusFirstInvalid } from "../Login/login.js";
@@ -258,13 +259,23 @@ function emptyGenreLocationList() {
 	};
 }
 
+// The cap existed because the file was stored exactly as picked, inside the one
+// localStorage value. Covers are re-encoded to a few tens of kilobytes now, so
+// this only has to bound what the browser is asked to decode — and 2 MB rejected
+// the phone photos that "photograph the sleeve" is entirely about.
+//
+// The megabyte figure appears in error.imageTooLarge in both string tables;
+// field errors are rendered from a key with no parameters, so the two are kept
+// in step by hand. Change one, change the other.
+const MAX_UPLOAD_BYTES = 12 * 1024 * 1024;
+
 export async function saveImage(image) {
 	const file = image.files[0];
 	if (!file) return;
 
 	const errors = model.viewState.musicForm.errors;
 
-	if (file.size > 2 * 1024 * 1024) {
+	if (file.size > MAX_UPLOAD_BYTES) {
 		errors.coverImg = "error.imageTooLarge";
 		image.value = "";
 		updateView();
@@ -281,14 +292,21 @@ export async function saveImage(image) {
 		return;
 	}
 
-	// Build the data URI from the sniffed MIME, not file.type, so the stored
-	// prefix can't be spoofed. Strip FileReader's own prefix and re-attach ours.
+	// Re-encoded small before anything stores it: a sleeve is drawn at 120px and
+	// arrives as a multi-megabyte photo. The canvas also drops the EXIF block,
+	// which is where a phone writes the GPS coordinates of wherever the picture
+	// was taken.
 	//
-	// It goes to the form's preview, not to the album: nothing is written to
+	// If that fails, fall back to the file as it came: build the data URI from the
+	// sniffed MIME rather than file.type, so the stored prefix cannot be spoofed —
+	// strip FileReader's own prefix and re-attach ours.
+	//
+	// Either way it goes to the form's preview, not to the album: nothing reaches
 	// IndexedDB until the album is saved, so choosing a cover and then cancelling
 	// leaves no row behind.
-	const base64 = await readFileAsBase64(file);
-	model.viewState.musicForm.coverPreview = `data:${mime};base64,${base64}`;
+	const downscaled = await downscaleCover(file);
+	model.viewState.musicForm.coverPreview =
+		downscaled ?? `data:${mime};base64,${await readFileAsBase64(file)}`;
 	errors.coverImg = "";
 	updateView();
 }

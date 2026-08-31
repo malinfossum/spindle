@@ -230,7 +230,7 @@ export const STRINGS_EN = {
 	"error.pickLocation": "Choose a location.",
 	"error.pickGenre": "Choose at least one genre.",
 	"error.storageNearFull": "Storage is nearly full. Delete some albums before adding more.",
-	"error.imageTooLarge": "The image is too large. Maximum 2 MB.",
+	"error.imageTooLarge": "The image is too large. Maximum 12 MB.",
 	"error.imageInvalid": "Invalid image file. Use JPEG, PNG or WebP.",
 	"error.imageStoreFailed": "The cover image could not be saved. Try again, or save without one.",
 };
