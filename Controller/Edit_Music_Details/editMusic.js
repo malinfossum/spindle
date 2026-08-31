@@ -304,11 +304,23 @@ export async function saveImage(image) {
 	// Either way it goes to the form's preview, not to the album: nothing reaches
 	// IndexedDB until the album is saved, so choosing a cover and then cancelling
 	// leaves no row behind.
-	const downscaled = await downscaleCover(file);
-	model.viewState.musicForm.coverPreview =
-		downscaled ?? `data:${mime};base64,${await readFileAsBase64(file)}`;
+	const form = model.viewState.musicForm;
+	form.coverBusy = true;
 	errors.coverImg = "";
 	updateView();
+
+	try {
+		const downscaled = await downscaleCover(file);
+		form.coverPreview = downscaled ?? `data:${mime};base64,${await readFileAsBase64(file)}`;
+	} finally {
+		form.coverBusy = false;
+		updateView();
+		// The render above replaced the input that was focused, so put focus back
+		// on its replacement — the picker is where someone tabbed to, and where
+		// they would go next to change their mind.
+		const picker = model.app.app.querySelector("#music-cover");
+		if (picker) picker.focus();
+	}
 }
 
 function readFileAsBase64(file) {

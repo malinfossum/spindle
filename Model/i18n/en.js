@@ -72,6 +72,7 @@ export const STRINGS_EN = {
 	"music.addAlbum": "+ Add album",
 	"music.changeCover": "Change cover image",
 	"music.chooseCover": "Choose image",
+	"music.coverWorking": "Processing image…",
 	"music.coverAlt": "Cover",
 	"music.artist": "Artist",
 	"music.artistPlaceholder": "Artist name",

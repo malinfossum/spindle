@@ -47,6 +47,8 @@ function buildMusicForm(isEdit) {
 		)
 		.join("");
 
+	const busy = model.viewState.musicForm.coverBusy;
+
 	// A cover chosen a moment ago outranks the stored one: it is what the person
 	// is looking at the form to confirm.
 	const preview = model.viewState.musicForm.coverPreview;
@@ -80,13 +82,16 @@ function buildMusicForm(isEdit) {
                        accept="image/jpeg,image/png,image/webp"
                        aria-invalid="${errors.coverImg ? "true" : "false"}"
                        aria-describedby="music-cover-error"
+                       ${busy ? "disabled" : ""}
                        data-action-change="music-cover">
 
-                <label class="form-cover-slot file-input-label" for="music-cover"${
+                <label class="form-cover-slot file-input-label" for="music-cover" aria-busy="${busy}"${
 					preview ? "" : coverAttr(info)
 				}>
                     ${albumCover}
-                    <span class="form-cover-caption">${t("music.chooseCover")}</span>
+                    <span class="form-cover-caption"${busy ? ' role="status"' : ""}>${
+						busy ? t("music.coverWorking") : t("music.chooseCover")
+					}</span>
                 </label>
             </div>
 
@@ -245,7 +250,10 @@ function buildMusicForm(isEdit) {
 
         <div class="form-actions">
             <div class="form-actions-left">
-                <button class="btn btn-accent" data-action="music-save" data-edit="${isEdit}">${t("music.save")}</button>
+                <button class="btn btn-accent"
+                        data-action="music-save"
+                        data-edit="${isEdit}"
+                        ${busy ? "disabled" : ""}>${t("music.save")}</button>
             </div>
 
             <div class="form-actions-right">

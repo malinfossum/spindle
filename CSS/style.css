@@ -833,6 +833,19 @@ footer {
 	display: flex;
 }
 
+/* While a picked image is being re-encoded. The slot is the only control that
+   can be waited on here, so it is the one that shows the wait. */
+.form-cover-slot[aria-busy="true"] {
+	cursor: progress;
+	border-style: solid;
+	border-color: var(--accent);
+}
+
+.form-cover-slot[aria-busy="true"] .form-cover-icon,
+.form-cover-slot[aria-busy="true"] img {
+	opacity: 0.45;
+}
+
 /* The whole slot is the picker, so the caption sits on it rather than under it
    as a second box to look at. Absolute, so it reads the same over the cover
    image and over the empty placeholder. */

@@ -90,6 +90,11 @@ export const model = {
 			// that meant the opposite, defaulted to true, and rendered as
 			// visibility: hidden, which hides a box but keeps its height. That is
 			// where the form's four tall empty bands came from.
+			// True while a picked image is being decoded and re-encoded. A big photo
+			// takes a moment, and the form would otherwise sit there looking as
+			// though the click did nothing.
+			coverBusy: false,
+
 			// A cover chosen but not saved yet. Kept off musicInfo for the same
 			// reason the errors are: musicInfo is spread into the saved album, and a
 			// data URL on it would land straight back in the library JSON that this

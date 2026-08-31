@@ -78,6 +78,7 @@ export const STRINGS_NO = {
 	"music.addAlbum": "+ Legg til album",
 	"music.changeCover": "Endre coverbilde",
 	"music.chooseCover": "Velg bilde",
+	"music.coverWorking": "Behandler bildet…",
 	"music.coverAlt": "Cover",
 	"music.artist": "Artist",
 	"music.artistPlaceholder": "Artistnavn",
