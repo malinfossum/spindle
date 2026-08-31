@@ -150,7 +150,17 @@ const ACTIONS = {
 		if (!panel) return;
 		const panels = model.viewState.musicForm.panels;
 		panels[panel] = !panels[panel];
+
+		// updateView() replaces #app wholesale, so the button that was just
+		// pressed stops existing. Move focus to its replacement: otherwise focus
+		// falls to <body>, and the aria-expanded state this press just changed is
+		// announced to nobody.
+		const name = target.dataset.panel;
 		updateView();
+		const toggle = model.app.app.querySelector(
+			`[data-action="toggle-panel"][data-panel="${name}"]`,
+		);
+		if (toggle) toggle.focus();
 	},
 
 	"chip-location": (_event, target) => {

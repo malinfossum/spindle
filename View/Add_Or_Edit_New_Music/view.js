@@ -118,12 +118,14 @@ function buildMusicForm(isEdit) {
                 <button
                 type="button"
                 aria-label="${t("music.addLocationToggle")}"
+                aria-expanded="${panels.locationAdd}"
                 data-action="toggle-panel"
                 data-panel="location-add">➕</button>
 
                 <button
                 type="button"
                 aria-label="${t("music.removeLocationToggle")}"
+                aria-expanded="${panels.locationRemove}"
                 data-action="toggle-panel"
                 data-panel="location-remove">✖️</button>
             </div>
@@ -174,12 +176,14 @@ function buildMusicForm(isEdit) {
                 <button
                 type="button"
                 aria-label="${t("music.addGenreToggle")}"
+                aria-expanded="${panels.genreAdd}"
                 data-action="toggle-panel"
                 data-panel="genre-add">➕</button>
 
                 <button
                 type="button"
                 aria-label="${t("music.removeGenreToggle")}"
+                aria-expanded="${panels.genreRemove}"
                 data-action="toggle-panel"
                 data-panel="genre-remove">✖️</button>
             </div>
