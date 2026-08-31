@@ -101,10 +101,33 @@ function readPage() {
 	}
 }
 
+// The library and the wishlist are one view with one setting between them, and
+// the fragment is what carries that setting: `#library` and `#wishList` both
+// render the library page, with the preset read off the name. Keeping two
+// fragments rather than one sticky flag is what makes Back, forward, a reload
+// and a bookmark all land on the list they say they will.
+const LIST_PRESETS = {
+	library: "all",
+	wishList: "wishlist",
+};
+
+// The results page folded into the library in v0.3. Old links still work; they
+// arrive as a plain library view with whatever query is in the box.
+const FOLDED_PAGES = { searchPage: "library" };
+
 // The decision half, unchanged from the changePage() that shipped in v0.1 apart
-// from the two redirects, which now have to say so in the address bar.
+// from the redirects, which now have to say so in the address bar.
 function resolveRoute(requested) {
 	let page = requested;
+
+	if (FOLDED_PAGES[page]) {
+		page = FOLDED_PAGES[page];
+		replaceFragment(page);
+	}
+
+	if (LIST_PRESETS[page]) {
+		model.viewState.library.preset = LIST_PRESETS[page];
+	}
 
 	// changePage() used to trust its argument, so a typo in an onclick handler
 	// set currentPage to a name nothing renders. Unknown names land on the

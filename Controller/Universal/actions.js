@@ -60,6 +60,15 @@ const FORM_PANELS = {
 const ACTIONS = {
 	// --- Navigation and chrome -------------------------------------------
 	nav: (_event, target) => navigate(target.dataset.page),
+
+	// Library and Wishlist are the same page under two fragments; the router
+	// reads the preset off the name. What this adds over plain nav is dropping
+	// the query still sitting in the search box — a nav click means "show me this
+	// list", not "show me the last thing I searched for inside it".
+	"nav-list": (_event, target) => {
+		model.viewState.searchBar = "";
+		navigate(target.dataset.page);
+	},
 	"nav-login": () => handleLoginNavClick(),
 	"nav-profile": () => handleProfileNavClick(),
 	logout: () => confirmLogout(),
@@ -85,7 +94,7 @@ const ACTIONS = {
 		model.viewState.searchBar = target.value;
 		model.viewState.suggest = { open: target.value.trim() !== "", index: -1 };
 
-		if (model.app.currentPage === "searchPage") {
+		if (model.app.currentPage === "library" || model.app.currentPage === "wishList") {
 			updateView();
 			return;
 		}
@@ -97,7 +106,10 @@ const ACTIONS = {
 	"search-submit": (event) => {
 		event.preventDefault();
 		model.viewState.suggest = { open: false, index: -1 };
-		navigate("searchPage");
+		// Searching looks through everything, so it leaves the wishlist preset
+		// behind rather than quietly searching inside it.
+		model.viewState.library.preset = "all";
+		navigate("library");
 	},
 
 	// Arrow keys move the active option, Enter opens it, Escape closes the list.
@@ -216,6 +228,28 @@ const ACTIONS = {
 		const name = target.dataset.panel;
 		updateView();
 		focusPanelToggle(name);
+	},
+
+	"library-genre": (_event, target) => {
+		model.viewState.library.genre = target.value;
+		updateView();
+	},
+	"library-location": (_event, target) => {
+		model.viewState.library.location = target.value;
+		updateView();
+	},
+	"library-sort": (_event, target) => {
+		model.viewState.library.sort = target.value;
+		updateView();
+	},
+	"library-clear": () => {
+		model.viewState.library.genre = "";
+		model.viewState.library.location = "";
+		updateView();
+	},
+	"library-clear-query": () => {
+		model.viewState.searchBar = "";
+		updateView();
 	},
 
 	"chip-location": (_event, target) => {

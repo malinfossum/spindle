@@ -93,6 +93,8 @@ export function applyStaticText() {
 
 	setText("nav-home-desktop", "nav.home");
 	setText("nav-home-mobile", "nav.home");
+	setText("nav-library-desktop", "nav.library");
+	setText("nav-library-mobile", "nav.library");
 	setText("nav-wishlist-desktop", "nav.wishlist");
 	setText("nav-wishlist-mobile", "nav.wishlist");
 	setText("footer-copyright", "footer.copyright");

@@ -4,7 +4,7 @@ export const model = {
 		allPages: [
 			"welcome",
 			"homePage",
-			"searchPage",
+			"library",
 			"wishList",
 			"viewDetails",
 			"addDetails",
@@ -109,6 +109,17 @@ export const model = {
 		},
 
 		searchBar: "",
+
+		// The library view's filters and sort. Not cleared on navigation, unlike
+		// everything in resetTransientViewState(): opening an album and coming back
+		// must not throw away the filter someone set to find it. The query itself
+		// lives on searchBar, since the navbar owns that field.
+		library: {
+			preset: "all",
+			genre: "",
+			location: "",
+			sort: "recent",
+		},
 
 		// The search box's suggestion list. Transient in the same way the chip
 		// panels are: open is whether the list is showing, index is the option the
