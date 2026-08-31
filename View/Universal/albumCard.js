@@ -14,19 +14,18 @@
 
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { coverAttr, coverInner } from "./cover.js";
 import { escapeHtml } from "./escape.js";
 import { icon } from "./icons.js";
 
 export function createAlbumCard(album) {
 	const genre = album.genre.map((i) => model.data.genre[i]).join(", ") || "—";
 	const location = album.location.map((i) => model.data.location[i]).join(", ") || "—";
-	const albumCover = album.coverImg
-		? /*HTML*/ `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
-		: icon("disc", { size: 32 });
+	const albumCover = coverInner(album, 32);
 
 	return /*HTML*/ `
     <div class="album-card">
-        <div class="album-cover">${albumCover}</div>
+        <div class="album-cover"${coverAttr(album)}>${albumCover}</div>
 
         <div class="album-info">
             <button class="album-title album-open"

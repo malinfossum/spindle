@@ -67,7 +67,9 @@ export const model = {
 			genre: [],
 			notes: "",
 			wishlist: false,
-			coverImg: null,
+			// The cover itself lives in IndexedDB (Model/covers.js); the album
+			// carries the row's id and nothing else.
+			coverId: null,
 		},
 
 		// Add/edit-form validation errors. Kept OFF musicInfo on purpose: musicInfo
@@ -88,6 +90,12 @@ export const model = {
 			// that meant the opposite, defaulted to true, and rendered as
 			// visibility: hidden, which hides a box but keeps its height. That is
 			// where the form's four tall empty bands came from.
+			// A cover chosen but not saved yet. Kept off musicInfo for the same
+			// reason the errors are: musicInfo is spread into the saved album, and a
+			// data URL on it would land straight back in the library JSON that this
+			// whole change exists to keep small.
+			coverPreview: null,
+
 			panels: {
 				locationAdd: false,
 				locationRemove: false,

@@ -12,6 +12,7 @@ import { profilePage } from "../Profile/view.js";
 import { registerPage } from "../Register/view.js";
 import { welcomePage } from "../Welcome/view.js";
 import { applyStaticText, syncChrome, syncNavbar, syncSuggestions } from "./chrome.js";
+import { hydrateCovers } from "./cover.js";
 
 export function updateView() {
 	let html = storageBanner();
@@ -39,6 +40,11 @@ export function updateView() {
 	// it can't drift out of sync with the page.
 	applyStaticText();
 	syncSuggestions();
+
+	// Covers are read out of IndexedDB, which is asynchronous, so the render above
+	// draws placeholders and this fills in what it can. Deliberately not awaited:
+	// updateView() is called from 20-odd synchronous places.
+	hydrateCovers(model.app.app);
 }
 
 function storageBanner() {

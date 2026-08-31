@@ -6,11 +6,13 @@ import {
 	deriveKeys,
 	zeroKeys,
 } from "../../Model/auth.js";
+import { migrateInlineCovers, pruneCovers } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
-import { readEnvelope } from "../../Model/persistence.js";
+import { persistState, readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
+import { clearCoverCache } from "../../View/Universal/cover.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { navigate } from "../Universal/router.js";
@@ -117,6 +119,21 @@ export async function login() {
 			kdfSaltB64: result.envelope.kdfSalt,
 			verifyHmacB64: result.envelope.verifyHmac,
 		};
+
+		// The cache belongs to whichever library was open last. Covers are keyed by
+		// a uuid so a collision is not the worry — holding another library's
+		// decrypted artwork in memory is.
+		clearCoverCache();
+
+		// A library written before covers moved out still carries them inline.
+		// Moving them is what makes the save below shrink, so it happens before it.
+		try {
+			if (await migrateInlineCovers()) persistState();
+			await pruneCovers(model.data.musicInfo.map((album) => album.coverId));
+		} catch (err) {
+			console.warn("[login] cover maintenance skipped:", err);
+		}
+
 		model.app.authBusy = false;
 		clearAuthMessage();
 		clearLoginForm();
@@ -153,9 +170,14 @@ export function logout() {
 		genre: [],
 		notes: "",
 		wishlist: false,
-		coverImg: null,
+		coverId: null,
 	};
+	model.viewState.musicForm.coverPreview = null;
 	model.viewState.searchBar = "";
+
+	// Decrypted covers are library contents. Locked has to mean locked for them
+	// too — the rows in IndexedDB stay, still encrypted.
+	clearCoverCache();
 
 	clearAuthMessage();
 	navigate("welcome");

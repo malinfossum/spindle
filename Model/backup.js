@@ -9,6 +9,8 @@
 // Model layer: builds and validates plain objects only. Blobs, downloads and
 // file pickers belong to Controller/Universal/backup.js.
 
+import { base64ToBytes, bytesToBase64 } from "./auth.js";
+import { readAllRows, readCover } from "./covers.js";
 import { model } from "./model.js";
 import { readEnvelope, validateEnvelope } from "./persistence.js";
 
@@ -24,12 +26,30 @@ export function backupFilename(kind) {
 }
 
 // The stored envelope, wrapped in a thin outer object that names the format and
-// the build that wrote it. Works while the library is locked, on purpose.
-export function buildEncryptedBackup() {
+// the build that wrote it, plus the cover rows.
+//
+// Still works while the library is locked, which is the property worth
+// protecting: covers are stored already encrypted, with the same key as the
+// envelope, so they are copied out as ciphertext exactly as the envelope is. The
+// bytes are base64'd only because JSON cannot hold a Uint8Array.
+export async function buildEncryptedBackup() {
 	const result = readEnvelope();
 	if (result === null) return { ok: false, reason: "noLibrary" };
 	if (!result.ok) {
 		return { ok: false, reason: result.reason === "too-new" ? "tooNew" : "corrupt" };
+	}
+
+	let covers = [];
+	try {
+		covers = (await readAllRows()).map((row) => ({
+			id: row.id,
+			iv: bytesToBase64(row.iv),
+			data: bytesToBase64(row.data),
+		}));
+	} catch (err) {
+		// A backup without covers still restores the library, and refusing to make
+		// one because IndexedDB is unavailable would be the worse failure.
+		console.warn("[backup] covers could not be read:", err);
 	}
 
 	return {
@@ -40,14 +60,26 @@ export function buildEncryptedBackup() {
 			kind: "encrypted",
 			exportedAt: new Date().toISOString(),
 			envelope: result.envelope,
+			covers,
 		},
 	};
 }
 
 // Serialises the decrypted library, so it needs an unlocked one. Opt-in only —
 // the controller puts an explicit warning in front of this.
-export function buildPlaintextBackup() {
+//
+// Covers are decrypted into it as data URLs. That is what "readable copy" means,
+// and leaving them out would make the readable copy the only export that loses
+// half the library.
+export async function buildPlaintextBackup() {
 	if (!model.app.crypto.unlocked) return { ok: false, reason: "locked" };
+
+	const covers = {};
+	for (const album of model.data.musicInfo) {
+		if (!album.coverId) continue;
+		const dataUrl = await readCover(album.coverId);
+		if (dataUrl) covers[album.coverId] = dataUrl;
+	}
 
 	return {
 		ok: true,
@@ -57,6 +89,7 @@ export function buildPlaintextBackup() {
 			kind: "plaintext",
 			exportedAt: new Date().toISOString(),
 			data: model.data,
+			covers,
 		},
 	};
 }
@@ -92,7 +125,30 @@ export function parseBackup(text) {
 	}
 
 	const result = validateEnvelope(parsed.envelope ? parsed.envelope : parsed);
-	if (result.ok) return { ok: true, envelope: result.envelope };
 	if (result.reason === "too-new") return { ok: false, reason: "tooNew" };
-	return { ok: false, reason: "notBackup" };
+	if (!result.ok) return { ok: false, reason: "notBackup" };
+
+	return { ok: true, envelope: result.envelope, covers: parseCoverRows(parsed.covers) };
+}
+
+// Cover rows from a backup file, back as bytes. Anything malformed is dropped
+// rather than failing the import: a library restored without one cover beats a
+// library not restored at all, and every row is opaque ciphertext here anyway —
+// it is only proved good when the key that opens the envelope decrypts it.
+function parseCoverRows(covers) {
+	if (!Array.isArray(covers)) return [];
+
+	const rows = [];
+	for (const row of covers) {
+		if (!row || typeof row.id !== "string" || typeof row.iv !== "string") continue;
+		if (typeof row.data !== "string") continue;
+
+		try {
+			rows.push({ id: row.id, iv: base64ToBytes(row.iv), data: base64ToBytes(row.data) });
+		} catch {
+			console.warn("[backup] skipped a malformed cover row");
+		}
+	}
+
+	return rows;
 }

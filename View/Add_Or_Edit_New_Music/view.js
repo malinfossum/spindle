@@ -1,5 +1,6 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { coverAttr, coverInner } from "../Universal/cover.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
 
@@ -46,9 +47,12 @@ function buildMusicForm(isEdit) {
 		)
 		.join("");
 
-	const albumCover = info.coverImg
-		? /*HTML*/ `<img src="${escapeHtml(info.coverImg)}" alt="${t("music.coverAlt")}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`
-		: /*HTML*/ `<span class="form-cover-icon">${icon("image", { size: 30 })}</span>`;
+	// A cover chosen a moment ago outranks the stored one: it is what the person
+	// is looking at the form to confirm.
+	const preview = model.viewState.musicForm.coverPreview;
+	const albumCover = preview
+		? /*HTML*/ `<img src="${escapeHtml(preview)}" alt="${t("music.coverAlt")}">`
+		: /*HTML*/ `<span class="form-cover-icon">${coverInner(info, 30, "image")}</span>`;
 
 	const formError = errors.form
 		? /*HTML*/ `<p class="auth-error" role="alert">${escapeHtml(t(errors.form))}</p>`
@@ -78,7 +82,9 @@ function buildMusicForm(isEdit) {
                        aria-describedby="music-cover-error"
                        data-action-change="music-cover">
 
-                <label class="form-cover-slot file-input-label" for="music-cover">
+                <label class="form-cover-slot file-input-label" for="music-cover"${
+					preview ? "" : coverAttr(info)
+				}>
                     ${albumCover}
                     <span class="form-cover-caption">${t("music.chooseCover")}</span>
                 </label>

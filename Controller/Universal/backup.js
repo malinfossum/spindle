@@ -17,6 +17,7 @@ import {
 	buildPlaintextBackup,
 	parseBackup,
 } from "../../Model/backup.js";
+import { replaceAllRows } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { STORAGE_KEY } from "../../Model/persistence.js";
@@ -65,9 +66,10 @@ function downloadJson(filename, payload) {
 	setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
-// Works locked or unlocked: the encrypted envelope is copied out as-is.
-export function exportEncryptedBackup() {
-	const result = buildEncryptedBackup();
+// Works locked or unlocked: the encrypted envelope and the cover rows are
+// copied out as-is.
+export async function exportEncryptedBackup() {
+	const result = await buildEncryptedBackup();
 
 	if (!result.ok) {
 		setBackupMessage(EXPORT_ERROR_KEYS[result.reason] || "error.unexpected", "error");
@@ -90,7 +92,7 @@ export async function exportPlaintextBackup() {
 	});
 	if (!confirmed) return;
 
-	const result = buildPlaintextBackup();
+	const result = await buildPlaintextBackup();
 	if (!result.ok) {
 		setBackupMessage(EXPORT_ERROR_KEYS[result.reason] || "error.unexpected", "error");
 		updateView();
@@ -152,6 +154,10 @@ export async function importBackupFile(input) {
 
 	try {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed.envelope));
+		// After the envelope, and only for an import that got that far: the covers
+		// belong to the library that just replaced this browser's one, so the old
+		// rows go with the old library.
+		await replaceAllRows(parsed.covers);
 	} catch (err) {
 		console.error("[backup] import failed:", err);
 		setBackupMessage(

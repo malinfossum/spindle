@@ -1,8 +1,10 @@
+import { deleteCover, newCoverId, putCover } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
+import { forgetCover } from "../../View/Universal/cover.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
 import { updateView } from "../../View/Universal/updateView.js";
@@ -43,12 +45,13 @@ function rng() {
 }
 
 export function initNewAlbum() {
+	model.viewState.musicForm.coverPreview = null;
 	emptyList();
 	emptyGenreLocationList();
 	clearAuthMessage();
 }
 
-export function submitChanges(isEdit) {
+export async function submitChanges(isEdit) {
 	if (!isLoggedIn()) {
 		navigate("login");
 		return;
@@ -81,6 +84,27 @@ export function submitChanges(isEdit) {
 		return;
 	}
 
+	// The cover is written before the album, so an album never points at a row
+	// that failed to store. A write that fails leaves the previous cover in place
+	// and says so, rather than saving an album with a broken reference.
+	const preview = model.viewState.musicForm.coverPreview;
+	let replacedCoverId = null;
+
+	if (preview) {
+		const newId = newCoverId();
+		try {
+			await putCover(newId, preview);
+		} catch (err) {
+			console.error("[editMusic] could not store the cover:", err);
+			errors.coverImg = "error.imageStoreFailed";
+			model.viewState.musicForm.errors = errors;
+			updateView();
+			return;
+		}
+		replacedCoverId = model.viewState.musicInfo.coverId;
+		model.viewState.musicInfo.coverId = newId;
+	}
+
 	if (!isEdit) {
 		model.viewState.musicInfo.id = rng();
 		model.data.musicInfo.push({ ...model.viewState.musicInfo });
@@ -92,6 +116,16 @@ export function submitChanges(isEdit) {
 		if (index === -1) return;
 
 		model.data.musicInfo[index] = { ...model.viewState.musicInfo };
+	}
+
+	model.viewState.musicForm.coverPreview = null;
+
+	// Only once the album that pointed at it is saved pointing somewhere else.
+	if (replacedCoverId) {
+		forgetCover(replacedCoverId);
+		deleteCover(replacedCoverId).catch((err) =>
+			console.warn("[editMusic] could not delete the replaced cover:", err),
+		);
 	}
 
 	persistState();
@@ -213,7 +247,7 @@ function emptyList() {
 		genre: [],
 		notes: "",
 		wishlist: false,
-		coverImg: null,
+		coverId: null,
 	};
 }
 
@@ -249,8 +283,12 @@ export async function saveImage(image) {
 
 	// Build the data URI from the sniffed MIME, not file.type, so the stored
 	// prefix can't be spoofed. Strip FileReader's own prefix and re-attach ours.
+	//
+	// It goes to the form's preview, not to the album: nothing is written to
+	// IndexedDB until the album is saved, so choosing a cover and then cancelling
+	// leaves no row behind.
 	const base64 = await readFileAsBase64(file);
-	model.viewState.musicInfo.coverImg = `data:${mime};base64,${base64}`;
+	model.viewState.musicForm.coverPreview = `data:${mime};base64,${base64}`;
 	errors.coverImg = "";
 	updateView();
 }

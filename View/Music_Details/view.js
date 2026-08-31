@@ -1,7 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { coverAttr, coverInner } from "../Universal/cover.js";
 import { escapeHtml } from "../Universal/escape.js";
-import { icon } from "../Universal/icons.js";
 
 export function viewDetailsPage() {
 	const id = model.viewState.musicInfo.id;
@@ -16,14 +16,12 @@ export function viewDetailsPage() {
 
 	const genre = album.genre.map((i) => model.data.genre[i]).join(", ") || "—";
 	const location = album.location.map((i) => model.data.location[i]).join(", ") || "—";
-	const albumCover = album.coverImg
-		? `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
-		: icon("disc", { size: 36 });
+	const albumCover = coverInner(album, 36);
 
 	return /*HTML*/ `
     <div class="detail-card">
         <div class="detail-top">
-            <div class="detail-cover">${albumCover}</div>
+            <div class="detail-cover"${coverAttr(album)}>${albumCover}</div>
 
             <div class="detail-fields">
                 <div class="field-row">

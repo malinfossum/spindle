@@ -232,6 +232,7 @@ export const STRINGS_EN = {
 	"error.storageNearFull": "Storage is nearly full. Delete some albums before adding more.",
 	"error.imageTooLarge": "The image is too large. Maximum 2 MB.",
 	"error.imageInvalid": "Invalid image file. Use JPEG, PNG or WebP.",
+	"error.imageStoreFailed": "The cover image could not be saved. Try again, or save without one.",
 };
 
 // See SEED_NO — seeded once at library creation, then owned by the user.

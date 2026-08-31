@@ -243,6 +243,7 @@ export const STRINGS_NO = {
 	"error.storageNearFull": "Lagringen er nesten full. Slett noen album før du legger til flere.",
 	"error.imageTooLarge": "Bildet er for stort. Maks 2 MB.",
 	"error.imageInvalid": "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.",
+	"error.imageStoreFailed": "Coverbildet kunne ikke lagres. Prøv igjen, eller lagre uten bilde.",
 };
 
 // Starter genres and locations written into a brand-new library. Seeded once in

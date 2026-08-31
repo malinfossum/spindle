@@ -11,6 +11,9 @@ export function editAlbum(id) {
 		location: [...album.location],
 		genre: [...album.genre],
 	};
+	// A cover picked during an edit that was never saved must not follow the next
+	// album into the form.
+	model.viewState.musicForm.coverPreview = null;
 
 	navigate("editDetails");
 }
