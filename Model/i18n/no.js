@@ -10,7 +10,8 @@ export const STRINGS_NO = {
 	// ---- Chrome: navbar, footer, document ----------------------------------
 	"nav.home": "Hjem",
 	"nav.wishlist": "Ønskeliste",
-	"nav.searchPlaceholder": "Søkefelt",
+	"nav.searchPlaceholder": "Søk i biblioteket",
+	"nav.suggestions": "Forslag",
 	"nav.search": "Søk",
 	"nav.login": "Logg inn",
 	"nav.logout": "Logg ut",

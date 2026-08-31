@@ -17,6 +17,7 @@
 import { getHtmlLang, t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { getLoggedInUser, isLoggedIn } from "../../Model/selectors.js";
+import { renderSuggestions, syncSearchInputs } from "./searchSuggest.js";
 
 export function syncNavbar() {
 	const user = getLoggedInUser();
@@ -54,6 +55,13 @@ export function syncNavbar() {
 // The logged-out flow (welcome, login, register, about) is shown without the app
 // navbar and footer so the welcome landing reads as a clean entry point. This only
 // flips a body class; CSS owns the actual hiding.
+// Called from updateView() alongside the other chrome syncs, so a navigation
+// closes the list: resetTransientViewState() has already cleared the state by
+// then, and this is what puts that on screen.
+export function syncSuggestions() {
+	renderSuggestions();
+}
+
 export function syncChrome() {
 	// The not-found view is reachable from both sides, so it is the one public
 	// page this rule treats differently: keep the chrome hidden in the logged-out
@@ -87,13 +95,20 @@ export function applyStaticText() {
 	setText("nav-home-mobile", "nav.home");
 	setText("nav-wishlist-desktop", "nav.wishlist");
 	setText("nav-wishlist-mobile", "nav.wishlist");
-	setText("nav-search-desktop", "nav.search");
-	setText("nav-search-mobile", "nav.search");
 	setText("footer-copyright", "footer.copyright");
+
+	// The search button is an icon now, so its name is an aria-label rather than
+	// its text content.
+	for (const id of ["nav-search-desktop-btn", "nav-search-mobile-btn"]) {
+		const btn = document.getElementById(id);
+		if (btn) btn.setAttribute("aria-label", t("nav.search"));
+	}
 
 	for (const input of document.querySelectorAll(".nav-search-input")) {
 		input.placeholder = t("nav.searchPlaceholder");
 	}
+
+	syncSearchInputs();
 
 	const burger = document.getElementById("nav-burger");
 	if (burger) burger.setAttribute("aria-label", t("nav.menuToggle"));

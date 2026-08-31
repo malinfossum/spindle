@@ -110,6 +110,15 @@ export const model = {
 
 		searchBar: "",
 
+		// The search box's suggestion list. Transient in the same way the chip
+		// panels are: open is whether the list is showing, index is the option the
+		// arrow keys have moved to (-1 = none), and both are forgotten on
+		// navigation.
+		suggest: {
+			open: false,
+			index: -1,
+		},
+
 		// The welcome page rebuilds wholesale on every re-render, so the backup
 		// panel would snap shut on a language switch if its open state lived in
 		// the DOM. Anything that must survive a re-render belongs on the model.

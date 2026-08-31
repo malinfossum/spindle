@@ -70,8 +70,6 @@ function buildMusicForm(isEdit) {
                  No file chosen" widget, which used to be nudged into place with a
                  210px margin and landed on top of the cover. -->
             <div class="form-cover">
-                <div class="form-cover-slot">${albumCover}</div>
-
                 <input class="file-input-hidden"
                        id="music-cover"
                        type="file"
@@ -79,9 +77,11 @@ function buildMusicForm(isEdit) {
                        aria-invalid="${errors.coverImg ? "true" : "false"}"
                        aria-describedby="music-cover-error"
                        data-action-change="music-cover">
-                <label class="btn btn-file file-input-label" for="music-cover">${t(
-					isEdit ? "music.changeCover" : "music.chooseCover",
-				)}</label>
+
+                <label class="form-cover-slot file-input-label" for="music-cover">
+                    ${albumCover}
+                    <span class="form-cover-caption">${t("music.chooseCover")}</span>
+                </label>
             </div>
 
             <div class="form-fields">

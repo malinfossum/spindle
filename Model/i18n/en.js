@@ -4,7 +4,8 @@ export const STRINGS_EN = {
 	// ---- Chrome: navbar, footer, document ----------------------------------
 	"nav.home": "Home",
 	"nav.wishlist": "Wishlist",
-	"nav.searchPlaceholder": "Search",
+	"nav.searchPlaceholder": "Search your library",
+	"nav.suggestions": "Suggestions",
 	"nav.search": "Search",
 	"nav.login": "Log in",
 	"nav.logout": "Log out",

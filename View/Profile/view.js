@@ -9,7 +9,9 @@ import { langSwitcher } from "../Universal/langSwitcher.js";
 
 export function profilePage() {
 	const user = getLoggedInUser();
-	const albums = getProfileAlbums();
+	// The count only. The grid of covers that used to be here is what Home is
+	// for; Profile is the settings screen.
+	const albumCount = getProfileAlbums().length;
 
 	if (!user) {
 		return /*HTML*/ `
@@ -19,32 +21,6 @@ export function profilePage() {
         </div>
         `;
 	}
-
-	const gridHTML = albums
-		.map((album) => {
-			const albumCover = album.coverImg
-				? `<img src="${escapeHtml(album.coverImg)}" alt="${t("music.coverAlt")}">`
-				: icon("disc", { size: 40 });
-
-			// Unlike the album card this one holds no nested buttons, so the whole
-			// card can simply BE the button — one tab stop, named after the album,
-			// and the entire tile is the target. Inner elements are spans because
-			// <button> only takes phrasing content; the stylesheet gives them back
-			// their block layout.
-			return /*HTML*/ `
-            <button class="profile-album-card"
-                    type="button"
-                    data-action="view-album"
-                    data-id="${album.id}">
-                <span class="profile-album-img">${albumCover}</span>
-                <span class="profile-album-info">
-                    <span class="profile-album-title">${escapeHtml(album.title)}</span>
-                    <span class="profile-album-artist">${escapeHtml(album.artist)}</span>
-                </span>
-            </button>
-            `;
-		})
-		.join("");
 
 	const storage = model.app.storage;
 	const storageBlock = storage
@@ -92,15 +68,9 @@ export function profilePage() {
         <span class="page-title">${t("profile.title", { username: escapeHtml(user.username) })}</span>
     </div>
 
-    <p class="search-result-count">${t("profile.myAlbums", { count: albums.length })}</p>
+    <p class="search-result-count">${t("profile.myAlbums", { count: albumCount })}</p>
 
     ${storageBlock}
     ${settingsBlock}
-
-    ${
-		albums.length
-			? `<div class="profile-grid">${gridHTML}</div>`
-			: `<div class="empty-state"><div class="empty-state-icon">${icon("disc", { size: 48 })}</div>${t("profile.noAlbums")}</div>`
-	}
     `;
 }

@@ -12,7 +12,7 @@ import { registerPage } from "../Register/view.js";
 import { searchPage } from "../Search/view.js";
 import { welcomePage } from "../Welcome/view.js";
 import { wishListPage } from "../Wishlist/view.js";
-import { applyStaticText, syncChrome, syncNavbar } from "./chrome.js";
+import { applyStaticText, syncChrome, syncNavbar, syncSuggestions } from "./chrome.js";
 
 export function updateView() {
 	let html = storageBanner();
@@ -39,6 +39,7 @@ export function updateView() {
 	// reaches them. Re-apply the current language to that static chrome here so
 	// it can't drift out of sync with the page.
 	applyStaticText();
+	syncSuggestions();
 }
 
 function storageBanner() {

@@ -15,9 +15,11 @@
 
 import { getLang, setLang } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { getSearchSuggestions } from "../../Model/selectors.js";
 import { renderStrength } from "../../View/Register/view.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
 import { applyLang } from "../../View/Universal/chrome.js";
+import { renderSuggestions } from "../../View/Universal/searchSuggest.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import {
 	clearMusicGroupError,
@@ -75,11 +77,68 @@ const ACTIONS = {
 		updateView();
 	},
 
-	// Deliberately no re-render: the search box lives in the static navbar, and
-	// re-rendering on every keystroke would drop its focus. The search page reads
-	// this when it renders.
+	// The search box lives in the static navbar, outside the #app element
+	// updateView() replaces — so a re-render here cannot drop its focus, and the
+	// results page can filter as you type. The suggestion list is patched
+	// directly either way, because it has to keep up with every keystroke.
 	"search-query": (_event, target) => {
 		model.viewState.searchBar = target.value;
+		model.viewState.suggest = { open: target.value.trim() !== "", index: -1 };
+
+		if (model.app.currentPage === "searchPage") {
+			updateView();
+			return;
+		}
+		renderSuggestions();
+	},
+
+	// Enter in the field. The form does the work; this only decides where to go
+	// and closes the list behind it.
+	"search-submit": (event) => {
+		event.preventDefault();
+		model.viewState.suggest = { open: false, index: -1 };
+		navigate("searchPage");
+	},
+
+	// Arrow keys move the active option, Enter opens it, Escape closes the list.
+	// Focus never leaves the input — the active option is named through
+	// aria-activedescendant — so typing carries on uninterrupted.
+	"search-keys": (event) => {
+		const state = model.viewState.suggest;
+		const count = getSearchSuggestions().length;
+
+		if (event.key === "Escape") {
+			if (!state.open) return;
+			model.viewState.suggest = { open: false, index: -1 };
+			renderSuggestions();
+			return;
+		}
+
+		if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+			if (!state.open || count === 0) return;
+			event.preventDefault();
+			// The ring is [-1, 0 .. count-1], where -1 is "nothing active" — so
+			// arrowing up off the top lands back in the field, not on the last item.
+			const next = state.index + (event.key === "ArrowDown" ? 1 : -1);
+			state.index = next < -1 ? count - 1 : next >= count ? -1 : next;
+			renderSuggestions();
+			return;
+		}
+
+		if (event.key === "Enter" && state.open && state.index >= 0) {
+			const album = getSearchSuggestions()[state.index];
+			if (!album) return;
+			// Beat the form's submit, which would send us to the results page
+			// instead of to the album that was chosen.
+			event.preventDefault();
+			model.viewState.suggest = { open: false, index: -1 };
+			viewMusicDetails(album.id);
+		}
+	},
+
+	"suggest-pick": (_event, target) => {
+		model.viewState.suggest = { open: false, index: -1 };
+		viewMusicDetails(Number(target.dataset.id));
 	},
 
 	// --- Albums ------------------------------------------------------------

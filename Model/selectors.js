@@ -46,6 +46,25 @@ export function getSearchResults() {
 	);
 }
 
+// What the search box offers while someone types. Title and artist only — the
+// two things a person is actually reaching for — and capped, because the list
+// is a shortcut, not a second results page. getSearchResults() stays the
+// authority for the results page itself; this one exists to be short.
+const SUGGESTION_LIMIT = 8;
+
+export function getSearchSuggestions() {
+	const query = (model.viewState.searchBar || "").toLowerCase().trim();
+	if (!query) return [];
+
+	return getAccessibleAlbums()
+		.filter(
+			(album) =>
+				album.title.toLowerCase().includes(query) ||
+				album.artist.toLowerCase().includes(query),
+		)
+		.slice(0, SUGGESTION_LIMIT);
+}
+
 // True when viewState holds an album the two detail pages can actually render.
 // They read the current selection rather than an id from the URL, so the router
 // asks this before routing to one: a cold deep link, or a selection left

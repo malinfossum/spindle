@@ -60,6 +60,12 @@ function resetMusicPanels() {
 	};
 }
 
+// Closes the search suggestions. A list left open across a navigation would
+// hang over the page someone just moved to.
+function closeSuggestions() {
+	model.viewState.suggest = { open: false, index: -1 };
+}
+
 // Everything a page change has to forget, in the order changePage() used to
 // call the four by hand. Navigation asks for this one function instead of
 // naming each write, which is what lets the router stay out of login.js,
@@ -70,4 +76,5 @@ export function resetTransientViewState() {
 	resetAuthFieldErrors();
 	resetMusicFieldErrors();
 	resetMusicPanels();
+	closeSuggestions();
 }

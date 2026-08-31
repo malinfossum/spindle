@@ -36,15 +36,15 @@
 	--welcome-vinyl-opacity: 0.55;
 }
 
-/* Cool neutral greys, deliberately: a light theme mixed from a flat grey reads
-   warm — pink, on a wide-gamut screen — beside the blue accent. Every step here
-   carries slightly more blue than red, which is what keeps it looking clean
-   rather than tinted. */
+/* Cool greys, and not subtly: a light theme mixed from near-neutral grey reads
+   warm next to a blue accent and a white card — pink, on a wide-gamut screen.
+   Every step here is 8-10 points bluer than it is red, which is enough to be
+   read as cool rather than as untinted grey that happens to lean. */
 html[data-theme="light"] {
-	--bg: #f1f3f5;
+	--bg: #eef1f6;
 	--surface: #ffffff;
-	--surface2: #e9ecef;
-	--border: #dee2e6;
+	--surface2: #e3e8ef;
+	--border: #d5dbe3;
 	--text: #16181b;
 	/* 5.79:1 on white and 5.16:1 on --bg. The old #777777 was 4.48:1 on white,
 	   under the 4.5:1 floor for body text. */
@@ -52,10 +52,10 @@ html[data-theme="light"] {
 	--accent: #2563eb;
 	--accent-hover: #1d55d5;
 	--btn-bg: #ffffff;
-	--btn-border: #ced4da;
+	--btn-border: #c8d0da;
 	--input-bg: #ffffff;
 	--card-bg: #ffffff;
-	--img-bg: #e9ecef;
+	--img-bg: #e6eaf1;
 	--tag-bg: #dbeafe;
 	--tag-text: #1d4ed8;
 	--shadow: rgba(0, 0, 0, 0.08);
@@ -163,8 +163,7 @@ body {
 }
 
 .Navbar input {
-	flex: 1;
-	max-width: 100px;
+	width: 100%;
 	/* Same reason as .nav-mobile — this is the field that gives up the space. */
 	min-width: 0;
 	min-height: 44px;
@@ -172,16 +171,112 @@ body {
 	border: 1px solid var(--border);
 	border-radius: 6px;
 	color: var(--text);
-	padding: 0.35rem 0.75rem;
+	/* The right side leaves room for the submit button, which sits on the field
+	   rather than beside it. */
+	padding: 0.35rem 46px 0.35rem 0.75rem;
 	font-size: 0.875rem;
 	outline: none;
 	transition: border-color 0.15s;
 }
 
+/* ── The search box ──
+   One form, two placements. The submit button is positioned on the field so
+   that Enter and the button are the same action in the same place, and the
+   suggestion list hangs under the whole thing. */
+.nav-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-width: 0;
+}
+
 /* Only the mobile bar pushes the field right; the desktop bar centres it in its
-   own zone instead (see .nav-search below). */
-.nav-mobile .nav-search-input {
+   own zone instead. */
+.nav-mobile .nav-search {
 	margin-left: auto;
+	flex: 1;
+	max-width: 210px;
+}
+
+.search-field {
+	position: relative;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	min-width: 0;
+}
+
+/* .Navbar button is (0,1,1) and would otherwise win the background and padding
+   here — the same specificity trap .btn-theme documents above. */
+.Navbar .search-go {
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 44px;
+	min-width: 44px;
+	padding: 0;
+	background: none;
+	border: none;
+	border-radius: 0 6px 6px 0;
+	color: var(--text-muted);
+}
+
+.Navbar .search-go:hover {
+	background: none;
+	color: var(--accent);
+}
+
+.nav-suggest {
+	position: absolute;
+	top: calc(100% + 4px);
+	left: 0;
+	right: 0;
+	z-index: 200;
+	margin: 0;
+	padding: 0.25rem;
+	list-style: none;
+	background: var(--nav-bg);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	box-shadow: 0 4px 16px var(--shadow);
+	max-height: 320px;
+	overflow-y: auto;
+}
+
+.nav-suggest-item {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 0.1rem;
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	min-height: 44px;
+	padding: 0.4rem 0.6rem;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+/* Hover and the arrow-key selection look the same on purpose: there is one
+   "this is the one you are about to open" state, however you got to it. */
+.nav-suggest-item:hover,
+.nav-suggest-item[aria-selected="true"] {
+	background: var(--surface2);
+}
+
+.nav-suggest-title {
+	font-size: 0.85rem;
+	color: var(--text);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.nav-suggest-artist {
+	font-size: 0.75rem;
+	color: var(--text-muted);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .Navbar input:focus {
@@ -634,7 +729,25 @@ footer {
 	color: var(--text-muted);
 	gap: 0.3rem;
 	overflow: hidden;
+	position: relative;
+	cursor: pointer;
 	transition: border-color 0.15s;
+}
+
+/* The whole slot is the picker, so the caption sits on it rather than under it
+   as a second box to look at. Absolute, so it reads the same over the cover
+   image and over the empty placeholder. */
+.form-cover-caption {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 0.25rem 0.2rem;
+	background: color-mix(in srgb, var(--surface) 88%, transparent);
+	color: var(--text);
+	font-size: 0.65rem;
+	line-height: 1.2;
+	text-align: center;
 }
 
 .form-cover:hover .form-cover-slot {
@@ -646,12 +759,11 @@ footer {
 	opacity: 0.7;
 }
 
-/* The picker's visible control. Sized like the buttons it sits among rather
-   than like body text, and narrow enough not to widen the cover column. */
-.btn-file {
-	font-size: 0.8rem;
-	padding: 0.4rem 0.7rem;
-	white-space: nowrap;
+/* The cover slot is its own focus ring: the input it belongs to is off screen,
+   so without this a keyboard user tabs onto nothing visible. */
+.form-cover .file-input-hidden:focus-visible + .form-cover-slot {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
 }
 
 .form-fields {
@@ -733,8 +845,12 @@ footer {
 	border-radius: 6px;
 }
 
-/* The ➕ / ✖️ chip toggles and the ✔️ confirm are unclassed <button>s, so they
-   are reached structurally. WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+/* The chip toggles and the confirm button are unclassed <button>s, so they are
+   reached structurally.
+   They keep the full 44x44 target (WCAG 2.5.5) but stop painting it: a bordered
+   box that size sits half a head above a row of 15px checkboxes and reads as an
+   empty field rather than as an icon. The box appears on hover and focus, where
+   it says "this is a control" at the moment that is the question being asked. */
 .checkbox-group > button,
 .form-row > form > button {
 	display: inline-flex;
@@ -743,17 +859,22 @@ footer {
 	min-width: 44px;
 	min-height: 44px;
 	background: none;
-	border: 1px solid var(--border);
+	border: 1px solid transparent;
 	border-radius: 6px;
-	color: var(--text);
+	color: var(--text-muted);
 	font-family: inherit;
 	cursor: pointer;
-	transition: border-color 0.15s;
+	transition:
+		background 0.15s,
+		border-color 0.15s,
+		color 0.15s;
 }
 
 .checkbox-group > button:hover,
 .form-row > form > button:hover {
-	border-color: var(--accent);
+	background: var(--surface2);
+	border-color: var(--border);
+	color: var(--text);
 }
 
 .checkbox-option {
@@ -1134,12 +1255,8 @@ footer {
 		justify-content: flex-end;
 	}
 
-	.nav-search {
-		display: flex;
-		align-items: center;
-		gap: 0.25rem;
-		flex: 0 1 auto;
-		min-width: 0;
+	.nav-desktop .nav-search {
+		flex: 0 1 420px;
 	}
 
 	.nav-mobile {
@@ -1147,7 +1264,7 @@ footer {
 	}
 
 	.Navbar input {
-		max-width: 280px;
+		max-width: none;
 	}
 
 	#app {

@@ -13,6 +13,7 @@
 //   data-action-change   change
 //   data-action-submit   submit
 //   data-action-toggle   toggle
+//   data-action-keydown  keydown
 //
 // The listeners sit on the document rather than on #app, because updateView()
 // replaces #app's contents wholesale on every render — a listener bound to a
@@ -24,6 +25,7 @@ const ACTION_EVENTS = {
 	change: "data-action-change",
 	submit: "data-action-submit",
 	toggle: "data-action-toggle",
+	keydown: "data-action-keydown",
 };
 
 export function bindActions(root, handlers) {
