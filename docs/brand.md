@@ -6,8 +6,8 @@ file is the reasoning behind them.
 
 Spindle's brand is not in the shared design system on purpose. The design system
 is the foundation under every project; one product's identity does not belong in
-it. What is generic here — the icon module, the file-picker pattern, the cool
-light palette — can be promoted separately.
+it. What is generic here — the icon module, the file-picker pattern, the light
+palette — can be promoted separately.
 
 ## The name
 
@@ -44,25 +44,34 @@ in the stylesheet writes a raw colour.
 |---|---|---|
 | Page | `#111111` | `#eef1f6` |
 | Card / surface | `#1e1e1e` / `#1c1c1c` | `#ffffff` |
-| Raised surface | `#252525` | `#e3e8ef` |
-| Border | `#2e2e2e` | `#d5dbe3` |
+| Raised surface | `#252525` | `#e4e7ea` |
+| Border | `#2e2e2e` | `#d6d9dd` |
 | Text | `#e8e8e8` | `#16181b` |
-| Muted text | `#888888` | `#5f6672` |
+| Muted text | `#888888` | `#5e6266` |
 | Accent | `#4a80d4` | `#2563eb` |
 | Tag | `#1e3050` on `#7aabf0` | `#dbeafe` on `#1d4ed8` |
 
 Rules that produced those numbers:
 
-- **The light theme is deliberately cool.** Greys mixed near-neutral read warm —
-  pink, on a wide-gamut screen — beside a blue accent and a white card. Every
-  grey in the light theme carries more blue than red: +8 on the page, +12 on the
-  raised surface, +14 on the border, +19 on the muted text. White is the
-  exception, and it reads as white because everything around it leans.
+- **The light greys are near-neutral, with at most a slight cool cast.** An
+  earlier version of this rule said the opposite — that near-neutral greys read
+  pink on a wide-gamut screen, so every light grey leaned blue: +8 on the page,
+  +12 on the raised surface, +14 on the border, +19 on the muted text. That
+  rationale was superseded on 2026-08-31: the pink was a stale display-pipeline
+  colour state on the reference monitor (an AW3425DW), cleared by toggling
+  HDR — not a property of the greys. Worse, a blue-leaning grey is itself what
+  bends pink under a genuinely warm display shift. The shared design system now
+  pins the reverse direction — cool-cast (R ≤ G ≤ B) with no grey more than 8
+  points bluer than red — as of DS 3.4.0
+  ([workbench PR #22](https://github.com/malinfossum/workbench/pull/22)), and
+  Spindle's light ramp follows the same rule, retuned to it at equal-or-better
+  contrast. The page keeps `#eef1f6` (+8, at the budget's edge); white is still
+  white.
 - **Three values flip with the theme rather than being shared**: `--error-text`,
   `--success-text` and `--danger-text`. No single red or green clears 4.5:1 on
   both a `#1e1e1e` card and a white one.
-- **Muted text is darker than it looks like it needs to be.** `#5f6672` is 5.78:1
-  on white and 5.11:1 on the page. The obvious `#777777` is 4.48:1 on white,
+- **Muted text is darker than it looks like it needs to be.** `#5e6266` is 6.15:1
+  on white and 5.43:1 on the page. The obvious `#777777` is 4.48:1 on white,
   which is under the floor — secondary text is still body text.
 - **The accent is the only saturated colour.** Everything else is grey. A
   collection app is full of album art, and the interface should not compete with
