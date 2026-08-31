@@ -48,6 +48,18 @@ function resetMusicFieldErrors() {
 	};
 }
 
+// Closes the add/edit form's four chip panels. Transient in the same way the
+// field errors are: a panel opened on one visit must not still be open on the
+// next, which is exactly why these flags did not belong on model.app.
+function resetMusicPanels() {
+	model.viewState.musicForm.panels = {
+		locationAdd: false,
+		locationRemove: false,
+		genreAdd: false,
+		genreRemove: false,
+	};
+}
+
 // Everything a page change has to forget, in the order changePage() used to
 // call the four by hand. Navigation asks for this one function instead of
 // naming each write, which is what lets the router stay out of login.js,
@@ -57,4 +69,5 @@ export function resetTransientViewState() {
 	clearBackupMessage();
 	resetAuthFieldErrors();
 	resetMusicFieldErrors();
+	resetMusicPanels();
 }

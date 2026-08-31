@@ -13,6 +13,7 @@ export function editDetailsPage() {
 function buildMusicForm(isEdit) {
 	const info = model.viewState.musicInfo;
 	const errors = model.viewState.musicForm.errors;
+	const panels = model.viewState.musicForm.panels;
 
 	const locationCheckboxes = model.data.location
 		.map(
@@ -129,7 +130,7 @@ function buildMusicForm(isEdit) {
 
             <span class="field-error" id="music-location-error">${escapeHtml(t(errors.location))}</span>
 
-            <form data-action-submit="new-location" style="visibility: ${model.app.showLocationInput ? "hidden" : "visible"};">
+            <form data-action-submit="new-location" ${panels.locationAdd ? "" : "hidden"}>
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.newLocation")}"
@@ -138,7 +139,7 @@ function buildMusicForm(isEdit) {
                 <button aria-label="${t("music.confirmOption")}">✔️</button>
             </form>
 
-            <form data-action-submit="remove-location" style="visibility: ${model.app.showDeleteLocationInput ? "hidden" : "visible"};">
+            <form data-action-submit="remove-location" ${panels.locationRemove ? "" : "hidden"}>
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.removeLocation")}"
@@ -185,7 +186,7 @@ function buildMusicForm(isEdit) {
 
             <span class="field-error" id="music-genre-error">${escapeHtml(t(errors.genre))}</span>
 
-            <form data-action-submit="new-genre" style="visibility: ${model.app.showGenreInput ? "hidden" : "visible"};">
+            <form data-action-submit="new-genre" ${panels.genreAdd ? "" : "hidden"}>
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.newGenre")}"
@@ -194,7 +195,7 @@ function buildMusicForm(isEdit) {
                 <button aria-label="${t("music.confirmOption")}">✔️</button>
             </form>
 
-            <form data-action-submit="remove-genre" style="visibility: ${model.app.showDeleteGenreInput ? "hidden" : "visible"};">
+            <form data-action-submit="remove-genre" ${panels.genreRemove ? "" : "hidden"}>
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.removeGenre")}"

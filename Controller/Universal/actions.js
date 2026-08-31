@@ -47,10 +47,10 @@ import { toggleTheme } from "./theme.js";
 import { viewMusicDetails } from "./viewMusicDetails.js";
 
 const FORM_PANELS = {
-	"location-add": "showLocationInput",
-	"location-remove": "showDeleteLocationInput",
-	"genre-add": "showGenreInput",
-	"genre-remove": "showDeleteGenreInput",
+	"location-add": "locationAdd",
+	"location-remove": "locationRemove",
+	"genre-add": "genreAdd",
+	"genre-remove": "genreRemove",
 };
 
 const ACTIONS = {
@@ -146,9 +146,10 @@ const ACTIONS = {
 	},
 
 	"toggle-panel": (_event, target) => {
-		const flag = FORM_PANELS[target.dataset.panel];
-		if (!flag) return;
-		model.app[flag] = !model.app[flag];
+		const panel = FORM_PANELS[target.dataset.panel];
+		if (!panel) return;
+		const panels = model.viewState.musicForm.panels;
+		panels[panel] = !panels[panel];
 		updateView();
 	},
 

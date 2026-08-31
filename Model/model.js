@@ -35,12 +35,6 @@ export const model = {
 			verifyHmacB64: null,
 		},
 
-		showGenreInput: true,
-		showLocationInput: true,
-
-		showDeleteGenreInput: true,
-		showDeleteLocationInput: true,
-
 		authMessage: "",
 
 		// Result of the last export / import, shown in the backup block on the
@@ -87,6 +81,18 @@ export const model = {
 				location: "",
 				genre: "",
 				form: "",
+			},
+
+			// The four chip panels behind each group's add and remove buttons. True
+			// means open, which is what the name says: these were show*Input flags
+			// that meant the opposite, defaulted to true, and rendered as
+			// visibility: hidden, which hides a box but keeps its height. That is
+			// where the form's four tall empty bands came from.
+			panels: {
+				locationAdd: false,
+				locationRemove: false,
+				genreAdd: false,
+				genreRemove: false,
 			},
 		},
 

@@ -113,7 +113,7 @@ export function newLocation(event) {
 		persistState();
 	}
 
-	model.app.showLocationInput = !model.app.showLocationInput;
+	model.viewState.musicForm.panels.locationAdd = false;
 	emptyGenreLocationList();
 	updateView();
 }
@@ -133,7 +133,7 @@ export function newGenre(event) {
 		persistState();
 	}
 
-	model.app.showGenreInput = !model.app.showGenreInput;
+	model.viewState.musicForm.panels.genreAdd = false;
 	emptyGenreLocationList();
 	updateView();
 }
@@ -159,7 +159,7 @@ export async function removeLocation(event) {
 		}
 	}
 
-	model.app.showDeleteLocationInput = !model.app.showDeleteLocationInput;
+	model.viewState.musicForm.panels.locationRemove = false;
 	updateView();
 }
 
@@ -184,7 +184,7 @@ export async function removeGenre(event) {
 		}
 	}
 
-	model.app.showDeleteGenreInput = !model.app.showDeleteGenreInput;
+	model.viewState.musicForm.panels.genreRemove = false;
 	updateView();
 }
 
