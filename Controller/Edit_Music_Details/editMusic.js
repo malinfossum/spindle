@@ -66,8 +66,19 @@ export async function submitChanges(isEdit) {
 		coverImg: model.viewState.musicForm.errors.coverImg,
 		artist: info.artist.trim() ? "" : "error.fillArtist",
 		title: info.title.trim() ? "" : "error.fillTitle",
-		location: info.location.length ? "" : "error.pickLocation",
-		genre: info.genre.length ? "" : "error.pickGenre",
+		// "Choose a location" is wrong advice on a library that has none — which is
+		// every library on its first run now that nothing is seeded. Point at the
+		// control that fixes it instead.
+		location: info.location.length
+			? ""
+			: model.data.location.length
+				? "error.pickLocation"
+				: "error.addLocationFirst",
+		genre: info.genre.length
+			? ""
+			: model.data.genre.length
+				? "error.pickGenre"
+				: "error.addGenreFirst",
 		form: "",
 	};
 

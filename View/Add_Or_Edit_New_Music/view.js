@@ -155,12 +155,18 @@ function buildMusicForm(isEdit) {
                 data-action="toggle-panel"
                 data-panel="location-add">${icon("plus")}</button>
 
-                <button
+                ${
+					// Nothing to remove from an empty list, so the control that
+					// removes from it does not belong on the page yet.
+					model.data.location.length
+						? /*HTML*/ `<button
                 type="button"
                 aria-label="${t("music.removeLocationToggle")}"
                 aria-expanded="${panels.locationRemove}"
                 data-action="toggle-panel"
-                data-panel="location-remove">${icon("close")}</button>
+                data-panel="location-remove">${icon("close")}</button>`
+						: ""
+				}
             </div>
 
             <span class="field-error" id="music-location-error">${escapeHtml(t(errors.location))}</span>
@@ -174,7 +180,9 @@ function buildMusicForm(isEdit) {
                 <button aria-label="${t("music.confirmOption")}">${icon("check")}</button>
             </form>
 
-            <form data-action-submit="remove-location" ${panels.locationRemove ? "" : "hidden"}>
+            <form data-action-submit="remove-location" ${
+				panels.locationRemove && model.data.location.length ? "" : "hidden"
+			}>
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.removeLocation")}"
@@ -223,12 +231,16 @@ function buildMusicForm(isEdit) {
                 data-action="toggle-panel"
                 data-panel="genre-add">${icon("plus")}</button>
 
-                <button
+                ${
+					model.data.genre.length
+						? /*HTML*/ `<button
                 type="button"
                 aria-label="${t("music.removeGenreToggle")}"
                 aria-expanded="${panels.genreRemove}"
                 data-action="toggle-panel"
-                data-panel="genre-remove">${icon("close")}</button>
+                data-panel="genre-remove">${icon("close")}</button>`
+						: ""
+				}
             </div>
 
             <span class="field-error" id="music-genre-error">${escapeHtml(t(errors.genre))}</span>
@@ -242,7 +254,9 @@ function buildMusicForm(isEdit) {
                 <button aria-label="${t("music.confirmOption")}">${icon("check")}</button>
             </form>
 
-            <form data-action-submit="remove-genre" ${panels.genreRemove ? "" : "hidden"}>
+            <form data-action-submit="remove-genre" ${
+				panels.genreRemove && model.data.genre.length ? "" : "hidden"
+			}>
                 <input class="form-input"
                        type="text"
                        placeholder="${t("music.removeGenre")}"

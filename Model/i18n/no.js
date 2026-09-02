@@ -249,6 +249,11 @@ export const STRINGS_NO = {
 	"error.fillTitle": "Fyll inn tittel.",
 	"error.pickLocation": "Velg en lokasjon.",
 	"error.pickGenre": "Velg minst én sjanger.",
+	// Vises i stedet for de to over når selve lista er tom. De navngir knappen og
+	// ikke ➕-tegnet: knappen er et ikon, og «Legg til lokasjon» er det tilgjengelige
+	// navnet en skjermleser leser opp.
+	"error.addLocationFirst": "Ingen lokasjoner ennå. Legg til en med «Legg til lokasjon»-knappen.",
+	"error.addGenreFirst": "Ingen sjangere ennå. Legg til en med «Legg til sjanger»-knappen.",
 	"error.storageNearFull": "Lagringen er nesten full. Slett noen album før du legger til flere.",
 	"error.imageTooLarge": "Bildet er for stort. Maks 12 MB.",
 	"error.imageInvalid": "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.",

@@ -238,6 +238,11 @@ export const STRINGS_EN = {
 	"error.fillTitle": "Enter a title.",
 	"error.pickLocation": "Choose a location.",
 	"error.pickGenre": "Choose at least one genre.",
+	// Shown instead of the two above when the list itself is empty. They name the
+	// button rather than the ➕ glyph: it is an icon, and "Add location" is the
+	// accessible name a screen reader will read out.
+	"error.addLocationFirst": "No locations yet. Add one with the “Add location” button.",
+	"error.addGenreFirst": "No genres yet. Add one with the “Add genre” button.",
 	"error.storageNearFull": "Storage is nearly full. Delete some albums before adding more.",
 	"error.imageTooLarge": "The image is too large. Maximum 12 MB.",
 	"error.imageInvalid": "Invalid image file. Use JPEG, PNG or WebP.",
