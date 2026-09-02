@@ -1,5 +1,5 @@
 import { t } from "../../Model/i18n/i18n.js";
-import { model } from "../../Model/model.js";
+import { formatLabelKey, model } from "../../Model/model.js";
 import { coverAttr, coverInner } from "../Universal/cover.js";
 import { escapeHtml } from "../Universal/escape.js";
 
@@ -16,6 +16,16 @@ export function viewDetailsPage() {
 
 	const genre = album.genre.map((i) => model.data.genre[i]).join(", ") || "—";
 	const location = album.location.map((i) => model.data.location[i]).join(", ") || "—";
+	// Optional, so it earns a row only when it has been set. The other fields
+	// fall back to an em dash because they are always meant to be filled in.
+	const formatRow = album.format
+		? /*HTML*/ `
+                <div class="field-row">
+                    <div class="field-label">${t("music.format")}</div>
+                    <div class="field-value">${escapeHtml(t(formatLabelKey(album.format)))}</div>
+                </div>`
+		: "";
+
 	const albumCover = coverInner(album, 36);
 
 	return /*HTML*/ `
@@ -43,6 +53,8 @@ export function viewDetailsPage() {
                     <div class="field-label">${t("music.year")}</div>
                     <div class="field-value">${album.releaseYear || "—"}</div>
                 </div>
+
+${formatRow}
 
                 <div class="field-row">
                     <div class="field-label">${t("music.genre")}</div>

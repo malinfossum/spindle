@@ -1,5 +1,5 @@
 import { t } from "../../Model/i18n/i18n.js";
-import { model } from "../../Model/model.js";
+import { ALBUM_FORMATS, formatLabelKey, model } from "../../Model/model.js";
 import { coverAttr, coverInner } from "../Universal/cover.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
@@ -45,6 +45,17 @@ function buildMusicForm(isEdit) {
         </label>
     `,
 		)
+		.join("");
+
+	// "" first and selected by default: format is optional, and defaulting to CD
+	// would quietly label every album someone never touches this field on.
+	const formatOptions = ["", ...ALBUM_FORMATS]
+		.map((value) => {
+			const label = value ? t(formatLabelKey(value)) : t("music.formatUnset");
+			return /*HTML*/ `<option value="${value}" ${
+				info.format === value ? "selected" : ""
+			}>${escapeHtml(label)}</option>`;
+		})
 		.join("");
 
 	const busy = model.viewState.musicForm.coverBusy;
@@ -182,6 +193,16 @@ function buildMusicForm(isEdit) {
                    value="${info.releaseYear || ""}"
                    data-action-input="music-year"
                    style="max-width: 140px">
+        </div>
+
+        <div class="form-row">
+            <label class="form-label" for="music-format">${t("music.format")}</label>
+            <select class="form-input"
+                    id="music-format"
+                    data-action-change="music-format"
+                    style="max-width: 200px">
+                ${formatOptions}
+            </select>
         </div>
 
         <div class="form-row">

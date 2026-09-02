@@ -85,6 +85,14 @@ export const STRINGS_EN = {
 	"music.removeLocationToggle": "Remove location",
 	"music.year": "Year",
 	"music.yearPlaceholder": "e.g. 1997",
+	"music.format": "Format",
+	// The empty option. Format is optional, so "not set" is a real answer and
+	// needs its own words — a blank line in the list reads as a glitch.
+	"music.formatUnset": "Not set",
+	"music.formatCd": "CD",
+	"music.formatLp": "LP",
+	"music.formatCassette": "Cassette",
+	"music.formatOther": "Other",
 	"music.genre": "Genre",
 	"music.newGenre": "New genre?",
 	"music.removeGenre": "Remove genre?",

@@ -1,3 +1,38 @@
+// The physical formats an album can be. These are stored on the record as-is,
+// so they are keys and not labels: a translated value would turn every saved
+// album into a different format the moment the language changed. The visible
+// text comes from music.formatCd and friends at render time.
+export const ALBUM_FORMATS = ["cd", "lp", "cassette", "other"];
+
+// "cd" -> "music.formatCd". Both the form's <option> list and the detail row
+// need it, and deriving it beats a second table that can fall out of step with
+// ALBUM_FORMATS.
+export function formatLabelKey(format) {
+	return `music.format${format.charAt(0).toUpperCase()}${format.slice(1)}`;
+}
+
+// One album record, empty. The form's working copy starts here, emptyList()
+// resets to it between albums, and logout() replaces the last one with it —
+// three places that each used to write the shape out in full, and that had
+// already drifted once.
+export function blankAlbum() {
+	return {
+		id: null,
+		title: "",
+		artist: "",
+		location: [],
+		releaseYear: null,
+		genre: [],
+		// "" means not set. Every other value is one of ALBUM_FORMATS.
+		format: "",
+		notes: "",
+		wishlist: false,
+		// The cover itself lives in IndexedDB (Model/covers.js); the album
+		// carries the row's id and nothing else.
+		coverId: null,
+	};
+}
+
 export const model = {
 	app: {
 		app: document.getElementById("app"),
@@ -58,19 +93,7 @@ export const model = {
 			location: "",
 		},
 
-		musicInfo: {
-			id: null,
-			title: "",
-			artist: "",
-			location: [],
-			releaseYear: null,
-			genre: [],
-			notes: "",
-			wishlist: false,
-			// The cover itself lives in IndexedDB (Model/covers.js); the album
-			// carries the row's id and nothing else.
-			coverId: null,
-		},
+		musicInfo: blankAlbum(),
 
 		// Add/edit-form validation errors. Kept OFF musicInfo on purpose: musicInfo
 		// is spread into the saved album ({ ...musicInfo }), so errors living there

@@ -1,6 +1,6 @@
 import { deleteCover, newCoverId, putCover } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
-import { model } from "../../Model/model.js";
+import { blankAlbum, model } from "../../Model/model.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
@@ -239,17 +239,7 @@ export async function removeGenre(event) {
 }
 
 function emptyList() {
-	model.viewState.musicInfo = {
-		id: null,
-		title: "",
-		artist: "",
-		location: [],
-		releaseYear: null,
-		genre: [],
-		notes: "",
-		wishlist: false,
-		coverId: null,
-	};
+	model.viewState.musicInfo = blankAlbum();
 }
 
 function emptyGenreLocationList() {

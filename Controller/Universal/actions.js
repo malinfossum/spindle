@@ -14,7 +14,7 @@
 // key straight out of the attribute, so markup can only reach these four flags.
 
 import { getLang, setLang } from "../../Model/i18n/i18n.js";
-import { model } from "../../Model/model.js";
+import { ALBUM_FORMATS, model } from "../../Model/model.js";
 import { getSearchSuggestions } from "../../Model/selectors.js";
 import { renderStrength } from "../../View/Register/view.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
@@ -202,6 +202,12 @@ const ACTIONS = {
 	},
 	"music-year": (_event, target) => {
 		model.viewState.musicInfo.releaseYear = parseInt(target.value, 10) || null;
+	},
+	"music-format": (_event, target) => {
+		// The <select> only offers valid values, so this guard is for a tampered
+		// DOM: an unknown value would be written to the record and later rendered
+		// through t() as a raw key. Anything unrecognised means "not set".
+		model.viewState.musicInfo.format = ALBUM_FORMATS.includes(target.value) ? target.value : "";
 	},
 	"music-notes": (_event, target) => {
 		model.viewState.musicInfo.notes = target.value;

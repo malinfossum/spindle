@@ -91,6 +91,14 @@ export const STRINGS_NO = {
 	"music.removeLocationToggle": "Fjern lokasjon",
 	"music.year": "Årstall",
 	"music.yearPlaceholder": "f.eks. 1997",
+	"music.format": "Format",
+	// Den tomme valgmuligheten. Format er valgfritt, så «ikke satt» er et ekte
+	// svar og trenger egne ord — en blank linje i lista ser ut som en feil.
+	"music.formatUnset": "Ikke satt",
+	"music.formatCd": "CD",
+	"music.formatLp": "LP",
+	"music.formatCassette": "Kassett",
+	"music.formatOther": "Annet",
 	"music.genre": "Sjanger",
 	"music.newGenre": "Ny sjanger?",
 	"music.removeGenre": "Fjern sjanger?",

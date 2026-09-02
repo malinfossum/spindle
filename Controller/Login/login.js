@@ -8,8 +8,8 @@ import {
 } from "../../Model/auth.js";
 import { migrateInlineCovers, pruneCovers } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
-import { model } from "../../Model/model.js";
-import { persistState, readEnvelope } from "../../Model/persistence.js";
+import { blankAlbum, model } from "../../Model/model.js";
+import { normalizeAlbums, persistState, readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
 import { clearCoverCache } from "../../View/Universal/cover.js";
@@ -112,6 +112,9 @@ export async function login() {
 		}
 
 		model.data = JSON.parse(plaintext);
+		// The only place a stored library becomes live state, so the only place a
+		// record written by an older version has to be brought up to date.
+		normalizeAlbums(model.data);
 		model.app.crypto = {
 			unlocked: true,
 			encryptKey,
@@ -161,17 +164,7 @@ export function logout() {
 
 	clearLoginForm();
 	clearRegisterForm();
-	model.viewState.musicInfo = {
-		id: null,
-		title: "",
-		artist: "",
-		location: [],
-		releaseYear: null,
-		genre: [],
-		notes: "",
-		wishlist: false,
-		coverId: null,
-	};
+	model.viewState.musicInfo = blankAlbum();
 	model.viewState.musicForm.coverPreview = null;
 	model.viewState.searchBar = "";
 

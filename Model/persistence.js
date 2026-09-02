@@ -6,7 +6,7 @@ import {
 	isCryptoAvailable,
 	KDF_SALT_BYTES,
 } from "./auth.js";
-import { model } from "./model.js";
+import { ALBUM_FORMATS, model } from "./model.js";
 
 export const SCHEMA_VERSION = 1;
 export const STORAGE_KEY = "spindle:v1:state";
@@ -104,6 +104,26 @@ export function loadState() {
 		return { kind: "error", message: "storage.tooNew" };
 	}
 	return { kind: "error", message: "storage.corrupt" };
+}
+
+// Brings a decrypted library up to the shape this build expects, in place.
+// Called on the one path where stored bytes become live state — the unlock in
+// Controller/Login/login.js — which is also where an imported backup arrives,
+// since an import writes the envelope and then forces a fresh login.
+//
+// It is a trust boundary as much as a migration: the bytes are whatever was in
+// a file someone chose. An unknown format is coerced back to "not set" rather
+// than kept, so a value invented elsewhere cannot reach t() as an untranslated
+// key or be written back out as if Spindle had produced it.
+export function normalizeAlbums(data) {
+	if (!data || !Array.isArray(data.musicInfo)) return;
+
+	for (const album of data.musicInfo) {
+		if (!album || typeof album !== "object") continue;
+		// Added in v0.3. Anything saved before it has no format at all, and "" is
+		// what the form and the detail view read as "not set" — undefined is not.
+		album.format = ALBUM_FORMATS.includes(album.format) ? album.format : "";
+	}
 }
 
 // persistState() is async and serialized: each call chains onto the previous so
