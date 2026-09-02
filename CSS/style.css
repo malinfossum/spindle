@@ -40,9 +40,10 @@
    more than 8 points bluer than it is red — the rule DS 3.4.0 pins for the
    shared light ramp. An earlier rule leaned every step blue (up to +19 on the
    muted text) on the belief that near-neutral grey reads pink on a wide-gamut
-   screen; that pink turned out to be a stale display-pipeline colour state on
-   the reference monitor (diagnosed 2026-08-31, cleared by toggling HDR), and a
-   blue-leaning grey is itself what bends pink under a warm display shift. */
+   screen. That belief is wrong for a reason that still holds: both ramps, shown
+   side by side, read the same salmon cast on the reference monitor, so the cast
+   is display-side, not palette-side. Why the display does it is still unsolved
+   — do not retune these values against it. See docs/brand.md. */
 html[data-theme="light"] {
 	--bg: #eef1f6;
 	--surface: #ffffff;

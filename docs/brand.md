@@ -56,17 +56,23 @@ Rules that produced those numbers:
 - **The light greys are near-neutral, with at most a slight cool cast.** An
   earlier version of this rule said the opposite — that near-neutral greys read
   pink on a wide-gamut screen, so every light grey leaned blue: +8 on the page,
-  +12 on the raised surface, +14 on the border, +19 on the muted text. That
-  rationale was superseded on 2026-08-31: the pink was a stale display-pipeline
-  colour state on the reference monitor (an AW3425DW), cleared by toggling
-  HDR — not a property of the greys. Worse, a blue-leaning grey is itself what
-  bends pink under a genuinely warm display shift. The shared design system now
-  pins the reverse direction — cool-cast (R ≤ G ≤ B) with no grey more than 8
-  points bluer than red — as of DS 3.4.0
-  ([workbench PR #22](https://github.com/malinfossum/workbench/pull/22)), and
-  Spindle's light ramp follows the same rule, retuned to it at equal-or-better
-  contrast. The page keeps `#eef1f6` (+8, at the budget's edge); white is still
-  white.
+  +12 on the raised surface, +14 on the border, +19 on the muted text. What is
+  settled is that the pink is not a property of the greys: two materially
+  different ramps — the old blue-leaning one and this near-neutral one, side by
+  side — read the same salmon cast on the reference monitor (an AW3425DW), and
+  a fault that survives the palette cannot be caused by it. A screenshot of the
+  same screen is neutral on a phone, so the framebuffer is right and the display
+  pipeline is wrong. **The cause of that pipeline fault is still open** — an
+  earlier note here claimed it was a stale scanout colour state cleared by
+  toggling HDR; the salmon came back, so that explanation does not hold and is
+  not a reason for anything in this table. Treat the reference display as
+  suspect and the numbers below as measured, not eyeballed. What the current
+  direction rests on instead: the shared design system pins cool-cast greys
+  (R ≤ G ≤ B, no grey more than 8 points bluer than red) as of DS 3.4.0
+  ([workbench PR #22](https://github.com/malinfossum/workbench/pull/22)),
+  Spindle follows the shared rule so the two do not drift, and the retune
+  raised contrast at every step rather than trading it away. The page keeps
+  `#eef1f6` (+8, at the budget's edge); white is still white.
 - **Three values flip with the theme rather than being shared**: `--error-text`,
   `--success-text` and `--danger-text`. No single red or green clears 4.5:1 on
   both a `#1e1e1e` card and a white one.
