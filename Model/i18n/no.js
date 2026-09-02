@@ -254,11 +254,3 @@ export const STRINGS_NO = {
 	"error.imageInvalid": "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.",
 	"error.imageStoreFailed": "Coverbildet kunne ikke lagres. Prøv igjen, eller lagre uten bilde.",
 };
-
-// Starter genres and locations written into a brand-new library. Seeded once in
-// whichever language is active at creation time and then owned by the user —
-// switching the UI language later must never rewrite their data.
-export const SEED_NO = {
-	genre: ["Rock", "Jazz", "Country", "Pop", "EDM", "Diverse sjangere"],
-	location: ["Stue", "Loft", "Boden", "Butikk"],
-};

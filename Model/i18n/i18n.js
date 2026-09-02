@@ -6,12 +6,12 @@
 // per-node binding to keep in sync.
 
 import { getPref, setPref } from "../prefs.js";
-import { SEED_EN, STRINGS_EN } from "./en.js";
-import { SEED_NO, STRINGS_NO } from "./no.js";
+import { STRINGS_EN } from "./en.js";
+import { STRINGS_NO } from "./no.js";
 
 const LANGUAGES = {
-	no: { strings: STRINGS_NO, seed: SEED_NO, htmlLang: "no" },
-	en: { strings: STRINGS_EN, seed: SEED_EN, htmlLang: "en" },
+	no: { strings: STRINGS_NO, htmlLang: "no" },
+	en: { strings: STRINGS_EN, htmlLang: "en" },
 };
 
 const FALLBACK_LANG = "no";
@@ -46,12 +46,6 @@ export function t(key, params) {
 	return value.replace(/\{(\w+)\}/g, (match, name) =>
 		Object.hasOwn(params, name) ? params[name] : match,
 	);
-}
-
-// Starter genre/location lists for a brand-new library, in the active language.
-export function seedData() {
-	const seed = LANGUAGES[getLang()].seed;
-	return { genre: [...seed.genre], location: [...seed.location] };
 }
 
 // Writes the preference and stops there. Applying the choice — the <html lang>

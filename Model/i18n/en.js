@@ -243,9 +243,3 @@ export const STRINGS_EN = {
 	"error.imageInvalid": "Invalid image file. Use JPEG, PNG or WebP.",
 	"error.imageStoreFailed": "The cover image could not be saved. Try again, or save without one.",
 };
-
-// See SEED_NO — seeded once at library creation, then owned by the user.
-export const SEED_EN = {
-	genre: ["Rock", "Jazz", "Country", "Pop", "EDM", "Various genres"],
-	location: ["Living room", "Attic", "Storage", "Shop"],
-};

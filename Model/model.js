@@ -173,8 +173,11 @@ export const model = {
 	},
 
 	data: {
-		genre: ["Rock", "Jazz", "Country", "Pop", "EDM", "Diverse Sjangere"],
-		location: ["Stue", "Loft", "Boden", "Butikk"],
+		// The shape only, empty. Whatever is here is replaced wholesale the moment
+		// a library is created or unlocked, so it is a placeholder for the locked
+		// screens rather than anything a user ever sees filled in.
+		genre: [],
+		location: [],
 
 		musicInfo: [],
 

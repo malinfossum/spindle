@@ -7,7 +7,6 @@ import {
 	randomBytes,
 	validatePassword,
 } from "../../Model/auth.js";
-import { seedData } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { SCHEMA_VERSION, STORAGE_KEY } from "../../Model/persistence.js";
 import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
@@ -71,10 +70,13 @@ export async function register() {
 
 		const newData = {
 			user: { username },
-			...seedData(),
-			// A new library starts empty. The home page already has an empty state
-			// and a prominent add button, which is a better first screen than four
-			// records the owner did not choose.
+			// A new library starts completely empty: no albums, and no genres or
+			// locations invented on the owner's behalf. The home page already has
+			// an empty state and a prominent add button, which is a better first
+			// screen than records and shelves nobody chose. Both lists are built
+			// from the ➕ controls on the add-album form.
+			genre: [],
+			location: [],
 			musicInfo: [],
 		};
 
