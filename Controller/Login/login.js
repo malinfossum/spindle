@@ -8,7 +8,7 @@ import {
 } from "../../Model/auth.js";
 import { migrateInlineCovers, pruneCovers } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
-import { blankAlbum, model } from "../../Model/model.js";
+import { blankAlbum, blankLibraryView, model } from "../../Model/model.js";
 import { normalizeAlbums, persistState, readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage, clearSearchHistory, setAuthMessage } from "../../Model/viewState.js";
@@ -165,6 +165,7 @@ export function logout() {
 	clearLoginForm();
 	clearRegisterForm();
 	model.viewState.musicInfo = blankAlbum();
+	model.viewState.library = blankLibraryView();
 	model.viewState.musicForm.coverPreview = null;
 	model.viewState.searchBar = "";
 	clearSearchHistory();

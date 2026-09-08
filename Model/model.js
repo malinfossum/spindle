@@ -33,6 +33,32 @@ export function blankAlbum() {
 	};
 }
 
+// The library page's filters and sort, unset. The initial state below is this,
+// and logout() puts it back: genre and location are stored as positions in
+// model.data, so a filter left over from one library would point at a different
+// name in the next one unlocked — or at nothing at all.
+export function blankLibraryView() {
+	return {
+		preset: "all",
+		genre: "",
+		location: "",
+		// One of ALBUM_FORMATS, or "" for no format filter. The key, never the
+		// label, for the same reason the album stores the key.
+		format: "",
+		// A decade's first year as a string: "1990" means 1990-1999. Derived
+		// from the release years already on the records, so the filter costs
+		// no new field and no migration.
+		decade: "",
+		sort: "recent",
+		// Whether the control row is open. On a narrow screen five controls
+		// push the albums off the screen, so they collapse behind a toggle —
+		// and the flag lives here rather than in the DOM because the library
+		// re-renders on every keystroke while someone types in the search box,
+		// which would snap a DOM-held disclosure shut mid-sentence.
+		filtersOpen: false,
+	};
+}
+
 export const model = {
 	app: {
 		app: document.getElementById("app"),
@@ -157,25 +183,7 @@ export const model = {
 		// everything in resetTransientViewState(): opening an album and coming back
 		// must not throw away the filter someone set to find it. The query itself
 		// lives on searchBar, since the navbar owns that field.
-		library: {
-			preset: "all",
-			genre: "",
-			location: "",
-			// One of ALBUM_FORMATS, or "" for no format filter. The key, never the
-			// label, for the same reason the album stores the key.
-			format: "",
-			// A decade's first year as a string: "1990" means 1990-1999. Derived
-			// from the release years already on the records, so the filter costs
-			// no new field and no migration.
-			decade: "",
-			sort: "recent",
-			// Whether the control row is open. On a narrow screen five controls
-			// push the albums off the screen, so they collapse behind a toggle —
-			// and the flag lives here rather than in the DOM because the library
-			// re-renders on every keystroke while someone types in the search box,
-			// which would snap a DOM-held disclosure shut mid-sentence.
-			filtersOpen: false,
-		},
+		library: blankLibraryView(),
 
 		// The search box's suggestion list. Transient in the same way the chip
 		// panels are: open is whether the list is showing, index is the option the
