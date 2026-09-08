@@ -87,10 +87,19 @@ function buildMusicForm(isEdit) {
                  No file chosen" widget, which used to be nudged into place with a
                  210px margin and landed on top of the cover. -->
             <div class="form-cover">
+                <!-- capture="environment" is what makes a phone open the rear
+                     camera on this field instead of the file picker, so a sleeve
+                     can be photographed where it is standing. It costs the phone
+                     its gallery: Android Chrome and iOS Safari read capture as
+                     "camera only", not "camera as well". Desktop ignores the
+                     attribute, so nothing changes there. Still nothing leaves the
+                     device — the file goes through the same downscale as any
+                     other, then into IndexedDB encrypted. -->
                 <input class="file-input-hidden"
                        id="music-cover"
                        type="file"
                        accept="image/jpeg,image/png,image/webp"
+                       capture="environment"
                        aria-invalid="${errors.coverImg ? "true" : "false"}"
                        aria-describedby="music-cover-error"
                        ${busy ? "disabled" : ""}
