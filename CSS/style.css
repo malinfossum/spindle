@@ -42,8 +42,8 @@
    muted text) on the belief that near-neutral grey reads pink on a wide-gamut
    screen. That belief is wrong for a reason that still holds: both ramps, shown
    side by side, read the same salmon cast on the reference monitor, so the cast
-   is display-side, not palette-side. Why the display does it is still unsolved
-   — do not retune these values against it. See docs/brand.md. */
+   is display-side, not palette-side: Windows Auto Colour Management was on for
+   that monitor — do not retune these values against it. See docs/brand.md. */
 html[data-theme="light"] {
 	--bg: #eef1f6;
 	--surface: #ffffff;

@@ -62,9 +62,10 @@ Rules that produced those numbers:
   side — read the same salmon cast on the reference monitor (an AW3425DW), and
   a fault that survives the palette cannot be caused by it. A screenshot of the
   same screen is neutral on a phone, so the framebuffer is right and the display
-  pipeline is wrong. **The cause of that pipeline fault is still open** — an
-  earlier note here claimed it was a stale scanout colour state cleared by
-  toggling HDR; the salmon came back, so that explanation does not hold and is
+  pipeline is wrong. **The cause is Windows Auto Colour Management** (found
+  2026-09-02): ACM was on for that monitor and re-mapped every pixel at the
+  GPU output stage against a white point the panel does not have; switching
+  it off made whites neutral at once. It is a display fault either way, and
   not a reason for anything in this table. Treat the reference display as
   suspect and the numbers below as measured, not eyeballed. What the current
   direction rests on instead: the shared design system pins cool-cast greys
