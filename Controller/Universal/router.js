@@ -52,9 +52,9 @@ let lastResolvedHash = null;
 
 // The only way the app should change pages. Writes the fragment, then resolves
 // it. Assigning location.hash a value it already holds fires no event and adds
-// no history entry, which is why the resolve below is unconditional: logout()
-// sends you to `login` from `login`, and deleteAlbum() re-enters `homePage` from
-// `homePage` to drop the row it just deleted. Both must still render.
+// no history entry, which is why the resolve below is unconditional:
+// deleteAlbum() re-enters `homePage` from `homePage` to drop the row it just
+// deleted, and that still has to render.
 export function navigate(page) {
 	const target = `#${page}`;
 

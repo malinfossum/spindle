@@ -16,7 +16,6 @@ export const STRINGS_NO = {
 	"nav.recentSearches": "Nylige søk",
 	"nav.search": "Søk",
 	"nav.login": "Logg inn",
-	"nav.logout": "Logg ut",
 	"nav.profile": "Profil",
 	"nav.themeToggle": "Bytt tema (mørkt eller lyst)",
 	"nav.menuToggle": "Meny",

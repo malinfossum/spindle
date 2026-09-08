@@ -10,7 +10,6 @@ export const STRINGS_EN = {
 	"nav.recentSearches": "Recent searches",
 	"nav.search": "Search",
 	"nav.login": "Log in",
-	"nav.logout": "Log out",
 	"nav.profile": "Profile",
 	"nav.themeToggle": "Switch theme (dark or light)",
 	"nav.menuToggle": "Menu",
