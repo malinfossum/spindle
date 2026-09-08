@@ -60,6 +60,30 @@ function resetMusicPanels() {
 	};
 }
 
+// How many past searches the dropdown offers. Short on purpose: it is a way
+// back to the search made a minute ago, not a log of the session.
+const SEARCH_HISTORY_LIMIT = 6;
+
+// Remembers a search. The same query typed twice moves back to the top rather
+// than appearing twice, matched without case so "Bowie" and "bowie" are one
+// entry — the second spelling wins, because it is the one just typed.
+export function recordSearch(query) {
+	const trimmed = query.trim();
+	if (trimmed === "") return;
+
+	const rest = model.viewState.searchHistory.filter(
+		(entry) => entry.toLowerCase() !== trimmed.toLowerCase(),
+	);
+
+	model.viewState.searchHistory = [trimmed, ...rest].slice(0, SEARCH_HISTORY_LIMIT);
+}
+
+// Logging out has to take the history with it: the queries name artists and
+// titles, which is library content, and locked means locked for those too.
+export function clearSearchHistory() {
+	model.viewState.searchHistory = [];
+}
+
 // Closes the search suggestions. A list left open across a navigation would
 // hang over the page someone just moved to.
 function closeSuggestions() {

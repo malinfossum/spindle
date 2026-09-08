@@ -17,21 +17,44 @@
 
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
-import { getSearchSuggestions } from "../../Model/selectors.js";
+import { getSuggestionList } from "../../Model/selectors.js";
 import { escapeHtml } from "./escape.js";
 
 const SEARCH_FORMS = ["desktop", "mobile"];
 
+// One <li> per entry, whichever kind of list is showing. An album is two lines,
+// a past search is one — there is nothing else known about it, and inventing a
+// second line would only make the two look interchangeable when they are not.
+function item(entry, kind, which, index, active) {
+	const attributes = /*HTML*/ `class="nav-suggest-item"
+            role="option"
+            id="nav-search-${which}-opt-${index}"
+            aria-selected="${active}"`;
+
+	if (kind === "history") {
+		return /*HTML*/ `
+        <li ${attributes} data-action="history-pick" data-query="${escapeHtml(entry)}">
+            <span class="nav-suggest-title">${escapeHtml(entry)}</span>
+        </li>`;
+	}
+
+	return /*HTML*/ `
+        <li ${attributes} data-action="suggest-pick" data-id="${entry.id}">
+            <span class="nav-suggest-title">${escapeHtml(entry.title)}</span>
+            <span class="nav-suggest-artist">${escapeHtml(entry.artist)}</span>
+        </li>`;
+}
+
 export function renderSuggestions() {
 	const state = model.viewState.suggest;
-	const albums = state.open ? getSearchSuggestions() : [];
+	const { kind, items } = state.open ? getSuggestionList() : { kind: "albums", items: [] };
 
 	for (const which of SEARCH_FORMS) {
 		const input = document.getElementById(`nav-search-${which}-input`);
 		const list = document.getElementById(`nav-search-${which}-list`);
 		if (!input || !list) continue;
 
-		const open = albums.length > 0;
+		const open = items.length > 0;
 		list.hidden = !open;
 		input.setAttribute("aria-expanded", open ? "true" : "false");
 
@@ -41,20 +64,16 @@ export function renderSuggestions() {
 			continue;
 		}
 
-		list.innerHTML = albums
-			.map((album, i) => {
-				const active = i === state.index;
-				return /*HTML*/ `
-        <li class="nav-suggest-item"
-            role="option"
-            id="nav-search-${which}-opt-${i}"
-            aria-selected="${active}"
-            data-action="suggest-pick"
-            data-id="${album.id}">
-            <span class="nav-suggest-title">${escapeHtml(album.title)}</span>
-            <span class="nav-suggest-artist">${escapeHtml(album.artist)}</span>
-        </li>`;
-			})
+		// The label is the only thing that says which list this is, since the
+		// options themselves look alike — so it is set here, from the kind, and
+		// not once in the static markup.
+		list.setAttribute(
+			"aria-label",
+			t(kind === "history" ? "nav.recentSearches" : "nav.suggestions"),
+		);
+
+		list.innerHTML = items
+			.map((entry, i) => item(entry, kind, which, i, i === state.index))
 			.join("");
 
 		if (state.index >= 0) {
@@ -74,7 +93,5 @@ export function syncSearchInputs() {
 		if (input && input.value !== model.viewState.searchBar) {
 			input.value = model.viewState.searchBar;
 		}
-		const list = document.getElementById(`nav-search-${which}-list`);
-		if (list) list.setAttribute("aria-label", t("nav.suggestions"));
 	}
 }

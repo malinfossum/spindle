@@ -78,10 +78,34 @@ function sortAlbums(albums, sort) {
 	return sorted.sort((a, b) => added.get(b.id) - added.get(a.id));
 }
 
+// The first year of an album's decade, or null when it has no usable year. A
+// backup file is an outside input, so this checks the value is a real number
+// rather than trusting that every record came from the form.
+function decadeOf(album) {
+	if (!Number.isFinite(album.releaseYear)) return null;
+	return Math.floor(album.releaseYear / 10) * 10;
+}
+
+// The decades the library actually covers, newest first. Built from the years
+// already on the records: a decade filter needs no new field and no migration,
+// only the releaseYear that has been there since v0.1. Derived from every
+// accessible album rather than from the filtered list, so choosing a decade
+// cannot make its own option disappear.
+export function getLibraryDecades() {
+	const decades = new Set();
+
+	for (const album of getAccessibleAlbums()) {
+		const decade = decadeOf(album);
+		if (decade !== null) decades.add(decade);
+	}
+
+	return [...decades].sort((a, b) => b - a);
+}
+
 // Everything the library page shows: the accessible albums, narrowed by the
-// wishlist preset, the two filters and the navbar query, then sorted.
+// wishlist preset, the four filters and the navbar query, then sorted.
 export function getLibraryAlbums() {
-	const { preset, genre, location, sort } = model.viewState.library;
+	const { preset, genre, location, format, decade, sort } = model.viewState.library;
 	const query = (model.viewState.searchBar || "").toLowerCase().trim();
 
 	let albums = getAccessibleAlbums();
@@ -90,6 +114,10 @@ export function getLibraryAlbums() {
 	if (genre !== "") albums = albums.filter((album) => album.genre.includes(Number(genre)));
 	if (location !== "")
 		albums = albums.filter((album) => album.location.includes(Number(location)));
+	if (format !== "") albums = albums.filter((album) => album.format === format);
+	// An album with no year belongs to no decade, so a chosen decade leaves it
+	// out rather than bucketing it into the 0s.
+	if (decade !== "") albums = albums.filter((album) => decadeOf(album) === Number(decade));
 	if (query) albums = albums.filter((album) => matchesQuery(album, query));
 
 	return sortAlbums(albums, sort);
@@ -119,6 +147,23 @@ export function getSearchSuggestions() {
 				album.artist.toLowerCase().includes(query),
 		)
 		.slice(0, SUGGESTION_LIMIT);
+}
+
+export function getSearchHistory() {
+	if (!isLoggedIn()) return [];
+	return model.viewState.searchHistory;
+}
+
+// What the dropdown is showing, and which kind it is. Typing offers albums;
+// an empty field offers the searches already made. The two are never mixed —
+// the query decides — and both the renderer and the arrow keys read this one
+// function, so they cannot disagree about what is in the list.
+export function getSuggestionList() {
+	const query = (model.viewState.searchBar || "").trim();
+
+	return query
+		? { kind: "albums", items: getSearchSuggestions() }
+		: { kind: "history", items: getSearchHistory() };
 }
 
 // True when viewState holds an album the two detail pages can actually render.

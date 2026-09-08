@@ -146,6 +146,13 @@ export const model = {
 
 		searchBar: "",
 
+		// The searches made this session, newest first. In memory and nowhere
+		// else: it is a record of what someone owns, and writing it to
+		// localStorage would leave that record sitting in the clear beside a
+		// library whose whole point is that it is encrypted. It dies with the
+		// tab, and logout clears it with the rest of the decrypted state.
+		searchHistory: [],
+
 		// The library view's filters and sort. Not cleared on navigation, unlike
 		// everything in resetTransientViewState(): opening an album and coming back
 		// must not throw away the filter someone set to find it. The query itself
@@ -154,7 +161,20 @@ export const model = {
 			preset: "all",
 			genre: "",
 			location: "",
+			// One of ALBUM_FORMATS, or "" for no format filter. The key, never the
+			// label, for the same reason the album stores the key.
+			format: "",
+			// A decade's first year as a string: "1990" means 1990-1999. Derived
+			// from the release years already on the records, so the filter costs
+			// no new field and no migration.
+			decade: "",
 			sort: "recent",
+			// Whether the control row is open. On a narrow screen five controls
+			// push the albums off the screen, so they collapse behind a toggle —
+			// and the flag lives here rather than in the DOM because the library
+			// re-renders on every keystroke while someone types in the search box,
+			// which would snap a DOM-held disclosure shut mid-sentence.
+			filtersOpen: false,
 		},
 
 		// The search box's suggestion list. Transient in the same way the chip

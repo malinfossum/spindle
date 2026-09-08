@@ -7,6 +7,7 @@ export const STRINGS_EN = {
 	"nav.wishlist": "Wishlist",
 	"nav.searchPlaceholder": "Search your library",
 	"nav.suggestions": "Suggestions",
+	"nav.recentSearches": "Recent searches",
 	"nav.search": "Search",
 	"nav.login": "Log in",
 	"nav.logout": "Log out",
@@ -121,6 +122,10 @@ export const STRINGS_EN = {
 	"library.sort.artist": "Artist (A-Z)",
 	"library.sort.title": "Title (A-Z)",
 	"library.sort.year": "Year (newest)",
+	"library.decade": "Decade",
+	// {decade} is the first year of the decade, e.g. 1990 -> "1990s".
+	"library.decadeLabel": "{decade}s",
+	"library.filters": "Filters",
 	"library.clearFilters": "Clear filters",
 	"library.filteredBy": "Filtered by “{query}”",
 	"library.clearQuery": "Clear search",

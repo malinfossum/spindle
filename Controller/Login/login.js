@@ -11,7 +11,7 @@ import { t } from "../../Model/i18n/i18n.js";
 import { blankAlbum, model } from "../../Model/model.js";
 import { normalizeAlbums, persistState, readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
-import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
+import { clearAuthMessage, clearSearchHistory, setAuthMessage } from "../../Model/viewState.js";
 import { clearCoverCache } from "../../View/Universal/cover.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { updateView } from "../../View/Universal/updateView.js";
@@ -167,6 +167,7 @@ export function logout() {
 	model.viewState.musicInfo = blankAlbum();
 	model.viewState.musicForm.coverPreview = null;
 	model.viewState.searchBar = "";
+	clearSearchHistory();
 
 	// Decrypted covers are library contents. Locked has to mean locked for them
 	// too — the rows in IndexedDB stay, still encrypted.

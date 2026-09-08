@@ -13,6 +13,7 @@ export const STRINGS_NO = {
 	"nav.wishlist": "Ønskeliste",
 	"nav.searchPlaceholder": "Søk i biblioteket",
 	"nav.suggestions": "Forslag",
+	"nav.recentSearches": "Nylige søk",
 	"nav.search": "Søk",
 	"nav.login": "Logg inn",
 	"nav.logout": "Logg ut",
@@ -127,6 +128,10 @@ export const STRINGS_NO = {
 	"library.sort.artist": "Artist (A–Å)",
 	"library.sort.title": "Tittel (A–Å)",
 	"library.sort.year": "Årstall (nyest)",
+	"library.decade": "Tiår",
+	// {decade} er tiårets første år, f.eks. 1990 -> "1990-tallet".
+	"library.decadeLabel": "{decade}-tallet",
+	"library.filters": "Filtre",
 	"library.clearFilters": "Nullstill filtre",
 	"library.filteredBy": "Filtrert på «{query}»",
 	"library.clearQuery": "Fjern søket",

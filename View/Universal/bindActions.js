@@ -14,6 +14,8 @@
 //   data-action-submit   submit
 //   data-action-toggle   toggle
 //   data-action-keydown  keydown
+//   data-action-focusin  focusin   (focus, in the version that bubbles)
+//   data-action-focusout focusout  (blur, in the version that bubbles)
 //
 // The listeners sit on the document rather than on #app, because updateView()
 // replaces #app's contents wholesale on every render — a listener bound to a
@@ -26,6 +28,8 @@ const ACTION_EVENTS = {
 	submit: "data-action-submit",
 	toggle: "data-action-toggle",
 	keydown: "data-action-keydown",
+	focusin: "data-action-focusin",
+	focusout: "data-action-focusout",
 };
 
 export function bindActions(root, handlers) {

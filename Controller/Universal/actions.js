@@ -15,11 +15,12 @@
 
 import { getLang, setLang } from "../../Model/i18n/i18n.js";
 import { ALBUM_FORMATS, model } from "../../Model/model.js";
-import { getSearchSuggestions } from "../../Model/selectors.js";
+import { getSuggestionList } from "../../Model/selectors.js";
+import { recordSearch } from "../../Model/viewState.js";
 import { renderStrength } from "../../View/Register/view.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
 import { applyLang } from "../../View/Universal/chrome.js";
-import { renderSuggestions } from "../../View/Universal/searchSuggest.js";
+import { renderSuggestions, syncSearchInputs } from "../../View/Universal/searchSuggest.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import {
 	clearMusicGroupError,
@@ -57,6 +58,34 @@ const FORM_PANELS = {
 	"genre-remove": "genreRemove",
 };
 
+// Set one library filter or the sort, re-render, and put focus back on the
+// control that was used. Without the last step the change would drop focus to
+// <body> — updateView() replaces #app and every <select> in it.
+function setLibraryFilter(key, value) {
+	model.viewState.library[key] = value;
+	updateView();
+	focusLibraryControl(`library-${key}`);
+}
+
+// Re-runs a search from the history: the query goes back in the field, moves
+// to the top of the history, and lands on the results page — the same three
+// things submitting the form does.
+function runSearch(query) {
+	model.viewState.searchBar = query;
+	recordSearch(query);
+	model.viewState.suggest = { open: false, index: -1 };
+	model.viewState.library.preset = "all";
+	syncSearchInputs();
+	navigate("library");
+}
+
+function focusLibraryControl(action) {
+	const control = model.app.app.querySelector(
+		`[data-action-change="${action}"], [data-action="${action}"]`,
+	);
+	if (control) control.focus();
+}
+
 const ACTIONS = {
 	// --- Navigation and chrome -------------------------------------------
 	nav: (_event, target) => navigate(target.dataset.page),
@@ -92,7 +121,10 @@ const ACTIONS = {
 	// directly either way, because it has to keep up with every keystroke.
 	"search-query": (_event, target) => {
 		model.viewState.searchBar = target.value;
-		model.viewState.suggest = { open: target.value.trim() !== "", index: -1 };
+		// Open unconditionally: with a query the list offers albums, and without
+		// one it offers the searches already made. renderSuggestions() is what
+		// decides whether either has anything in it.
+		model.viewState.suggest = { open: true, index: -1 };
 
 		if (model.app.currentPage === "library" || model.app.currentPage === "wishList") {
 			updateView();
@@ -101,10 +133,28 @@ const ACTIONS = {
 		renderSuggestions();
 	},
 
-	// Enter in the field. The form does the work; this only decides where to go
-	// and closes the list behind it.
+	// Focusing the empty field is how the past searches are reached, so the list
+	// opens on focus and not only on a keystroke.
+	"search-focus": () => {
+		model.viewState.suggest = { open: true, index: -1 };
+		renderSuggestions();
+	},
+
+	// Clicking away closes it. An option is a plain <li> and takes no focus, so
+	// picking one does not come through here first; moving to the search button
+	// inside the same form does, and must not shut the list before the click
+	// lands.
+	"search-blur": (event, target) => {
+		if (target.form?.contains(event.relatedTarget)) return;
+		model.viewState.suggest = { open: false, index: -1 };
+		renderSuggestions();
+	},
+
+	// Enter in the field. The form does the work; this only decides where to go,
+	// remembers the query, and closes the list behind it.
 	"search-submit": (event) => {
 		event.preventDefault();
+		recordSearch(model.viewState.searchBar);
 		model.viewState.suggest = { open: false, index: -1 };
 		// Searching looks through everything, so it leaves the wishlist preset
 		// behind rather than quietly searching inside it.
@@ -117,7 +167,8 @@ const ACTIONS = {
 	// aria-activedescendant — so typing carries on uninterrupted.
 	"search-keys": (event) => {
 		const state = model.viewState.suggest;
-		const count = getSearchSuggestions().length;
+		const { kind, items } = getSuggestionList();
+		const count = items.length;
 
 		if (event.key === "Escape") {
 			if (!state.open) return;
@@ -138,13 +189,19 @@ const ACTIONS = {
 		}
 
 		if (event.key === "Enter" && state.open && state.index >= 0) {
-			const album = getSearchSuggestions()[state.index];
-			if (!album) return;
+			const chosen = items[state.index];
+			if (!chosen) return;
 			// Beat the form's submit, which would send us to the results page
-			// instead of to the album that was chosen.
+			// instead of to whatever was chosen.
 			event.preventDefault();
+
+			if (kind === "history") {
+				runSearch(chosen);
+				return;
+			}
+
 			model.viewState.suggest = { open: false, index: -1 };
-			viewMusicDetails(album.id);
+			viewMusicDetails(chosen.id);
 		}
 	},
 
@@ -152,6 +209,8 @@ const ACTIONS = {
 		model.viewState.suggest = { open: false, index: -1 };
 		viewMusicDetails(Number(target.dataset.id));
 	},
+
+	"history-pick": (_event, target) => runSearch(target.dataset.query),
 
 	// --- Albums ------------------------------------------------------------
 	"view-album": (_event, target) => viewMusicDetails(Number(target.dataset.id)),
@@ -236,22 +295,36 @@ const ACTIONS = {
 		focusPanelToggle(name);
 	},
 
-	"library-genre": (_event, target) => {
-		model.viewState.library.genre = target.value;
+	// The five library controls all do the same three things, so they say which
+	// key they set and share the rest. Re-rendering is what makes the filter
+	// visible, and refocusing is what stops it costing the keyboard its place —
+	// updateView() replaces #app, so the control that was just used stops
+	// existing, the same way the chip-panel toggles do.
+	"library-genre": (_event, target) => setLibraryFilter("genre", target.value),
+	"library-location": (_event, target) => setLibraryFilter("location", target.value),
+	"library-format": (_event, target) => setLibraryFilter("format", target.value),
+	"library-decade": (_event, target) => setLibraryFilter("decade", target.value),
+	"library-sort": (_event, target) => setLibraryFilter("sort", target.value),
+
+	// Mobile only: the control row collapses behind this, and CSS drops the
+	// button from the tablet breakpoint up.
+	"library-filters-toggle": () => {
+		model.viewState.library.filtersOpen = !model.viewState.library.filtersOpen;
 		updateView();
+		focusLibraryControl("library-filters-toggle");
 	},
-	"library-location": (_event, target) => {
-		model.viewState.library.location = target.value;
-		updateView();
-	},
-	"library-sort": (_event, target) => {
-		model.viewState.library.sort = target.value;
-		updateView();
-	},
+
 	"library-clear": () => {
-		model.viewState.library.genre = "";
-		model.viewState.library.location = "";
+		Object.assign(model.viewState.library, {
+			genre: "",
+			location: "",
+			format: "",
+			decade: "",
+		});
 		updateView();
+		// The button clears itself off the page, so there is nothing to go back
+		// to; the toggle above it is the nearest thing still standing.
+		focusLibraryControl("library-filters-toggle");
 	},
 	"library-clear-query": () => {
 		model.viewState.searchBar = "";

@@ -528,6 +528,20 @@ footer {
 	min-height: 44px;
 }
 
+/* Five controls stacked two to a row push the albums off a phone screen, so on
+   mobile they sit behind this and the page opens on the list. The button is a
+   mobile affordance only — the tablet block below drops it, and with it the
+   collapse. */
+.library-filters-toggle {
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
+	min-height: 44px;
+	margin-bottom: 0.75rem;
+}
+
+.library-controls.is-collapsed {
+	display: none;
+}
+
 .library-query {
 	display: flex;
 	align-items: center;
@@ -1409,6 +1423,17 @@ footer {
 
 	.album-actions {
 		flex-direction: row;
+	}
+
+	/* There is room for the controls here, so there is nothing to collapse and
+	   nothing to collapse it with. The row is shown whatever the model's
+	   filtersOpen says — the flag only ever governed the phone layout. */
+	.library-filters-toggle {
+		display: none;
+	}
+
+	.library-controls.is-collapsed {
+		display: flex;
 	}
 }
 
