@@ -14,6 +14,12 @@ import { welcomePage } from "../Welcome/view.js";
 import { applyStaticText, syncChrome, syncNavbar, syncSuggestions } from "./chrome.js";
 import { hydrateCovers } from "./cover.js";
 
+// The element every page renders into. It used to sit on model.app, which put
+// a live DOM node in the one file that is supposed to have none; it belongs
+// next to the function that writes into it. boot.js is a module, so this runs
+// after the document is parsed and the lookup cannot come back null.
+export const appRoot = document.getElementById("app");
+
 export function updateView() {
 	let html = storageBanner();
 
@@ -32,7 +38,7 @@ export function updateView() {
 	// here without a branch would otherwise render as an empty content area.
 	else html += notFoundPage();
 
-	model.app.app.innerHTML = html;
+	appRoot.innerHTML = html;
 	syncNavbar();
 	syncChrome();
 	// The navbar and footer live outside #app, so the re-render above never
@@ -44,7 +50,7 @@ export function updateView() {
 	// Covers are read out of IndexedDB, which is asynchronous, so the render above
 	// draws placeholders and this fills in what it can. Deliberately not awaited:
 	// updateView() is called from 20-odd synchronous places.
-	hydrateCovers(model.app.app);
+	hydrateCovers(appRoot);
 }
 
 function storageBanner() {

@@ -22,7 +22,7 @@
 
 <body>
     <header class="Navbar">
-        <h1><button class="brand-btn" type="button" data-action="nav" data-page="homePage">Spindle</button></h1>
+        <h1><a class="brand-btn" href="#homePage" data-action="nav">Spindle</a></h1>
 
         <!-- Three zones, so the search box sits in the middle of the bar instead
              of drifting with the width of the labels either side of it. The two
@@ -30,9 +30,9 @@
              language changes. -->
         <div class="nav-desktop">
             <div class="nav-links">
-                <button id="nav-home-desktop" data-action="nav" data-page="homePage">Hjem</button>
-                <button id="nav-library-desktop" data-action="nav-list" data-page="library">Bibliotek</button>
-                <button id="nav-wishlist-desktop" data-action="nav-list" data-page="wishList">Ønskeliste</button>
+                <a id="nav-home-desktop" href="#homePage" data-action="nav">Hjem</a>
+                <a id="nav-library-desktop" href="#library" data-action="nav-list">Bibliotek</a>
+                <a id="nav-wishlist-desktop" href="#wishList" data-action="nav-list">Ønskeliste</a>
             </div>
 
             <!-- A real <form>, so Enter searches without a keydown handler having
@@ -61,8 +61,8 @@
             </form>
 
             <div class="nav-actions">
-                <button id="nav-login-desktop" data-action="nav-login">Logg inn</button>
-                <button id="nav-profile-desktop" style="display: none;" data-action="nav-profile">Profil</button>
+                <a id="nav-login-desktop" href="#login" data-action="nav-login">Logg inn</a>
+                <a id="nav-profile-desktop" href="#profile" style="display: none;" data-action="nav-profile">Profil</a>
             </div>
         </div>
 
@@ -89,12 +89,12 @@
             <button class="navBurger" id="nav-burger" aria-label="Meny" data-action="toggle-menu"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 
             <div class="mobile-menu-show">
-                <button id="nav-home-mobile" data-action="nav" data-page="homePage">Hjem</button>
-                <button id="nav-library-mobile" data-action="nav-list" data-page="library">Bibliotek</button>
-                <button id="nav-wishlist-mobile" data-action="nav-list" data-page="wishList">Ønskeliste</button>
+                <a id="nav-home-mobile" href="#homePage" data-action="nav">Hjem</a>
+                <a id="nav-library-mobile" href="#library" data-action="nav-list">Bibliotek</a>
+                <a id="nav-wishlist-mobile" href="#wishList" data-action="nav-list">Ønskeliste</a>
 
-                <button id="nav-login-mobile" data-action="nav-login">Logg inn</button>
-                <button id="nav-profile-mobile" style="display: none;" data-action="nav-profile">Profil</button>
+                <a id="nav-login-mobile" href="#login" data-action="nav-login">Logg inn</a>
+                <a id="nav-profile-mobile" href="#profile" style="display: none;" data-action="nav-profile">Profil</a>
             </div>
 
         </div>

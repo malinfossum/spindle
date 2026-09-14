@@ -128,9 +128,9 @@ body {
 	flex-shrink: 0;
 }
 
-/* The brand doubles as "go home", so the clickable part is a real <button>
-   inside the <h1> — an <h1> with a click handler is invisible to the keyboard.
-   No horizontal padding, unlike every other .Navbar button: at 375px the navbar
+/* The brand doubles as "go home", so the clickable part is a real link inside
+   the <h1> — an <h1> with a click handler is invisible to the keyboard. No
+   horizontal padding, unlike every other .Navbar link: at 375px the navbar
    row has no slack left, and 16px of padding here pushes the theme toggle off
    the right edge in English. The text is 51px wide, so the 44x44 floor still
    holds without it. */
@@ -141,10 +141,15 @@ body {
 	padding: 0;
 }
 
-.Navbar button {
+/* The page links are <a href="#page"> since v0.3 item 8 and the burger and
+   theme toggle are still <button>s; both take the same box. Same (0,1,1)
+   specificity either way, so the override notes below hold for both. */
+.Navbar button,
+.Navbar a {
 	background: none;
 	border: none;
 	color: var(--text-muted);
+	text-decoration: none;
 	font-size: 0.875rem;
 	padding: 0.35rem 0.75rem;
 	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
@@ -161,7 +166,8 @@ body {
 	white-space: nowrap;
 }
 
-.Navbar button:hover {
+.Navbar button:hover,
+.Navbar a:hover {
 	background: var(--surface2);
 	color: var(--text);
 }
@@ -371,6 +377,7 @@ footer {
 	background: var(--btn-bg);
 	border: 1px solid var(--btn-border);
 	color: var(--text);
+	text-decoration: none;
 	border-radius: 6px;
 	padding: 0.4rem 0.9rem;
 	font-size: 0.875rem;
@@ -1093,17 +1100,14 @@ footer {
 	color: var(--text-muted);
 }
 
-/* These move between pages of a single-page app, so they are buttons, not
-   links — there is no URL to follow, and href="#" only ever pushed a stray
-   fragment onto the URL. Styled as links because that is the right affordance.
-   This one sits inside a run of text, so it takes WCAG 2.5.5's inline
-   exception rather than a 44x44 box. */
+/* These move between pages, and since v0.2 every page has a fragment URL, so
+   they are real links. This one sits inside a run of text, so it takes WCAG
+   2.5.5's inline exception rather than a 44x44 box. */
 .auth-footer .link-inline {
-	background: none;
-	border: none;
 	padding: 0;
 	font: inherit;
 	color: var(--accent);
+	text-decoration: none;
 	cursor: pointer;
 }
 
@@ -1121,10 +1125,9 @@ footer {
 /* Alone in its own paragraph, so it is a standalone target rather than a link
    inside a run of text — WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
 .auth-back {
-	background: none;
-	border: none;
 	font: inherit;
 	color: var(--accent);
+	text-decoration: none;
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
@@ -1254,7 +1257,8 @@ footer {
 	z-index: 200;
 }
 
-.mobile-menu-show button {
+.mobile-menu-show button,
+.mobile-menu-show a {
 	width: 100%;
 	text-align: left;
 	justify-content: flex-start;
@@ -1802,11 +1806,10 @@ body.chrome-hidden > footer {
 	color: var(--text-muted);
 }
 
-/* Link-styled button — SPA navigation that isn't a primary action. */
+/* Quiet page link — navigation that isn't a primary action. */
 .link-btn {
-	background: none;
-	border: none;
 	padding: 0.25rem 0.5rem;
+	text-decoration: none;
 	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. */
 	display: inline-flex;
 	align-items: center;

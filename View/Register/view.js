@@ -88,11 +88,11 @@ export function registerPage() {
 
             <p class="auth-footer">
                 ${t("auth.haveLibrary")}
-                <button class="link-inline" type="button" data-action="nav" data-page="login">${t("auth.login")}</button>
+                <a class="link-inline" href="#login" data-action="nav">${t("auth.login")}</a>
             </p>
 
             <p class="auth-footer">
-                <button class="auth-back" type="button" data-action="nav" data-page="welcome">${t("auth.backToStart")}</button>
+                <a class="auth-back" href="#welcome" data-action="nav">${t("auth.backToStart")}</a>
             </p>
         </div>
     </div>

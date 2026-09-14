@@ -14,7 +14,8 @@ import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage, clearSearchHistory, setAuthMessage } from "../../Model/viewState.js";
 import { clearCoverCache } from "../../View/Universal/cover.js";
 import { openDialog } from "../../View/Universal/dialog.js";
-import { updateView } from "../../View/Universal/updateView.js";
+import { renderFieldError } from "../../View/Universal/fieldError.js";
+import { appRoot, updateView } from "../../View/Universal/updateView.js";
 import { navigate } from "../Universal/router.js";
 
 function clearLoginForm() {
@@ -33,24 +34,21 @@ export function clearRegisterForm() {
 	};
 }
 
-// Clears one field's error the instant the user edits it. Updates the DOM
-// directly instead of re-rendering — exactly like renderStrength — because
-// calling updateView() on every keystroke would drop the input's focus.
+// Clears one field's error the instant the user edits it. The state change is
+// here; the paint is renderFieldError(), which patches the field in place
+// because a full updateView() on every keystroke would drop the input's focus.
 export function clearFieldError(input, formName, fieldName) {
 	const errors = model.viewState[formName].errors;
 	if (!errors[fieldName]) return;
 
 	errors[fieldName] = "";
-	input.setAttribute("aria-invalid", "false");
-
-	const span = document.getElementById(`${input.id}-error`);
-	if (span) span.textContent = "";
+	renderFieldError(input, "");
 }
 
 // After a failed submit, send focus to the first field flagged invalid so a
 // keyboard or screen-reader user lands on the problem and hears its linked error.
 export function focusFirstInvalid() {
-	const field = model.app.app.querySelector('[aria-invalid="true"]');
+	const field = appRoot.querySelector('[aria-invalid="true"]');
 	if (field) field.focus();
 }
 

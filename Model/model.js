@@ -61,7 +61,6 @@ export function blankLibraryView() {
 
 export const model = {
 	app: {
-		app: document.getElementById("app"),
 		allPages: [
 			"welcome",
 			"homePage",

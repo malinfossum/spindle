@@ -9,9 +9,9 @@ export function aboutPage() {
 	return /*HTML*/ `
     <section class="about" aria-labelledby="about-heading">
         <div class="about-top">
-            <button class="btn btn-ghost" type="button" data-action="nav" data-page="welcome">
+            <a class="btn btn-ghost" href="#welcome" data-action="nav">
                 ${t("about.back")}
-            </button>
+            </a>
         </div>
 
         <h1 class="about-title" id="about-heading">${t("about.title")}</h1>

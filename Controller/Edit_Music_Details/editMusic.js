@@ -8,7 +8,7 @@ import { forgetCover } from "../../View/Universal/cover.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { downscaleCover } from "../../View/Universal/downscale.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
-import { updateView } from "../../View/Universal/updateView.js";
+import { appRoot, updateView } from "../../View/Universal/updateView.js";
 import { focusFirstInvalid } from "../Login/login.js";
 import { navigate } from "../Universal/router.js";
 
@@ -149,9 +149,7 @@ export async function submitChanges(isEdit) {
 // here instead: focus returns to the panel's toggle, which is both a sensible
 // place to carry on from and the element whose aria-expanded just changed.
 export function focusPanelToggle(panel) {
-	const toggle = model.app.app.querySelector(
-		`[data-action="toggle-panel"][data-panel="${panel}"]`,
-	);
+	const toggle = appRoot.querySelector(`[data-action="toggle-panel"][data-panel="${panel}"]`);
 	if (toggle) toggle.focus();
 }
 
@@ -319,7 +317,7 @@ export async function saveImage(image) {
 		// The render above replaced the input that was focused, so put focus back
 		// on its replacement — the picker is where someone tabbed to, and where
 		// they would go next to change their mind.
-		const picker = model.app.app.querySelector("#music-cover");
+		const picker = appRoot.querySelector("#music-cover");
 		if (picker) picker.focus();
 	}
 }

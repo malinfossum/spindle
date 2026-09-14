@@ -10,7 +10,7 @@ export function viewDetailsPage() {
 	if (!album) {
 		return /*HTML*/ `
         <p style="color: var(--text-muted)">${t("music.notFound")}</p>
-        <button class="btn btn-ghost" data-action="nav" data-page="homePage">${t("music.back")}</button>
+        <a class="btn btn-ghost" href="#homePage" data-action="nav">${t("music.back")}</a>
         `;
 	}
 
@@ -83,7 +83,7 @@ ${formatRow}
         <div class="detail-actions">
             <button class="btn btn-accent" data-action="edit-album" data-id="${album.id}">${t("music.edit")}</button>
             <button class="btn btn-danger" data-action="delete-album" data-id="${album.id}">${t("music.delete")}</button>
-            <button class="btn btn-ghost" data-action="nav" data-page="homePage">${t("music.cancel")}</button>
+            <a class="btn btn-ghost" href="#homePage" data-action="nav">${t("music.cancel")}</a>
         </div>
     </div>
     `;

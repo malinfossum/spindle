@@ -20,10 +20,10 @@ export function homeView() {
 
 	const capture = /*HTML*/ `
     <div class="home-capture">
-        <button class="btn btn-accent home-add" data-action="nav" data-page="addDetails">
+        <a class="btn btn-accent home-add" href="#addDetails" data-action="nav">
             ${icon("plus", { size: 22 })}
             <span>${t("home.add")}</span>
-        </button>
+        </a>
     </div>`;
 
 	if (total === 0) {
@@ -41,10 +41,7 @@ export function homeView() {
 
     <div class="page-header">
         <span class="page-title">${t("home.recent")}</span>
-        <button class="btn btn-ghost"
-                data-action="nav-list"
-                data-page="library"
-                data-preset="all">${t("home.seeAll", { count: total })}</button>
+        <a class="btn btn-ghost" href="#library" data-action="nav-list">${t("home.seeAll", { count: total })}</a>
     </div>
 
     ${recent.map((album) => createAlbumCard(album)).join("")}

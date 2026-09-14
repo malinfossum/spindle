@@ -21,7 +21,7 @@ import { renderStrength } from "../../View/Register/view.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
 import { applyLang } from "../../View/Universal/chrome.js";
 import { renderSuggestions, syncSearchInputs } from "../../View/Universal/searchSuggest.js";
-import { updateView } from "../../View/Universal/updateView.js";
+import { appRoot, updateView } from "../../View/Universal/updateView.js";
 import {
 	clearMusicGroupError,
 	focusPanelToggle,
@@ -80,26 +80,54 @@ function runSearch(query) {
 }
 
 function focusLibraryControl(action) {
-	const control = model.app.app.querySelector(
+	const control = appRoot.querySelector(
 		`[data-action-change="${action}"], [data-action="${action}"]`,
 	);
 	if (control) control.focus();
 }
 
+// The page links are <a href="#page"> (v0.3 item 8), and the handler still
+// runs navigate() itself rather than leaving it to the click's default: the
+// default only writes the fragment, and the render would then wait for the
+// queued hashchange — the same one-tick gap navigate() exists to close. A
+// modifier click is the exception: Ctrl, Cmd, Shift or Alt means "open this
+// somewhere else", which only the browser can do, so the handler steps aside.
+function followsLink(event) {
+	if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return true;
+	event.preventDefault();
+	return false;
+}
+
+// "#homePage" -> "homePage". The link's href is the one place the page is
+// named; a data-page twin would be a second thing to keep in step with it.
+function pageOf(link) {
+	return link.getAttribute("href").slice(1);
+}
+
 const ACTIONS = {
 	// --- Navigation and chrome -------------------------------------------
-	nav: (_event, target) => navigate(target.dataset.page),
+	nav: (event, target) => {
+		if (followsLink(event)) return;
+		navigate(pageOf(target));
+	},
 
 	// Library and Wishlist are the same page under two fragments; the router
 	// reads the preset off the name. What this adds over plain nav is dropping
 	// the query still sitting in the search box — a nav click means "show me this
 	// list", not "show me the last thing I searched for inside it".
-	"nav-list": (_event, target) => {
+	"nav-list": (event, target) => {
+		if (followsLink(event)) return;
 		model.viewState.searchBar = "";
-		navigate(target.dataset.page);
+		navigate(pageOf(target));
 	},
-	"nav-login": () => handleLoginNavClick(),
-	"nav-profile": () => handleProfileNavClick(),
+	"nav-login": (event) => {
+		if (followsLink(event)) return;
+		handleLoginNavClick();
+	},
+	"nav-profile": (event) => {
+		if (followsLink(event)) return;
+		handleProfileNavClick();
+	},
 	logout: () => confirmLogout(),
 	"toggle-menu": () => toggleMobileMenu(),
 	"toggle-theme": () => toggleTheme(),

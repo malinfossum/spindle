@@ -22,18 +22,14 @@ export function welcomePage() {
 			: icon("moon");
 
 	const createBtn = /*HTML*/ `
-        <button class="btn btn-full ${hasLibrary ? "" : "btn-accent"}"
-                type="button"
-                data-action="nav" data-page="register">
+        <a class="btn btn-full ${hasLibrary ? "" : "btn-accent"}" href="#register" data-action="nav">
             ${t("welcome.createLibrary")}
-        </button>`;
+        </a>`;
 
 	const loginBtn = /*HTML*/ `
-        <button class="btn btn-full ${hasLibrary ? "btn-accent" : ""}"
-                type="button"
-                data-action="nav" data-page="login">
+        <a class="btn btn-full ${hasLibrary ? "btn-accent" : ""}" href="#login" data-action="nav">
             ${t("welcome.login")}
-        </button>`;
+        </a>`;
 
 	const actions = hasLibrary ? loginBtn + createBtn : createBtn + loginBtn;
 
@@ -75,9 +71,9 @@ export function welcomePage() {
                 ${actions}
             </div>
 
-            <button class="link-btn welcome-about" type="button" data-action="nav" data-page="about">
+            <a class="link-btn welcome-about" href="#about" data-action="nav">
                 ${t("welcome.about")}
-            </button>
+            </a>
 
             ${backupPanel}
         </div>

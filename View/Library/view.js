@@ -52,7 +52,7 @@ export function libraryPage() {
 	return /*HTML*/ `
     <div class="page-header">
         <span class="page-title">${title}</span>
-        <button class="btn btn-accent" data-action="nav" data-page="addDetails">${t("music.addAlbum")}</button>
+        <a class="btn btn-accent" href="#addDetails" data-action="nav">${t("music.addAlbum")}</a>
     </div>
 
     ${controls(state)}

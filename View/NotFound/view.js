@@ -26,9 +26,9 @@ export function notFoundPage() {
         <div class="notfound-icon">${icon("search", { size: 48 })}</div>
         <h1 class="notfound-title" id="notfound-heading">${t("notFound.title")}</h1>
         <p class="notfound-body">${t("notFound.body")}</p>
-        <button class="btn btn-accent" type="button" data-action="nav" data-page="${target}">
+        <a class="btn btn-accent" href="#${target}" data-action="nav">
             ${t(backKey)}
-        </button>
+        </a>
     </section>
     `;
 }

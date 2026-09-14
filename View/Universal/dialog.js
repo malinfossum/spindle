@@ -2,9 +2,10 @@
 // the blocking window.confirm(). showModal() hands us a real focus trap,
 // Esc-to-close, and an inert background for free — everything a hand-rolled
 // modal would have to reimplement with ARIA and keydown handlers. Resolves to
-// true on confirm and false on cancel / Esc / backdrop click. The body is
-// written with textContent, never innerHTML, so user-entered names (album
-// titles, genres, locations) can be dropped in without escaping.
+// true on confirm and false on cancel / Esc / backdrop click / leaving the
+// page with Back or forward. The body is written with textContent, never
+// innerHTML, so user-entered names (album titles, genres, locations) can be
+// dropped in without escaping.
 
 import { t } from "../../Model/i18n/i18n.js";
 
@@ -61,11 +62,28 @@ export function openDialog({
 			if (!clickedInside) dialog.close("cancel");
 		});
 
-		// One exit for every close path (button, Esc, backdrop): read the result,
-		// drop the element, hand focus back to whatever opened the dialog.
+		// Back or forward while the dialog is up. The router has already
+		// re-rendered the page underneath by the time this runs — its listener
+		// was registered first — so the question the dialog asks is about a page
+		// that is gone. Closing as a cancel resolves false, and the caller returns
+		// without touching anything. hashchange is queued, so a navigate() from
+		// the same turn as this dialog echoes after it has opened; comparing
+		// against the fragment the dialog opened on drops that echo, the same
+		// test the router makes.
+		const openedOn = window.location.hash;
+		const onLeave = () => {
+			if (window.location.hash !== openedOn) dialog.close("cancel");
+		};
+		window.addEventListener("hashchange", onLeave);
+
+		// One exit for every close path (button, Esc, backdrop, navigation): read
+		// the result, drop the element, hand focus back to whatever opened the
+		// dialog — if it still exists. After a page change it does not, and the
+		// fresh page keeps whatever focus the router gave it.
 		dialog.addEventListener("close", () => {
+			window.removeEventListener("hashchange", onLeave);
 			dialog.remove();
-			if (opener && typeof opener.focus === "function") opener.focus();
+			if (opener?.isConnected && typeof opener.focus === "function") opener.focus();
 			resolve(dialog.returnValue === "confirm");
 		});
 
