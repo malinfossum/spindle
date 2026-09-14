@@ -21,12 +21,14 @@ export function backupSection({ idPrefix, allowPlaintext = false, canExport = tr
 	const exportRow = canExport
 		? /*HTML*/ `
         <div class="backup-row">
-            <span class="backup-label">${t("backup.export")}</span>
+            <div class="backup-text">
+                <span class="backup-label">${t("backup.export")}</span>
+                <p class="backup-hint" id="${idPrefix}-export-hint">${t("backup.exportHint")}</p>
+            </div>
             <button class="btn" type="button"
                     aria-describedby="${idPrefix}-export-hint"
                     data-action="export-encrypted">${t("backup.exportBtn")}</button>
-        </div>
-        <p class="backup-hint" id="${idPrefix}-export-hint">${t("backup.exportHint")}</p>`
+        </div>`
 		: "";
 
 	// The input is a real <input type="file"> still — moved off screen rather
@@ -37,7 +39,10 @@ export function backupSection({ idPrefix, allowPlaintext = false, canExport = tr
 	// input named "Restore" rather than "Choose file".
 	const importRow = /*HTML*/ `
         <div class="backup-row">
-            <span class="backup-label" id="${idPrefix}-import-label">${t("backup.import")}</span>
+            <div class="backup-text">
+                <span class="backup-label" id="${idPrefix}-import-label">${t("backup.import")}</span>
+                <p class="backup-hint" id="${idPrefix}-import-hint">${t("backup.importHint")}</p>
+            </div>
             <input class="file-input-hidden" type="file"
                    id="${idPrefix}-import-file"
                    accept="application/json,.json"
@@ -45,20 +50,21 @@ export function backupSection({ idPrefix, allowPlaintext = false, canExport = tr
                    aria-describedby="${idPrefix}-import-hint"
                    data-action-change="import-backup">
             <label class="btn file-input-label" for="${idPrefix}-import-file">${t("backup.importBtn")}</label>
-        </div>
-        <p class="backup-hint" id="${idPrefix}-import-hint">${t("backup.importHint")}</p>`;
+        </div>`;
 
 	// Kept in its own row rather than beside the encrypted button, so the unsafe
 	// export is never one misclick away from the safe one.
 	const plaintextRow = allowPlaintext
 		? /*HTML*/ `
         <div class="backup-row">
-            <span class="backup-label">${t("backup.plaintext")}</span>
+            <div class="backup-text">
+                <span class="backup-label">${t("backup.plaintext")}</span>
+                <p class="backup-hint backup-hint-warn" id="${idPrefix}-plaintext-hint">${t("backup.plaintextHint")}</p>
+            </div>
             <button class="btn" type="button"
                     aria-describedby="${idPrefix}-plaintext-hint"
                     data-action="export-plaintext">${t("backup.plaintextBtn")}</button>
-        </div>
-        <p class="backup-hint backup-hint-warn" id="${idPrefix}-plaintext-hint">${t("backup.plaintextHint")}</p>`
+        </div>`
 		: "";
 
 	return messageBlock + exportRow + importRow + plaintextRow;

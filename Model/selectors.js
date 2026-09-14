@@ -24,10 +24,6 @@ export function getAccessibleAlbums() {
 	return model.data.musicInfo;
 }
 
-export function getProfileAlbums() {
-	return getAccessibleAlbums();
-}
-
 // Title, artist and genre names. Location is deliberately not searched: it is a
 // filter on the library page, and a query that quietly also matched "Loft"
 // would make the filter and the search fight over the same word.
