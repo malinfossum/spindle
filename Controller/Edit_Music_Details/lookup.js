@@ -1,0 +1,171 @@
+// Barcode → album fields (v0.4). One press does at most one request, and
+// nothing goes out before the consent dialog has been answered yes once.
+//
+// The flow is a straight line: validate, check the library, check the pref,
+// send, apply. Each stop renders and says where focus goes, because
+// updateView() replaces #app and would otherwise drop it on <body>.
+
+import { t } from "../../Model/i18n/i18n.js";
+import { blankLookup, model, normalizeBarcode } from "../../Model/model.js";
+import { lookupBarcode } from "../../Model/musicbrainz.js";
+import { getPref, setPref } from "../../Model/prefs.js";
+import { findByBarcode } from "../../Model/selectors.js";
+import { openDialog } from "../../View/Universal/dialog.js";
+import { renderFieldError } from "../../View/Universal/fieldError.js";
+import { appRoot, updateView } from "../../View/Universal/updateView.js";
+
+const LOOKUP_TIMEOUT_MS = 10_000;
+
+// The four fields a match may fill, in the order focus is offered after a
+// fill, and the input id each one renders as.
+const FILLABLE = [
+	["artist", "music-artist"],
+	["title", "music-title"],
+	["releaseYear", "music-year"],
+	["format", "music-format"],
+];
+
+function focusById(id) {
+	const node = appRoot.querySelector(`#${id}`);
+	if (node) node.focus();
+}
+
+function failWith(errorKey) {
+	const form = model.viewState.musicForm;
+	form.errors.barcode = errorKey;
+	form.lookup.status = "idle";
+	form.lookup.controller = null;
+	updateView();
+	focusById("music-barcode");
+}
+
+// Writes a match into the working copy — only into fields still empty. A
+// lookup never overwrites something the person typed. The barcode is always
+// set: it is what the fields were looked up by. Nothing reaches model.data
+// until Save, exactly as the cover preview.
+function fill(match, digits) {
+	const info = model.viewState.musicInfo;
+	const lookup = model.viewState.musicForm.lookup;
+	let firstFilled = null;
+
+	for (const [field, id] of FILLABLE) {
+		const value = match[field === "releaseYear" ? "year" : field];
+		const empty = info[field] === "" || info[field] === null;
+		if (!empty || value === "" || value === null) continue;
+		info[field] = value;
+		firstFilled ??= id;
+	}
+
+	info.barcode = digits;
+	lookup.matches = [];
+	lookup.filled = { artist: match.artist, title: match.title };
+	lookup.status = "idle";
+	lookup.controller = null;
+	updateView();
+	focusById(firstFilled ?? "music-barcode");
+}
+
+export async function lookupPressed(event) {
+	event.preventDefault();
+
+	const form = model.viewState.musicForm;
+	const lookup = form.lookup;
+	// The button is disabled while busy, but Enter in the small form is not.
+	if (lookup.status === "busy") return;
+
+	const field = appRoot.querySelector("#music-barcode");
+	const digits = normalizeBarcode((field?.value ?? "").replace(/\s/g, ""));
+	if (digits === "") {
+		failWith("error.barcodeInvalid");
+		return;
+	}
+
+	// Already on the shelf? One press tells, the next press goes — a second
+	// copy is legitimate, and the two-press shape is the same for someone who
+	// cannot see the note appear.
+	const owned = findByBarcode(digits, model.viewState.musicInfo.id);
+	if (owned && lookup.owned !== owned.id) {
+		lookup.owned = owned.id;
+		updateView();
+		focusById("music-barcode-owned");
+		return;
+	}
+
+	if (getPref("lookups") !== "on") {
+		const agreed = await openDialog({
+			title: t("dialog.lookupTitle"),
+			body: t("dialog.lookupBody"),
+			confirmText: t("dialog.lookupConfirm"),
+			cancelText: t("dialog.lookupCancel"),
+		});
+		if (!agreed) return;
+		setPref("lookups", "on");
+	}
+
+	const controller = new AbortController();
+	lookup.status = "busy";
+	lookup.controller = controller;
+	lookup.filled = null;
+	lookup.matches = [];
+	updateView();
+
+	let result;
+	try {
+		result = await lookupBarcode(
+			digits,
+			AbortSignal.any([controller.signal, AbortSignal.timeout(LOOKUP_TIMEOUT_MS)]),
+		);
+	} catch {
+		result = { status: "failed" };
+	}
+
+	// The page moved on (resetLookup() aborted us) or a newer press replaced
+	// us: whatever came back is about a form that is gone.
+	if (model.viewState.musicForm.lookup.controller !== controller) return;
+
+	if (result.status === "busy") return failWith("error.lookupBusy");
+	if (result.status === "failed") return failWith("error.lookupFailed");
+	if (result.matches.length === 0) return failWith("error.barcodeNoMatch");
+
+	if (result.matches.length === 1) {
+		fill(result.matches[0], digits);
+		return;
+	}
+
+	lookup.matches = result.matches;
+	lookup.status = "idle";
+	lookup.controller = null;
+	updateView();
+	const first = appRoot.querySelector('[data-action="barcode-pick"]');
+	if (first) first.focus();
+}
+
+export function pickMatch(index) {
+	const match = model.viewState.musicForm.lookup.matches[index];
+	// A stale render: the list this button came from is gone.
+	if (!match) return;
+	const field = appRoot.querySelector("#music-barcode");
+	fill(match, normalizeBarcode((field?.value ?? "").replace(/\s/g, "")));
+}
+
+// Any input in the field: the number the notes were about is gone, so the
+// error, the match list, the owned note and the status go with it — patched
+// in place, because a re-render on every keystroke would drop focus.
+export function barcodeTyped(input) {
+	const form = model.viewState.musicForm;
+	model.viewState.musicInfo.barcode = normalizeBarcode(input.value.replace(/\s/g, ""));
+
+	const controller = form.lookup.controller;
+	form.lookup = blankLookup();
+	// A request in flight is about a number that is being changed.
+	controller?.abort();
+
+	form.errors.barcode = "";
+	renderFieldError(input, "");
+	const matches = appRoot.querySelector("#music-lookup-matches");
+	if (matches) matches.hidden = true;
+	const owned = appRoot.querySelector("#music-barcode-owned");
+	if (owned) owned.remove();
+	const status = appRoot.querySelector("#music-lookup-status");
+	if (status) status.textContent = "";
+}

@@ -34,6 +34,7 @@ import {
 	toggleGenreCheckbox,
 	toggleLocationCheckbox,
 } from "../Edit_Music_Details/editMusic.js";
+import { barcodeTyped, lookupPressed, pickMatch } from "../Edit_Music_Details/lookup.js";
 import {
 	clearFieldError,
 	confirmLogout,
@@ -302,6 +303,12 @@ const ACTIONS = {
 	"music-wishlist": (_event, target) => {
 		model.viewState.musicInfo.wishlist = target.checked;
 	},
+
+	// --- Barcode lookup (v0.4) ---------------------------------------------
+	"music-barcode": (_event, target) => barcodeTyped(target),
+	// preventDefault inside — it is the small form's submit.
+	"barcode-lookup": (event) => lookupPressed(event),
+	"barcode-pick": (_event, target) => pickMatch(Number(target.dataset.index)),
 
 	"music-location": (_event, target) => {
 		toggleLocationCheckbox(target, Number(target.dataset.index));
