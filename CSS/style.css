@@ -1013,6 +1013,71 @@ footer {
 	color: var(--text);
 }
 
+/* Barcode row (v0.4): the field, Look up and — where a detector exists — Scan
+   on one line, wrapping on a narrow screen. The buttons are .btn, so they
+   keep the 44px target the chip buttons above get structurally. */
+.lookup-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.lookup-row > .form-input {
+	flex: 1 1 12rem;
+	min-width: 0;
+}
+
+/* Full contrast rather than --text-muted, for the same reason
+   .profile-settings-label gives: muted is 4.48:1 on the light theme, under AA
+   for text this size, and the note is the one line that says where a request
+   goes. */
+.lookup-status,
+.form-hint {
+	margin-top: 0.3rem;
+	font-size: 0.78rem;
+	line-height: 1.4;
+	color: var(--text);
+}
+
+.lookup-status:empty {
+	display: none;
+}
+
+/* Programmatically focusable, like the checkbox groups. */
+.lookup-owned {
+	margin-top: 0.5rem;
+	font-size: 0.85rem;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.lookup-owned:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+	border-radius: 6px;
+}
+
+.lookup-matches {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+
+.lookup-match {
+	width: 100%;
+	flex-direction: column;
+	align-items: flex-start;
+	text-align: left;
+}
+
+.lookup-match-meta {
+	font-size: 0.78rem;
+	color: var(--text-muted);
+}
+
 .checkbox-option {
 	display: flex;
 	align-items: center;

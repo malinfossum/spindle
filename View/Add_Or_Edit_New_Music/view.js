@@ -1,5 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { ALBUM_FORMATS, formatLabelKey, model } from "../../Model/model.js";
+import { getPref } from "../../Model/prefs.js";
+import { getAccessibleAlbums } from "../../Model/selectors.js";
 import { coverAttr, coverInner } from "../Universal/cover.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
@@ -16,6 +18,113 @@ function buildMusicForm(isEdit) {
 	const info = model.viewState.musicInfo;
 	const errors = model.viewState.musicForm.errors;
 	const panels = model.viewState.musicForm.panels;
+
+	const lookup = model.viewState.musicForm.lookup;
+	const lookupsOn = getPref("lookups") === "on";
+	const busyLookup = lookup.status === "busy";
+
+	// The album the barcode already belongs to, when there is one. Looked up by
+	// id here rather than kept on the state, so a name edited in the meantime
+	// renders as it is now.
+	const ownedAlbum =
+		lookup.owned === null
+			? null
+			: (getAccessibleAlbums().find((album) => album.id === lookup.owned) ?? null);
+
+	// What the status line says. role="status" is what tells a screen-reader
+	// user that three fields just changed — aria-busy on a button says nothing.
+	const lookupStatus = busyLookup
+		? t("music.lookupWorking")
+		: lookup.filled
+			? t("music.lookupFilled", {
+					artist: escapeHtml(lookup.filled.artist),
+					title: escapeHtml(lookup.filled.title),
+				})
+			: "";
+
+	const matchButtons = lookup.matches
+		.map(
+			(match, i) => /*HTML*/ `
+        <li>
+            <button type="button" class="btn btn-ghost lookup-match"
+                    data-action="barcode-pick" data-index="${i}">
+                <span class="lookup-match-name">${escapeHtml(match.artist)} – ${escapeHtml(match.title)}</span>
+                <span class="lookup-match-meta">${match.year ?? ""}${
+					match.year && match.format ? " · " : ""
+				}${match.format ? escapeHtml(t(formatLabelKey(match.format))) : ""}</span>
+            </button>
+        </li>`,
+		)
+		.join("");
+
+	// Only ids that are on the page. The note is rendered only while the pref is
+	// on, so the attribute must not name it otherwise.
+	const barcodeDescribedBy = lookupsOn
+		? "music-barcode-error music-lookup-note"
+		: "music-barcode-error";
+
+	const barcodeRow = /*HTML*/ `
+        <div class="form-row">
+            <label class="form-label" for="music-barcode">${t("music.barcode")}</label>
+            <!-- Its own small form, the chip-input pattern: the page's main
+                 form is a <div>, so this is what makes Enter in the field work
+                 without a keydown handler. The controller validates; the
+                 pattern attribute is a hint, not a gate. The wrapper keeps the
+                 form from matching .form-row > form > button, which would
+                 out-rank .btn and paint Look up as a borderless icon button. -->
+            <div class="lookup-wrap">
+            <form class="lookup-row" data-action-submit="barcode-lookup">
+                <input class="form-input"
+                       id="music-barcode"
+                       type="text"
+                       inputmode="numeric"
+                       pattern="[0-9 ]*"
+                       autocomplete="off"
+                       placeholder="${t("music.barcodePlaceholder")}"
+                       aria-invalid="${errors.barcode ? "true" : "false"}"
+                       aria-describedby="${barcodeDescribedBy}"
+                       value="${escapeHtml(info.barcode)}"
+                       data-action-input="music-barcode">
+                <button class="btn" id="music-lookup-btn"
+                        aria-busy="${busyLookup}"
+                        ${busyLookup ? "disabled" : ""}>${t("music.lookup")}</button>
+                ${
+					// Everyone without a working detector sees only the
+					// typed field — no dead button.
+					model.app.canScan
+						? /*HTML*/ `<button class="btn" type="button" id="music-scan-btn"
+                        data-action="barcode-scan">${t("music.scan")}</button>`
+						: ""
+				}
+            </form>
+            </div>
+            <span class="field-error" id="music-barcode-error">${escapeHtml(t(errors.barcode))}</span>
+            <p class="lookup-status" id="music-lookup-status" role="status">${lookupStatus}</p>
+            ${
+				lookupsOn
+					? /*HTML*/ `<p class="form-hint" id="music-lookup-note">${t("music.lookupNote")}</p>`
+					: ""
+			}
+            ${
+				ownedAlbum
+					? /*HTML*/ `<p class="lookup-owned" id="music-barcode-owned" tabindex="-1">
+                ${t("music.barcodeOwned", {
+					artist: escapeHtml(ownedAlbum.artist),
+					title: escapeHtml(ownedAlbum.title),
+				})}
+                <button class="btn btn-ghost" type="button" data-action="view-album"
+                        data-id="${ownedAlbum.id}">${t("music.view")}</button>
+            </p>`
+					: ""
+			}
+            <div id="music-lookup-matches" ${lookup.matches.length > 1 ? "" : "hidden"}>
+                <p class="form-label" id="music-lookup-matches-label">${t("music.pickMatch")}</p>
+                <ul class="lookup-matches" aria-labelledby="music-lookup-matches-label">
+                    ${matchButtons}
+                </ul>
+            </div>
+        </div>
+`;
 
 	const locationCheckboxes = model.data.location
 		.map(
@@ -221,6 +330,8 @@ function buildMusicForm(isEdit) {
                 ${formatOptions}
             </select>
         </div>
+
+        ${barcodeRow}
 
         <div class="form-row">
             <label class="form-label" id="music-genre-label">${t("music.genre")}</label>
