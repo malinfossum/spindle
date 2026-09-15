@@ -68,12 +68,14 @@ function buildMusicForm(isEdit) {
             <label class="form-label" for="music-barcode">${t("music.barcode")}</label>
             <!-- Its own small form, the chip-input pattern: the page's main
                  form is a <div>, so this is what makes Enter in the field work
-                 without a keydown handler. The controller validates; the
-                 pattern attribute is a hint, not a gate. The wrapper keeps the
-                 form from matching .form-row > form > button, which would
-                 out-rank .btn and paint Look up as a borderless icon button. -->
+                 without a keydown handler. novalidate keeps the browser's own
+                 pattern check out of the way: the controller validates and
+                 renders the i18n error, so the native tooltip never shows.
+                 The wrapper keeps the form from matching .form-row > form >
+                 button, which would out-rank .btn and paint Look up as a
+                 borderless icon button. -->
             <div class="lookup-wrap">
-            <form class="lookup-row" data-action-submit="barcode-lookup">
+            <form class="lookup-row" data-action-submit="barcode-lookup" novalidate>
                 <input class="form-input"
                        id="music-barcode"
                        type="text"
