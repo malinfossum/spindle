@@ -44,6 +44,7 @@ function resetMusicFieldErrors() {
 		title: "",
 		location: "",
 		genre: "",
+		barcode: "",
 		form: "",
 	};
 }

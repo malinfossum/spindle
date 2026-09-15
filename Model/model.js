@@ -11,6 +11,15 @@ export function formatLabelKey(format) {
 	return `music.format${format.charAt(0).toUpperCase()}${format.slice(1)}`;
 }
 
+// A barcode is 8 to 14 ASCII digits (EAN-8 through GTIN-14), or "" for not
+// set. This is the one place the rule is written: the form's input handler,
+// the lookup and the import path in normalizeAlbums() all ask here. Spaces are
+// not stripped — the field strips them before asking, and an imported value
+// with spaces in it is not something Spindle wrote.
+export function normalizeBarcode(value) {
+	return typeof value === "string" && /^[0-9]{8,14}$/.test(value) ? value : "";
+}
+
 // One album record, empty. The form's working copy starts here, emptyList()
 // resets to it between albums, and logout() replaces the last one with it —
 // three places that each used to write the shape out in full, and that had
@@ -30,6 +39,8 @@ export function blankAlbum() {
 		// The cover itself lives in IndexedDB (Model/covers.js); the album
 		// carries the row's id and nothing else.
 		coverId: null,
+		// v0.4. "" means not set; otherwise the digits a lookup or scan used.
+		barcode: "",
 	};
 }
 
@@ -130,6 +141,7 @@ export const model = {
 				title: "",
 				location: "",
 				genre: "",
+				barcode: "",
 				form: "",
 			},
 

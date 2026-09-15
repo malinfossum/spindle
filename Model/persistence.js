@@ -6,7 +6,7 @@ import {
 	isCryptoAvailable,
 	KDF_SALT_BYTES,
 } from "./auth.js";
-import { ALBUM_FORMATS, model } from "./model.js";
+import { ALBUM_FORMATS, model, normalizeBarcode } from "./model.js";
 
 export const SCHEMA_VERSION = 1;
 export const STORAGE_KEY = "spindle:v1:state";
@@ -123,6 +123,9 @@ export function normalizeAlbums(data) {
 		// Added in v0.3. Anything saved before it has no format at all, and "" is
 		// what the form and the detail view read as "not set" — undefined is not.
 		album.format = ALBUM_FORMATS.includes(album.format) ? album.format : "";
+		// Added in v0.4. A hand-edited backup cannot put anything but digits in
+		// the field: nothing downstream re-validates.
+		album.barcode = normalizeBarcode(album.barcode);
 	}
 }
 
