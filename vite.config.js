@@ -11,7 +11,8 @@ import { defineConfig } from "vite";
 // exceptions are needed, both for Vite's own client and neither belonging
 // anywhere near the built output:
 //
-//   - connect-src, because the HMR client opens a websocket back to localhost.
+//   - connect-src, because the HMR client opens a websocket back to localhost —
+//     added beside the one real host, not in place of it.
 //   - worker-src, because when that socket drops Vite reconnects from a worker
 //     created out of a blob: URL, and script-src is the fallback for workers.
 //
@@ -32,9 +33,16 @@ function devPolicy() {
 		);
 	}
 
-	return match[1]
-		.trim()
-		.replace("connect-src 'none'", "connect-src 'self' ws: wss:; worker-src 'self' blob:")
+	const policy = match[1].trim();
+	const marker = "connect-src https://musicbrainz.org";
+	if (!policy.includes(marker)) {
+		throw new Error(
+			`public/_headers no longer contains "${marker}" — update the dev replacement in vite.config.js`,
+		);
+	}
+
+	return policy
+		.replace(marker, `${marker} 'self' ws: wss:; worker-src 'self' blob:`)
 		.replace("; frame-ancestors 'none'", "");
 }
 
