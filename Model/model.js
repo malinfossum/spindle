@@ -70,6 +70,19 @@ export function blankLibraryView() {
 	};
 }
 
+// The add/edit form's lookup, idle. Transient: resetLookup() in viewState.js
+// puts it back on every navigation, aborting a request in flight first, so a
+// response can never land on a page other than the one that asked for it.
+export function blankLookup() {
+	return {
+		status: "idle", // "idle" | "busy"
+		matches: [], // [{ artist, title, year, format }], distinct
+		owned: null, // an album id when the barcode is already in the library
+		filled: null, // { artist, title } of the last fill, for the status line
+		controller: null, // AbortController of the request in flight
+	};
+}
+
 export const model = {
 	app: {
 		allPages: [
@@ -95,6 +108,14 @@ export const model = {
 
 		currentPage: "welcome",
 		mobileMenuToggle: false,
+
+		// Whether the live scanner can be offered. Set once at boot by
+		// initScanSupport(): true only when getUserMedia exists and
+		// BarcodeDetector reports "ean_13" in getSupportedFormats() — the
+		// constructor alone is present on desktop Chrome with no formats at all.
+		// scanFormats is the supported subset of the formats the scanner wants.
+		canScan: false,
+		scanFormats: [],
 
 		authBusy: false,
 		// In-memory only — NEVER persisted to localStorage.
@@ -167,6 +188,8 @@ export const model = {
 				genreAdd: false,
 				genreRemove: false,
 			},
+
+			lookup: blankLookup(),
 		},
 
 		login: {

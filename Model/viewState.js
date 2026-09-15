@@ -9,7 +9,7 @@
 // Every one of these is a plain write to model.viewState or model.app. None of
 // them reads or touches the DOM, so none of them was ever Controller work.
 
-import { model } from "./model.js";
+import { blankLookup, model } from "./model.js";
 
 export function clearAuthMessage() {
 	model.app.authMessage = "";
@@ -61,6 +61,15 @@ function resetMusicPanels() {
 	};
 }
 
+// Forgets the add/edit form's lookup, aborting a request still in flight.
+// Without the abort a response arriving after navigation would fill whatever
+// musicInfo is current — the blank album on the next Add, or an unrelated
+// album on Edit.
+export function resetLookup() {
+	model.viewState.musicForm.lookup.controller?.abort();
+	model.viewState.musicForm.lookup = blankLookup();
+}
+
 // How many past searches the dropdown offers. Short on purpose: it is a way
 // back to the search made a minute ago, not a log of the session.
 const SEARCH_HISTORY_LIMIT = 6;
@@ -101,5 +110,6 @@ export function resetTransientViewState() {
 	resetAuthFieldErrors();
 	resetMusicFieldErrors();
 	resetMusicPanels();
+	resetLookup();
 	closeSuggestions();
 }
