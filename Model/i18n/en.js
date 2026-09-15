@@ -40,7 +40,7 @@ export const STRINGS_EN = {
 		"Spindle began as a team assignment at GET Academy. It has been rebuilt here as an open project for general use.",
 	"about.privacyTitle": "Privacy",
 	"about.privacyBody":
-		"No server, no tracking, no third parties. Your library is encrypted at rest with a key derived from your password (PBKDF2 + HKDF). Without the password the data cannot be read — there is no password recovery, so export regularly.",
+		"No server, no tracking, and no third parties — with one exception you choose: if you turn on barcode look-ups, the scanned number is sent to musicbrainz.org — nothing from your library — and, as with any web request, they see your IP address. Your library is encrypted at rest with a key derived from your password (PBKDF2 + HKDF). Without the password the data cannot be read — there is no password recovery, so export regularly.",
 	"about.a11yTitle": "Accessibility",
 	"about.a11yBody":
 		"Spindle is built to work with a keyboard and a screen reader: semantic HTML, visible focus, sufficient contrast, and respect for reduced motion.",
@@ -89,6 +89,19 @@ export const STRINGS_EN = {
 	// The empty option. Format is optional, so "not set" is a real answer and
 	// needs its own words — a blank line in the list reads as a glitch.
 	"music.formatUnset": "Not set",
+	// ---- Barcode lookup (v0.4) --------------------------------------------
+	"music.barcode": "Barcode",
+	"music.barcodePlaceholder": "13 digits from the sleeve",
+	"music.lookup": "Look up",
+	"music.scan": "Scan",
+	"music.lookupNote": "Look-ups go to musicbrainz.org",
+	"music.lookupWorking": "Looking up…",
+	"music.lookupFilled": "Filled from MusicBrainz: {artist} – {title}",
+	"music.barcodeOwned": "Already in your library: {artist} – {title}",
+	"music.pickMatch": "Which one is it?",
+	"scanner.title": "Scan a barcode",
+	"scanner.hint": "Hold the barcode inside the frame.",
+	"scanner.close": "Close",
 	"music.formatCd": "CD",
 	"music.formatLp": "LP",
 	"music.formatCassette": "Cassette",
@@ -151,6 +164,9 @@ export const STRINGS_EN = {
 	"profile.logoutBtn": "Log out",
 	"profile.logoutHint":
 		"Locks the library in this browser. You need the password to open it again.",
+	"profile.lookups": "Barcode look-ups",
+	"profile.lookupsOff": "Off",
+	"profile.lookupsOn": "On — sends the barcode to musicbrainz.org",
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Cancel",
@@ -165,6 +181,11 @@ export const STRINGS_EN = {
 	"dialog.logoutBody":
 		"The library locks, and you need the password to open it again. Everything you have saved stays encrypted in this browser.",
 	"dialog.logoutConfirm": "Log out",
+	"dialog.lookupTitle": "Look up this barcode?",
+	"dialog.lookupBody":
+		"Spindle will send this barcode to musicbrainz.org to find the album — nothing from your library, and never on its own. As with any web request, MusicBrainz sees your IP address. You can turn look-ups off under Profile.",
+	"dialog.lookupConfirm": "Look up",
+	"dialog.lookupCancel": "Not now",
 
 	// ---- Storage banners ----------------------------------------------------
 	"storage.unavailable":
@@ -251,4 +272,9 @@ export const STRINGS_EN = {
 	"error.imageTooLarge": "The image is too large. Maximum 12 MB.",
 	"error.imageInvalid": "Invalid image file. Use JPEG, PNG or WebP.",
 	"error.imageStoreFailed": "The cover image could not be saved. Try again, or save without one.",
+	"error.barcodeInvalid": "A barcode is 8 to 14 digits.",
+	"error.barcodeNoMatch": "No album found for that barcode.",
+	"error.lookupBusy": "MusicBrainz is busy. Try again in a moment.",
+	"error.lookupFailed": "The look-up failed. Check your connection and try again.",
+	"error.cameraUnavailable": "The camera could not be opened.",
 };
