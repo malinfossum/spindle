@@ -80,6 +80,10 @@ export async function lookupPressed(event) {
 		return;
 	}
 
+	// A valid press starts clean: whatever the last press said about this
+	// number no longer applies.
+	form.errors.barcode = "";
+
 	// Already on the shelf? One press tells, the next press goes — a second
 	// copy is legitimate, and the two-press shape is the same for someone who
 	// cannot see the note appear.
