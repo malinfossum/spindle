@@ -15,6 +15,7 @@
 
 import { getLang, setLang } from "../../Model/i18n/i18n.js";
 import { ALBUM_FORMATS, model } from "../../Model/model.js";
+import { setPref } from "../../Model/prefs.js";
 import { getSuggestionList } from "../../Model/selectors.js";
 import { recordSearch } from "../../Model/viewState.js";
 import { renderStrength } from "../../View/Register/view.js";
@@ -142,6 +143,15 @@ const ACTIONS = {
 		setLang(target.dataset.lang);
 		applyLang();
 		updateView();
+	},
+
+	// Turning look-ups off deletes nothing: barcodes already on albums stay,
+	// and the next Look up simply asks again. setPref() whitelists the value.
+	"set-lookups": (_event, target) => {
+		setPref("lookups", target.value);
+		updateView();
+		const select = appRoot.querySelector("#profile-lookups");
+		if (select) select.focus();
 	},
 
 	// The search box lives in the static navbar, outside the #app element

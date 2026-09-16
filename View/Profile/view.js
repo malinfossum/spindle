@@ -1,6 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { formatBytes } from "../../Model/persistence.js";
+import { getPref } from "../../Model/prefs.js";
 import { getAccessibleAlbums, getLoggedInUser } from "../../Model/selectors.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
@@ -51,6 +52,15 @@ export function profilePage() {
             <div class="profile-settings-row">
                 <span class="profile-settings-label" id="profile-language-label">${t("profile.language")}</span>
                 ${langSwitcher("", "profile-language-label")}
+            </div>
+            <div class="profile-settings-row">
+                <label class="profile-settings-label" for="profile-lookups">${t("profile.lookups")}</label>
+                <select class="form-input" id="profile-lookups"
+                        style="max-width: 320px"
+                        data-action-change="set-lookups">
+                    <option value="off" ${getPref("lookups") === "off" ? "selected" : ""}>${t("profile.lookupsOff")}</option>
+                    <option value="on" ${getPref("lookups") === "on" ? "selected" : ""}>${t("profile.lookupsOn")}</option>
+                </select>
             </div>
 
             <h2 class="profile-settings-heading">${t("backup.title")}</h2>
