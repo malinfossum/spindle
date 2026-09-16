@@ -77,7 +77,13 @@ export async function lookupPressed(event) {
 	const field = appRoot.querySelector("#music-barcode");
 	const digits = normalizeBarcode((field?.value ?? "").replace(/\s/g, ""));
 	if (digits === "") {
-		failWith("error.barcodeInvalid");
+		// Patched in place, the way barcodeTyped patches: a re-render would
+		// drop the typed value back to "" and take the error with it.
+		form.errors.barcode = "error.barcodeInvalid";
+		if (field) {
+			renderFieldError(field, "error.barcodeInvalid");
+			field.focus();
+		}
 		return;
 	}
 
@@ -173,6 +179,11 @@ export function barcodeTyped(input) {
 	if (owned) owned.remove();
 	const status = appRoot.querySelector("#music-lookup-status");
 	if (status) status.textContent = "";
+	const btn = appRoot.querySelector("#music-lookup-btn");
+	if (btn) {
+		btn.disabled = false;
+		btn.setAttribute("aria-busy", "false");
+	}
 }
 
 // The scanner only delivers the number. Look up is the user's next press, so
