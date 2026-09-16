@@ -1071,6 +1071,9 @@ footer {
 	flex-direction: column;
 	align-items: flex-start;
 	text-align: left;
+	/* A .btn never wraps; a MusicBrainz title can be longer than a phone is wide. */
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 .lookup-match-meta {
