@@ -125,6 +125,13 @@ test("lookupBarcode lets a fetch rejection through", async () => {
 	await assert.rejects(lookupBarcode("720642442524"), { name: "AbortError" });
 });
 
+test("lookupBarcode rejects digits that don't normalize without calling fetch", async () => {
+	globalThis.fetch = () => {
+		throw new Error("fetch should not be called");
+	};
+	assert.deepEqual(await lookupBarcode("abc"), { status: "failed", matches: [] });
+});
+
 test("lookupBarcode passes the signal and no custom headers", async () => {
 	let seen;
 	globalThis.fetch = async (url, init) => {

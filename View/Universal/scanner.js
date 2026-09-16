@@ -76,6 +76,7 @@ export function openScanner() {
 			window.removeEventListener("hashchange", onLeave);
 			dialog.remove();
 			if (opener?.isConnected && typeof opener.focus === "function") opener.focus();
+			else document.getElementById("music-barcode")?.focus();
 			resolve(dialog.returnValue === "match" ? result : null);
 		});
 
@@ -119,6 +120,10 @@ export function openScanner() {
 				frame = requestAnimationFrame(tick);
 			})
 			.catch(() => {
+				// The .then above may have thrown after assigning stream (for
+				// example the BarcodeDetector constructor) — stop it here too.
+				for (const track of stream?.getTracks() ?? []) track.stop();
+				stream = null;
 				// Refused, no camera, or anything else: say so, keep Close.
 				hint.textContent = t("error.cameraUnavailable");
 				hint.setAttribute("role", "alert");

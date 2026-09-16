@@ -17,7 +17,7 @@
 // headers are sent — a browser cannot set User-Agent, and any other header
 // would turn the request into a preflighted one for nothing.
 
-import { ALBUM_FORMATS } from "./model.js";
+import { ALBUM_FORMATS, normalizeBarcode } from "./model.js";
 
 const HOST = "https://musicbrainz.org";
 
@@ -108,6 +108,8 @@ export function collapseReleases(releases) {
 // no network, aborted, timed out — and is left to the caller, which is the
 // only place that knows whether the page has moved on in the meantime.
 export async function lookupBarcode(digits, signal) {
+	if (normalizeBarcode(digits) === "") return { status: "failed", matches: [] };
+
 	const response = await fetch(LOOKUP_URL(digits), { signal });
 
 	if (response.status === 503 || response.status === 429) return { status: "busy" };

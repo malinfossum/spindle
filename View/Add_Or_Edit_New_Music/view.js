@@ -49,7 +49,7 @@ function buildMusicForm(isEdit) {
             <button type="button" class="btn btn-ghost lookup-match"
                     data-action="barcode-pick" data-index="${i}">
                 <span class="lookup-match-name">${escapeHtml(match.artist)} – ${escapeHtml(match.title)}</span>
-                <span class="lookup-match-meta">${match.year ?? ""}${
+                <span class="lookup-match-meta">${escapeHtml(match.year ?? "")}${
 					match.year && match.format ? " · " : ""
 				}${match.format ? escapeHtml(t(formatLabelKey(match.format))) : ""}</span>
             </button>
