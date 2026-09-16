@@ -1679,6 +1679,21 @@ footer {
 	flex-wrap: wrap;
 }
 
+/* The scanner needs room for a camera frame; the confirm dialog does not. */
+.dialog-scanner {
+	max-width: 480px;
+}
+
+.scanner-video {
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+	background: #000;
+	border-radius: 6px;
+	margin-bottom: 0.75rem;
+}
+
 /* ============================================================
    LOGGED-OUT CHROME  (task H)
    Welcome / login / register / about hide the app navbar + footer

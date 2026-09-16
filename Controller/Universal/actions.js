@@ -35,7 +35,12 @@ import {
 	toggleGenreCheckbox,
 	toggleLocationCheckbox,
 } from "../Edit_Music_Details/editMusic.js";
-import { barcodeTyped, lookupPressed, pickMatch } from "../Edit_Music_Details/lookup.js";
+import {
+	barcodeTyped,
+	lookupPressed,
+	pickMatch,
+	scanPressed,
+} from "../Edit_Music_Details/lookup.js";
 import {
 	clearFieldError,
 	confirmLogout,
@@ -319,6 +324,7 @@ const ACTIONS = {
 	// preventDefault inside — it is the small form's submit.
 	"barcode-lookup": (event) => lookupPressed(event),
 	"barcode-pick": (_event, target) => pickMatch(Number(target.dataset.index)),
+	"barcode-scan": () => scanPressed(),
 
 	"music-location": (_event, target) => {
 		toggleLocationCheckbox(target, Number(target.dataset.index));

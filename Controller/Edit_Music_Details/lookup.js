@@ -12,6 +12,7 @@ import { getPref, setPref } from "../../Model/prefs.js";
 import { findByBarcode } from "../../Model/selectors.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { renderFieldError } from "../../View/Universal/fieldError.js";
+import { openScanner } from "../../View/Universal/scanner.js";
 import { appRoot, updateView } from "../../View/Universal/updateView.js";
 
 const LOOKUP_TIMEOUT_MS = 10_000;
@@ -172,4 +173,18 @@ export function barcodeTyped(input) {
 	if (owned) owned.remove();
 	const status = appRoot.querySelector("#music-lookup-status");
 	if (status) status.textContent = "";
+}
+
+// The scanner only delivers the number. Look up is the user's next press, so
+// the consent gate and the owned check sit in one place whatever way the
+// digits arrived. The field is patched in place rather than re-rendered, so
+// the focus the scanner handed back to the Scan button holds.
+export async function scanPressed() {
+	const digits = await openScanner();
+	if (digits === null) return;
+
+	const field = appRoot.querySelector("#music-barcode");
+	if (!field) return;
+	field.value = digits;
+	barcodeTyped(field);
 }

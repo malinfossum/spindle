@@ -1,5 +1,5 @@
 // Boot — the single entry point index.html loads, and the root of the module
-// graph. Everything else in the app is reachable from these four imports.
+// graph. Everything else in the app is reachable from these five imports.
 //
 // Until v0.2 this file was loaded last by the last of 41 <script> tags, and
 // that ordering *was* the dependency graph: every function was a global, and a
@@ -14,12 +14,17 @@
 import { applyLang } from "../../View/Universal/chrome.js";
 import { initActions } from "./actions.js";
 import { initRouter } from "./router.js";
+import { initScanSupport } from "./scanSupport.js";
 import "./storageSync.js";
 import { applyStoredTheme } from "./theme.js";
 
 initActions();
 applyStoredTheme();
 applyLang();
+// Before the first paint, so the add page renders with or without its Scan
+// button rather than gaining one a tick later. getSupportedFormats() resolves
+// in well under a frame; a browser without the API returns at once.
+await initScanSupport();
 // Last, and it is what paints the first frame: the address bar decides which
 // page opens, so this used to be a bare updateView() on whatever currentPage
 // happened to start as.
