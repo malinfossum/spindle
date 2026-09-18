@@ -170,3 +170,15 @@ export function hasSelectedAlbum() {
 	const id = model.viewState.musicInfo.id;
 	return id !== null && getAccessibleAlbums().some((album) => album.id === id);
 }
+
+// The first album already carrying this barcode, or null. Asked before any
+// request goes out, so a sleeve scanned twice is caught locally. exceptId is
+// the album being edited: without it every lookup from the edit page would
+// find the record itself.
+export function findByBarcode(digits, exceptId) {
+	if (digits === "") return null;
+	return (
+		model.data.musicInfo.find((album) => album.barcode === digits && album.id !== exceptId) ??
+		null
+	);
+}

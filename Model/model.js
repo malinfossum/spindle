@@ -11,6 +11,15 @@ export function formatLabelKey(format) {
 	return `music.format${format.charAt(0).toUpperCase()}${format.slice(1)}`;
 }
 
+// A barcode is 8 to 14 ASCII digits (EAN-8 through GTIN-14), or "" for not
+// set. This is the one place the rule is written: the form's input handler,
+// the lookup and the import path in normalizeAlbums() all ask here. Spaces are
+// not stripped — the field strips them before asking, and an imported value
+// with spaces in it is not something Spindle wrote.
+export function normalizeBarcode(value) {
+	return typeof value === "string" && /^[0-9]{8,14}$/.test(value) ? value : "";
+}
+
 // One album record, empty. The form's working copy starts here, emptyList()
 // resets to it between albums, and logout() replaces the last one with it —
 // three places that each used to write the shape out in full, and that had
@@ -30,6 +39,8 @@ export function blankAlbum() {
 		// The cover itself lives in IndexedDB (Model/covers.js); the album
 		// carries the row's id and nothing else.
 		coverId: null,
+		// v0.4. "" means not set; otherwise the digits a lookup or scan used.
+		barcode: "",
 	};
 }
 
@@ -59,6 +70,19 @@ export function blankLibraryView() {
 	};
 }
 
+// The add/edit form's lookup, idle. Transient: resetLookup() in viewState.js
+// puts it back on every navigation, aborting a request in flight first, so a
+// response can never land on a page other than the one that asked for it.
+export function blankLookup() {
+	return {
+		status: "idle", // "idle" | "busy"
+		matches: [], // [{ artist, title, year, format }], distinct
+		owned: null, // an album id when the barcode is already in the library
+		filled: null, // { artist, title } of the last fill, for the status line
+		controller: null, // AbortController of the request in flight
+	};
+}
+
 export const model = {
 	app: {
 		allPages: [
@@ -84,6 +108,14 @@ export const model = {
 
 		currentPage: "welcome",
 		mobileMenuToggle: false,
+
+		// Whether the live scanner can be offered. Set once at boot by
+		// initScanSupport(): true only when getUserMedia exists and
+		// BarcodeDetector reports "ean_13" in getSupportedFormats() — the
+		// constructor alone is present on desktop Chrome with no formats at all.
+		// scanFormats is the supported subset of the formats the scanner wants.
+		canScan: false,
+		scanFormats: [],
 
 		authBusy: false,
 		// In-memory only — NEVER persisted to localStorage.
@@ -130,6 +162,7 @@ export const model = {
 				title: "",
 				location: "",
 				genre: "",
+				barcode: "",
 				form: "",
 			},
 
@@ -155,6 +188,8 @@ export const model = {
 				genreAdd: false,
 				genreRemove: false,
 			},
+
+			lookup: blankLookup(),
 		},
 
 		login: {

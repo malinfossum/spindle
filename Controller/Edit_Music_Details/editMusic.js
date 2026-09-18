@@ -79,6 +79,7 @@ export async function submitChanges(isEdit) {
 			: model.data.genre.length
 				? "error.pickGenre"
 				: "error.addGenreFirst",
+		barcode: "",
 		form: "",
 	};
 

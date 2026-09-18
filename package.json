@@ -11,7 +11,8 @@
 		"preview": "vite preview",
 		"format": "biome format --write",
 		"lint": "biome lint",
-		"check": "biome check"
+		"check": "biome check",
+		"test": "node --test"
 	},
 	"devDependencies": {
 		"vite": "^8.2.2"

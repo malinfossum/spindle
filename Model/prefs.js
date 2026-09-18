@@ -13,11 +13,17 @@ export const PREFS_KEY = "spindle:v1:prefs";
 const PREFS_DEFAULTS = {
 	lang: "no",
 	theme: "dark",
+	// v0.4. Whether a barcode may be sent to musicbrainz.org. Off until the
+	// consent dialog has been answered yes once; the Profile select turns it
+	// back off. Plaintext on purpose: it has to be readable before unlock, and
+	// it says nothing about what the library holds.
+	lookups: "off",
 };
 
 const PREFS_ALLOWED = {
 	lang: ["no", "en"],
 	theme: ["dark", "light"],
+	lookups: ["off", "on"],
 };
 
 // In-memory mirror. Doubles as the fallback when localStorage is unavailable

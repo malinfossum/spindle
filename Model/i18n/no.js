@@ -46,7 +46,7 @@ export const STRINGS_NO = {
 		"Spindle begynte som en lagoppgave på GET Academy. Det er bygget om her som et åpent prosjekt for allmenn bruk.",
 	"about.privacyTitle": "Personvern",
 	"about.privacyBody":
-		"Ingen server, ingen sporing, ingen tredjeparter. Biblioteket ditt krypteres i ro med en nøkkel utledet fra passordet ditt (PBKDF2 + HKDF). Uten passordet kan dataen ikke leses — det finnes ingen passordgjenoppretting, så eksporter jevnlig.",
+		"Ingen server, ingen sporing og ingen tredjeparter — med ett unntak du velger selv: slår du på strekkodeoppslag, sendes det skannede nummeret til musicbrainz.org — ingenting fra biblioteket ditt — og som ved enhver nettforespørsel ser de IP-adressen din. Biblioteket ditt krypteres i ro med en nøkkel utledet fra passordet ditt (PBKDF2 + HKDF). Uten passordet kan dataen ikke leses — det finnes ingen passordgjenoppretting, så eksporter jevnlig.",
 	"about.a11yTitle": "Tilgjengelighet",
 	"about.a11yBody":
 		"Spindle bygges tastatur- og skjermleservennlig: semantisk HTML, synlig fokus, tilstrekkelig kontrast, og respekt for «redusert bevegelse».",
@@ -95,6 +95,19 @@ export const STRINGS_NO = {
 	// Den tomme valgmuligheten. Format er valgfritt, så «ikke satt» er et ekte
 	// svar og trenger egne ord — en blank linje i lista ser ut som en feil.
 	"music.formatUnset": "Ikke satt",
+	// ---- Strekkodeoppslag (v0.4) ------------------------------------------
+	"music.barcode": "Strekkode",
+	"music.barcodePlaceholder": "13 sifre fra omslaget",
+	"music.lookup": "Slå opp",
+	"music.scan": "Skann",
+	"music.lookupNote": "Oppslag går til musicbrainz.org",
+	"music.lookupWorking": "Slår opp…",
+	"music.lookupFilled": "Fylt inn fra MusicBrainz: {artist} – {title}",
+	"music.barcodeOwned": "Allerede i biblioteket: {artist} – {title}",
+	"music.pickMatch": "Hvilken er det?",
+	"scanner.title": "Skann en strekkode",
+	"scanner.hint": "Hold strekkoden innenfor rammen.",
+	"scanner.close": "Lukk",
 	"music.formatCd": "CD",
 	"music.formatLp": "LP",
 	"music.formatCassette": "Kassett",
@@ -157,6 +170,9 @@ export const STRINGS_NO = {
 	"profile.logoutBtn": "Logg ut",
 	"profile.logoutHint":
 		"Låser biblioteket i denne nettleseren. Du trenger passordet for å åpne det igjen.",
+	"profile.lookups": "Strekkodeoppslag",
+	"profile.lookupsOff": "Av",
+	"profile.lookupsOn": "På — sender strekkoden til musicbrainz.org",
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Avbryt",
@@ -171,6 +187,11 @@ export const STRINGS_NO = {
 	"dialog.logoutBody":
 		"Biblioteket låses, og du trenger passordet for å åpne det igjen. Alt du har lagret blir liggende kryptert i denne nettleseren.",
 	"dialog.logoutConfirm": "Logg ut",
+	"dialog.lookupTitle": "Slå opp denne strekkoden?",
+	"dialog.lookupBody":
+		"Spindle sender denne strekkoden til musicbrainz.org for å finne albumet — ingenting fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser MusicBrainz IP-adressen din. Du kan slå av oppslag under Profil.",
+	"dialog.lookupConfirm": "Slå opp",
+	"dialog.lookupCancel": "Ikke nå",
 
 	// ---- Storage banners ----------------------------------------------------
 	"storage.unavailable":
@@ -262,4 +283,9 @@ export const STRINGS_NO = {
 	"error.imageTooLarge": "Bildet er for stort. Maks 12 MB.",
 	"error.imageInvalid": "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.",
 	"error.imageStoreFailed": "Coverbildet kunne ikke lagres. Prøv igjen, eller lagre uten bilde.",
+	"error.barcodeInvalid": "En strekkode er 8 til 14 sifre.",
+	"error.barcodeNoMatch": "Fant ikke noe album for den strekkoden.",
+	"error.lookupBusy": "MusicBrainz er opptatt. Prøv igjen om litt.",
+	"error.lookupFailed": "Oppslaget mislyktes. Sjekk tilkoblingen og prøv igjen.",
+	"error.cameraUnavailable": "Kameraet kunne ikke åpnes.",
 };
