@@ -46,7 +46,7 @@ function buildMusicForm(isEdit) {
 		? t("music.lookupFilled", {
 				artist: escapeHtml(lookup.filled.artist),
 				title: escapeHtml(lookup.filled.title),
-			}) + (lookup.cover ? ` ${t(COVER_KEYS[lookup.cover])}` : "")
+			}) + (lookup.cover ? `. ${t(COVER_KEYS[lookup.cover])}` : "")
 		: "";
 	const lookupStatus = busyLookup
 		? t("music.lookupWorking")
