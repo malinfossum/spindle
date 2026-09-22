@@ -1,6 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";
+import { authNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
 import { icon } from "../Universal/icons.js";
 import { langSwitcher } from "../Universal/langSwitcher.js";
@@ -66,6 +67,8 @@ export function welcomePage() {
             <p class="welcome-tagline">
                 ${t("welcome.tagline")}
             </p>
+
+            ${authNotice()}
 
             <div class="welcome-actions">
                 ${actions}

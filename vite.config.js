@@ -34,7 +34,8 @@ function devPolicy() {
 	}
 
 	const policy = match[1].trim();
-	const marker = "connect-src https://musicbrainz.org";
+	const marker =
+		"connect-src https://musicbrainz.org https://coverartarchive.org https://archive.org https://*.archive.org";
 	if (!policy.includes(marker)) {
 		throw new Error(
 			`public/_headers no longer contains "${marker}" — update the dev replacement in vite.config.js`,

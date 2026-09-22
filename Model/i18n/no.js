@@ -46,7 +46,7 @@ export const STRINGS_NO = {
 		"Spindle begynte som en lagoppgave på GET Academy. Det er bygget om her som et åpent prosjekt for allmenn bruk.",
 	"about.privacyTitle": "Personvern",
 	"about.privacyBody":
-		"Ingen server, ingen sporing og ingen tredjeparter — med ett unntak du velger selv: slår du på strekkodeoppslag, sendes det skannede nummeret til musicbrainz.org — ingenting fra biblioteket ditt — og som ved enhver nettforespørsel ser de IP-adressen din. Biblioteket ditt krypteres i ro med en nøkkel utledet fra passordet ditt (PBKDF2 + HKDF). Uten passordet kan dataen ikke leses — det finnes ingen passordgjenoppretting, så eksporter jevnlig.",
+		"Ingen server, ingen sporing og ingen tredjeparter — med to unntak du velger selv. Slår du på strekkodeoppslag, sendes det skannede nummeret til musicbrainz.org og omslaget til albumet du velger hentes fra coverartarchive.org — ingenting fra biblioteket ditt — og som ved enhver nettforespørsel ser de IP-adressen din. Huker du av «Hold opplåst på denne enheten» ved innlogging, beholdes nøkkelen som åpner biblioteket i denne nettleseren til du logger ut, så alle som holder enheten kan åpne det imens. Biblioteket ditt krypteres i ro med en nøkkel utledet fra passordet ditt (PBKDF2 + HKDF). Uten passordet kan dataen ikke leses — det finnes ingen passordgjenoppretting, så eksporter jevnlig.",
 	"about.a11yTitle": "Tilgjengelighet",
 	"about.a11yBody":
 		"Spindle bygges tastatur- og skjermleservennlig: semantisk HTML, synlig fokus, tilstrekkelig kontrast, og respekt for «redusert bevegelse».",
@@ -71,6 +71,15 @@ export const STRINGS_NO = {
 	"auth.passwordHint":
 		"Minst 8 tegn. Husk passordet — biblioteket kan ikke gjenopprettes uten det.",
 	"auth.strength": "Passordstyrke: {level} av {max}",
+
+	// ---- Hold opplåst (v0.5) ---------------------------------------------
+	"login.stay": "Hold opplåst på denne enheten",
+	"login.stayHelp":
+		"Biblioteket holdes åpent etter en omlasting eller et bytte til en annen app — til du logger ut. Alle som holder enheten kan åpne det imens. Passordet lagres fortsatt aldri.",
+	"login.stayFailed": "Logget inn, men enheten kunne ikke holdes opplåst.",
+	"login.stayClearFailed":
+		"Logget ut, men den lagrede nøkkelen kunne ikke fjernes. Slett nettstedets data i nettleseren for å være sikker.",
+	"login.sessionStale": "Enheten var opplåst, men biblioteket er endret. Logg inn på nytt.",
 
 	// ---- Add / edit album ---------------------------------------------------
 	"music.addTitle": "Legg til album",
@@ -100,10 +109,20 @@ export const STRINGS_NO = {
 	"music.barcodePlaceholder": "13 sifre fra omslaget",
 	"music.lookup": "Slå opp",
 	"music.scan": "Skann",
-	"music.lookupNote": "Oppslag går til musicbrainz.org",
+	"music.lookupNote":
+		"Oppslag går til musicbrainz.org; et omslag kan hentes fra coverartarchive.org",
 	"music.lookupWorking": "Slår opp…",
 	"music.lookupFilled": "Fylt inn fra MusicBrainz: {artist} – {title}",
 	"music.barcodeOwned": "Allerede i biblioteket: {artist} – {title}",
+
+	"lookup.off": "Oppslag er av. Slå dem på under Profil for å fylle inn detaljer fra strekkoden.",
+	"lookup.coverAdded":
+		"Omslag hentet fra Cover Art Archive. Bytt det under hvis det er feil utgave.",
+	"lookup.coverNone": "Arkivet har ikke noe omslag for dette albumet — legg til ett under.",
+	"lookup.coverBusy": "Omslagsarkivet er opptatt — prøv Slå opp igjen om litt.",
+	"lookup.coverFailed":
+		"Omslaget kunne ikke hentes. Detaljene ble fylt inn; legg til et omslag under.",
+
 	"music.pickMatch": "Hvilken er det?",
 	"scanner.title": "Skann en strekkode",
 	"scanner.hint": "Hold strekkoden innenfor rammen.",
@@ -172,7 +191,18 @@ export const STRINGS_NO = {
 		"Låser biblioteket i denne nettleseren. Du trenger passordet for å åpne det igjen.",
 	"profile.lookups": "Strekkodeoppslag",
 	"profile.lookupsOff": "Av",
-	"profile.lookupsOn": "På — sender strekkoden til musicbrainz.org",
+	"profile.lookupsOn":
+		"På — sender strekkoden til musicbrainz.org, omslag fra coverartarchive.org",
+
+	"profile.lookupsUnset": "Ikke valgt ennå",
+	"profile.stay": "Hold opplåst på denne enheten",
+	"profile.stayHelp":
+		"På: biblioteket åpnes uten passord etter en omlasting, til du logger ut — alle som holder enheten kan åpne det. Logg ut er låsen.",
+	"profile.stayOff": "Av",
+	"profile.stayOn": "På — til jeg logger ut",
+	"profile.stayFailed": "Enheten kunne ikke holdes opplåst.",
+	"profile.stayClearFailed":
+		"Den lagrede nøkkelen kunne ikke fjernes. Logg ut og slett nettstedets data i nettleseren for å være sikker.",
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Avbryt",
@@ -189,9 +219,15 @@ export const STRINGS_NO = {
 	"dialog.logoutConfirm": "Logg ut",
 	"dialog.lookupTitle": "Slå opp denne strekkoden?",
 	"dialog.lookupBody":
-		"Spindle sender denne strekkoden til musicbrainz.org for å finne albumet — ingenting fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser MusicBrainz IP-adressen din. Du kan slå av oppslag under Profil.",
+		"Spindle sender denne strekkoden til musicbrainz.org for å finne albumet, og henter omslaget til albumet du velger fra coverartarchive.org — ingenting fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser de nettstedene IP-adressen din. Du kan slå av oppslag under Profil.",
 	"dialog.lookupConfirm": "Slå opp",
 	"dialog.lookupCancel": "Ikke nå",
+
+	"dialog.lookupsAskTitle": "Slå opp strekkoder på nett?",
+	"dialog.lookupsAskBody":
+		"Når du skanner eller skriver inn en strekkode, kan Spindle sende den til musicbrainz.org for å finne albumet og hente omslaget fra coverartarchive.org — ingenting fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser de nettstedene IP-adressen din. Du kan endre dette under Profil.",
+	"dialog.lookupsAskConfirm": "Ja, slå dem opp",
+	"dialog.lookupsAskCancel": "Nei, hold det frakoblet",
 
 	// ---- Storage banners ----------------------------------------------------
 	"storage.unavailable":

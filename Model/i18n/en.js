@@ -40,7 +40,7 @@ export const STRINGS_EN = {
 		"Spindle began as a team assignment at GET Academy. It has been rebuilt here as an open project for general use.",
 	"about.privacyTitle": "Privacy",
 	"about.privacyBody":
-		"No server, no tracking, and no third parties — with one exception you choose: if you turn on barcode look-ups, the scanned number is sent to musicbrainz.org — nothing from your library — and, as with any web request, they see your IP address. Your library is encrypted at rest with a key derived from your password (PBKDF2 + HKDF). Without the password the data cannot be read — there is no password recovery, so export regularly.",
+		"No server, no tracking, and no third parties — with two exceptions you choose. If you turn on barcode look-ups, the scanned number is sent to musicbrainz.org and the cover of the album you pick is fetched from coverartarchive.org — nothing from your library — and, as with any web request, they see your IP address. If you tick “Stay unlocked on this device” when logging in, the key that opens your library is kept in this browser until you log out, so anyone holding the device can open it meanwhile. Your library is encrypted at rest with a key derived from your password (PBKDF2 + HKDF). Without the password the data cannot be read — there is no password recovery, so export regularly.",
 	"about.a11yTitle": "Accessibility",
 	"about.a11yBody":
 		"Spindle is built to work with a keyboard and a screen reader: semantic HTML, visible focus, sufficient contrast, and respect for reduced motion.",
@@ -65,6 +65,15 @@ export const STRINGS_EN = {
 	"auth.passwordHint":
 		"At least 8 characters. Remember it — the library cannot be recovered without it.",
 	"auth.strength": "Password strength: {level} of {max}",
+
+	// ---- Stay unlocked (v0.5) --------------------------------------------
+	"login.stay": "Stay unlocked on this device",
+	"login.stayHelp":
+		"Keeps the library open after a reload or a switch to another app — until you log out. Anyone holding this device can open it meanwhile. The password is still never stored.",
+	"login.stayFailed": "Logged in, but this device could not be kept unlocked.",
+	"login.stayClearFailed":
+		"Logged out, but the stored key could not be removed. Clear this site's data in your browser to be sure.",
+	"login.sessionStale": "This device was unlocked, but the library has changed. Log in again.",
 
 	// ---- Add / edit album ---------------------------------------------------
 	"music.addTitle": "Add album",
@@ -94,10 +103,21 @@ export const STRINGS_EN = {
 	"music.barcodePlaceholder": "13 digits from the sleeve",
 	"music.lookup": "Look up",
 	"music.scan": "Scan",
-	"music.lookupNote": "Look-ups go to musicbrainz.org",
+	"music.lookupNote":
+		"Look-ups go to musicbrainz.org; a cover may be fetched from coverartarchive.org",
 	"music.lookupWorking": "Looking up…",
 	"music.lookupFilled": "Filled from MusicBrainz: {artist} – {title}",
 	"music.barcodeOwned": "Already in your library: {artist} – {title}",
+
+	"lookup.off":
+		"Look-ups are off. Turn them on under Profile to fill in details from the barcode.",
+	"lookup.coverAdded":
+		"Cover added from the Cover Art Archive. Change it below if it is the wrong pressing.",
+	"lookup.coverNone": "No cover in the archive for this album — add one below.",
+	"lookup.coverBusy": "The cover archive is busy — try Look up again in a moment.",
+	"lookup.coverFailed":
+		"The cover could not be fetched. The details were filled in; add a cover below.",
+
 	"music.pickMatch": "Which one is it?",
 	"scanner.title": "Scan a barcode",
 	"scanner.hint": "Hold the barcode inside the frame.",
@@ -166,7 +186,18 @@ export const STRINGS_EN = {
 		"Locks the library in this browser. You need the password to open it again.",
 	"profile.lookups": "Barcode look-ups",
 	"profile.lookupsOff": "Off",
-	"profile.lookupsOn": "On — sends the barcode to musicbrainz.org",
+	"profile.lookupsOn":
+		"On — sends the barcode to musicbrainz.org, covers from coverartarchive.org",
+
+	"profile.lookupsUnset": "Not chosen yet",
+	"profile.stay": "Stay unlocked on this device",
+	"profile.stayHelp":
+		"On: the library opens without the password after a reload, until you log out — anyone holding this device can open it. Log out is the lock.",
+	"profile.stayOff": "Off",
+	"profile.stayOn": "On — until I log out",
+	"profile.stayFailed": "This device could not be kept unlocked.",
+	"profile.stayClearFailed":
+		"The stored key could not be removed. Log out and clear this site's data in your browser to be sure.",
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Cancel",
@@ -183,9 +214,15 @@ export const STRINGS_EN = {
 	"dialog.logoutConfirm": "Log out",
 	"dialog.lookupTitle": "Look up this barcode?",
 	"dialog.lookupBody":
-		"Spindle will send this barcode to musicbrainz.org to find the album — nothing from your library, and never on its own. As with any web request, MusicBrainz sees your IP address. You can turn look-ups off under Profile.",
+		"Spindle will send this barcode to musicbrainz.org to find the album, and fetch the cover of the album you pick from coverartarchive.org — nothing from your library, and never on its own. As with any web request, those sites see your IP address. You can turn look-ups off under Profile.",
 	"dialog.lookupConfirm": "Look up",
 	"dialog.lookupCancel": "Not now",
+
+	"dialog.lookupsAskTitle": "Look up barcodes online?",
+	"dialog.lookupsAskBody":
+		"When you scan or type a barcode, Spindle can send it to musicbrainz.org to find the album and fetch its cover from coverartarchive.org — nothing from your library, and never on its own. As with any web request, those sites see your IP address. You can change this under Profile.",
+	"dialog.lookupsAskConfirm": "Yes, look them up",
+	"dialog.lookupsAskCancel": "No, keep it offline",
 
 	// ---- Storage banners ----------------------------------------------------
 	"storage.unavailable":

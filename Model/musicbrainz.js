@@ -1,4 +1,4 @@
-// The one file that knows the host (v0.4).
+// The one file that knows the hosts (v0.4, v0.5).
 //
 // lookupBarcode() is a pure function of the digits: it builds the URL,
 // fetches, and turns the response into matches. No DOM, no model writes —
@@ -11,6 +11,9 @@
 // 1000–2999 is dropped, and a medium format that does not map onto
 // ALBUM_FORMATS becomes "other". Artist and title are plain strings that
 // every template escapes on render.
+// The cover (v0.5) is the second: a release-group id is used only when it is
+// a UUID, and the image is trusted by its bytes, checked by the Controller
+// with the same sniff a chosen file gets.
 //
 // Verified 2026-09-15: the endpoint answers with Access-Control-Allow-Origin:
 // *, needs no key, and returns 503 when busy as a matter of course. No custom
@@ -20,6 +23,27 @@
 import { ALBUM_FORMATS, normalizeBarcode } from "./model.js";
 
 const HOST = "https://musicbrainz.org";
+// The same project, one more host (v0.5). front-500 caps the download at a
+// 500 px edge, well under downscale's 700, so a slow connection never pulls a
+// 3000 px scan. The archive answers with a redirect to archive.org and from
+// there to a *.archive.org mirror — connect-src in public/_headers names all
+// three, and the probe that established that is Task 1 of docs/v0.5-tasks.md.
+const COVER_HOST = "https://coverartarchive.org";
+export const COVER_MAX_BYTES = 2 * 1024 * 1024;
+
+// A release-group id goes into a URL path, and it comes from a third party:
+// only a lower-case UUID is allowed to. Missing and malformed are the same
+// case — no request. Upper case is rejected on purpose: MusicBrainz never
+// writes one, so an upper-case id is not a MusicBrainz id.
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+export function isReleaseGroupId(value) {
+	return typeof value === "string" && UUID.test(value);
+}
+
+export function COVER_URL(releaseGroupId) {
+	return `${COVER_HOST}/release-group/${releaseGroupId}/front-500`;
+}
 
 // limit=100 is the API's maximum. One barcode is known to carry 25 releases,
 // and the whole 25-release body is 34 KB, so asking for everything costs little
@@ -56,6 +80,14 @@ function formatOf(release) {
 	return "";
 }
 
+// The release group's id when it is a UUID, "" otherwise — never a value that
+// could be spliced into a path.
+function releaseGroupOf(release) {
+	const group = release["release-group"];
+	const id = group && typeof group === "object" ? group.id : undefined;
+	return isReleaseGroupId(id) ? id : "";
+}
+
 // The credit is a list of {name, joinphrase, artist:{name}} parts; the
 // display string is every name followed by its join phrase, in order.
 function artistOf(release) {
@@ -75,7 +107,8 @@ function artistOf(release) {
 // One match per distinct lower-cased artist + title, in order of first
 // appearance, with the earliest year seen and the first format seen. Several
 // pressings of one album collapse into the one entry the person is looking
-// for; a bootleg with its own title stays its own entry.
+// for; a bootleg with its own title stays its own entry. The release group of
+// the first release seen is what the cover is fetched by.
 export function collapseReleases(releases) {
 	const byKey = new Map();
 
@@ -91,7 +124,15 @@ export function collapseReleases(releases) {
 		const seen = byKey.get(key);
 
 		if (!seen) {
-			byKey.set(key, { artist, title: release.title, year, format });
+			byKey.set(key, {
+				artist,
+				title: release.title,
+				year,
+				format,
+				// Of the first release in the group (v0.5): every pressing of one
+				// album shares a release group, so the first one is as good as any.
+				releaseGroupId: releaseGroupOf(release),
+			});
 			continue;
 		}
 		if (year !== null && (seen.year === null || year < seen.year)) seen.year = year;
@@ -127,4 +168,29 @@ export async function lookupBarcode(digits, signal) {
 	}
 
 	return { status: "ok", matches: collapseReleases(body.releases) };
+}
+
+// The front cover of a release group, as a blob, or why there is none. The
+// caller sniffs the bytes and decodes them: this file has no DOM and does not
+// import the View's image helpers. A rejection is fetch's own — aborted,
+// timed out, offline — and is left to the caller, as lookupBarcode() does.
+export async function fetchCover(releaseGroupId, signal) {
+	if (!isReleaseGroupId(releaseGroupId)) return { status: "none" };
+
+	const response = await fetch(COVER_URL(releaseGroupId), { signal });
+
+	if (response.status === 404) return { status: "none" };
+	if (response.status === 503 || response.status === 429) return { status: "busy" };
+	if (!response.ok) return { status: "failed" };
+
+	// front-500 is a request, not a guarantee. The header is checked so an
+	// oversized file is not downloaded; the blob is checked because the header
+	// can be absent or wrong across a redirect.
+	const declared = Number(response.headers.get("content-length"));
+	if (declared > COVER_MAX_BYTES) return { status: "failed" };
+
+	const blob = await response.blob();
+	if (blob.size > COVER_MAX_BYTES) return { status: "failed" };
+
+	return { status: "ok", blob };
 }

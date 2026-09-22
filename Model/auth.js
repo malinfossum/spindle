@@ -20,6 +20,7 @@
 // platform's audited primitives. The only hand-written security helper is the
 // constant-time comparison used for the HMAC password check.
 
+import { run, SESSION_STORE, withStore } from "./db.js";
 import { model } from "./model.js";
 
 const PBKDF2_ITERATIONS = 600_000;
@@ -200,4 +201,40 @@ export function zeroKeys() {
 	model.app.crypto.kdfSaltB64 = null;
 	model.app.crypto.verifyHmacB64 = null;
 	model.app.crypto.unlocked = false;
+}
+
+// Stay unlocked on this device (v0.5).
+//
+// The record is the non-extractable AES-GCM key from deriveKeys() and nothing
+// else: a CryptoKey is structured-cloneable, so IndexedDB can hold it, and
+// non-extractable means script can decrypt with it but never read its bytes.
+// Not the verify key (nothing to verify at boot), not the salt (it is in the
+// envelope), not the username, not the password. The trade is stated in
+// docs/v0.5-plan.md § 5: anyone holding the unlocked device can open the
+// library until log out. Log out is the lock.
+//
+// Every one of these can reject — private mode, storage disabled, a WebKit
+// that will not clone a CryptoKey — and the caller says so to the person;
+// a checked box that quietly did nothing is the lie the standing rule exists
+// to prevent. Called from login() (store), boot (read), logout() and the
+// Profile toggle (clear). Restore backup clears through logout(). A change-
+// password or delete-library feature, if one is ever built, must call
+// clearSessionKey() too — neither exists today.
+const SESSION_ID = "session";
+
+export async function storeSessionKey(key) {
+	await withStore(SESSION_STORE, "readwrite", (store) =>
+		run(store, (s) => s.put({ id: SESSION_ID, key })),
+	);
+}
+
+export async function readSessionKey() {
+	const row = await withStore(SESSION_STORE, "readonly", (store) =>
+		run(store, (s) => s.get(SESSION_ID)),
+	);
+	return row?.key instanceof CryptoKey ? row.key : null;
+}
+
+export async function clearSessionKey() {
+	await withStore(SESSION_STORE, "readwrite", (store) => run(store, (s) => s.delete(SESSION_ID)));
 }

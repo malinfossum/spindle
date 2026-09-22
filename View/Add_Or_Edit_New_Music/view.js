@@ -33,14 +33,26 @@ function buildMusicForm(isEdit) {
 
 	// What the status line says. role="status" is what tells a screen-reader
 	// user that three fields just changed — aria-busy on a button says nothing.
+	// The cover result (v0.5) is appended to the fill sentence rather than
+	// written to a second region a screen reader may talk over: one line, one
+	// announcement, and the second write carries the whole sentence.
+	const COVER_KEYS = {
+		added: "lookup.coverAdded",
+		none: "lookup.coverNone",
+		busy: "lookup.coverBusy",
+		failed: "lookup.coverFailed",
+	};
+	const filledLine = lookup.filled
+		? t("music.lookupFilled", {
+				artist: escapeHtml(lookup.filled.artist),
+				title: escapeHtml(lookup.filled.title),
+			}) + (lookup.cover ? ` ${t(COVER_KEYS[lookup.cover])}` : "")
+		: "";
 	const lookupStatus = busyLookup
 		? t("music.lookupWorking")
-		: lookup.filled
-			? t("music.lookupFilled", {
-					artist: escapeHtml(lookup.filled.artist),
-					title: escapeHtml(lookup.filled.title),
-				})
-			: "";
+		: lookup.status === "off"
+			? t("lookup.off")
+			: filledLine;
 
 	const matchButtons = lookup.matches
 		.map(

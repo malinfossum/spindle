@@ -13,11 +13,12 @@
 // The add/edit form's four chip panels. A lookup rather than reading the model
 // key straight out of the attribute, so markup can only reach these four flags.
 
+import { clearSessionKey, storeSessionKey } from "../../Model/auth.js";
 import { getLang, setLang } from "../../Model/i18n/i18n.js";
 import { ALBUM_FORMATS, model } from "../../Model/model.js";
 import { setPref } from "../../Model/prefs.js";
 import { getSuggestionList } from "../../Model/selectors.js";
-import { recordSearch } from "../../Model/viewState.js";
+import { recordSearch, setAuthMessage } from "../../Model/viewState.js";
 import { renderStrength } from "../../View/Register/view.js";
 import { bindActions } from "../../View/Universal/bindActions.js";
 import { applyLang } from "../../View/Universal/chrome.js";
@@ -159,6 +160,24 @@ const ACTIONS = {
 		if (select) select.focus();
 	},
 
+	// The stay toggle (v0.5). On stores the key already in memory — same key,
+	// no password prompt; off clears the store. Either can be refused, and a
+	// refusal is said on the page rather than shown as a select that moved.
+	"set-stay": async (_event, target) => {
+		const on = target.value === "on";
+		try {
+			if (on) await storeSessionKey(model.app.crypto.encryptKey);
+			else await clearSessionKey();
+			model.app.stayUnlocked = on;
+		} catch (err) {
+			console.warn("[session] could not update the store:", err);
+			setAuthMessage(on ? "profile.stayFailed" : "profile.stayClearFailed");
+		}
+		updateView();
+		const select = appRoot.querySelector("#profile-stay");
+		if (select) select.focus();
+	},
+
 	// The search box lives in the static navbar, outside the #app element
 	// updateView() replaces — so a re-render here cannot drop its focus, and the
 	// results page can filter as you type. The suggestion list is patched
@@ -275,6 +294,9 @@ const ACTIONS = {
 	"login-password": (_event, target) => {
 		model.viewState.login.password = target.value;
 		clearFieldError(target, "login", "password");
+	},
+	"login-stay": (_event, target) => {
+		model.viewState.login.stay = target.checked;
 	},
 	"register-username": (_event, target) => {
 		model.viewState.createProfile.username = target.value;

@@ -1,5 +1,6 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { authNotice } from "../Universal/authNotice.js";
 import { escapeHtml } from "../Universal/escape.js";
 
 export function loginPage() {
@@ -11,9 +12,15 @@ export function loginPage() {
         <div class="auth-card">
             <div class="auth-title">${t("auth.unlockTitle")}</div>
 
+            ${authNotice()}
             ${
-				model.app.authMessage
-					? `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`
+				model.app.sessionStale
+					? `<p class="auth-error" role="alert">${escapeHtml(t("login.sessionStale"))}</p>`
+					: ""
+			}
+            ${
+				model.app.sessionClearFailed
+					? `<p class="auth-error" role="alert">${escapeHtml(t("login.stayClearFailed"))}</p>`
 					: ""
 			}
 
@@ -31,6 +38,16 @@ export function loginPage() {
                            data-action-input="login-password">
                     <span class="field-error" id="login-password-error">${escapeHtml(t(errors.password))}</span>
                 </div>
+
+                <label class="checkbox-row" for="login-stay">
+                    <input type="checkbox"
+                           id="login-stay"
+                           ${model.viewState.login.stay ? "checked" : ""}
+                           aria-describedby="login-stay-help"
+                           data-action-change="login-stay">
+                    ${t("login.stay")}
+                </label>
+                <p class="form-hint" id="login-stay-help">${t("login.stayHelp")}</p>
 
                 <button class="btn btn-accent btn-full"
                         type="submit"

@@ -75,11 +75,12 @@ export function blankLibraryView() {
 // response can never land on a page other than the one that asked for it.
 export function blankLookup() {
 	return {
-		status: "idle", // "idle" | "busy"
-		matches: [], // [{ artist, title, year, format }], distinct
+		status: "idle", // "idle" | "busy" | "off" — off: look-ups are off, the line says where to turn them on
+		matches: [], // [{ artist, title, year, format, releaseGroupId }], distinct
 		owned: null, // an album id when the barcode is already in the library
 		filled: null, // { artist, title } of the last fill, for the status line
-		controller: null, // AbortController of the request in flight
+		cover: null, // null | "added" | "none" | "busy" | "failed" — what the cover request came to (v0.5)
+		controller: null, // AbortController of the request in flight — the lookup, then the cover
 	};
 }
 
@@ -126,6 +127,22 @@ export const model = {
 			kdfSaltB64: null,
 			verifyHmacB64: null,
 		},
+
+		// Mirrors the session store (v0.5): true while a key is kept in
+		// IndexedDB for "Stay unlocked on this device". Set by boot from the
+		// store before the first render and by every write to it after — views
+		// render synchronously and IndexedDB does not, so it is mirrored, not
+		// read at render.
+		stayUnlocked: false,
+		// A stored key was found at boot but did not open the envelope — a
+		// backup restored from another device, a corrupt store. Rendered on the
+		// Login page until the next login attempt.
+		sessionStale: false,
+		// The clear that follows a stale key (above) or a gone library
+		// refused — the device is still unlocked to anyone holding it, and
+		// that must never be silent. Rendered on the Login page until the
+		// next login attempt.
+		sessionClearFailed: false,
 
 		authMessage: "",
 
@@ -194,6 +211,9 @@ export const model = {
 
 		login: {
 			password: "",
+			// The checkbox. Unchecked every time the form renders: the app does
+			// not remember the choice, the stored key is the choice.
+			stay: false,
 			errors: { password: "" },
 		},
 

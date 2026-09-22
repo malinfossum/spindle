@@ -23,7 +23,7 @@ Spindle needs a secure context for encryption. Opening `index.html` directly via
 - Search by artist, title, or genre
 - View and edit album details: notes, release year, genre, and shelf location
 - Add new albums with a cover image upload
-- Barcode look-up on MusicBrainz — opt-in, sends only the barcode
+- Barcode look-up on MusicBrainz, with the album cover from the Cover Art Archive — opt-in, sends only the barcode
 - Wishlist for albums you don't own yet
 - A local profile with custom genres and locations
 - Encrypted backup and restore, plus an opt-in readable export
@@ -47,7 +47,7 @@ Spindle needs a secure context for encryption. Opening `index.html` directly via
 
 ## Privacy
 
-Your library lives on your device. Spindle does not send any data to a server, does not load third-party scripts, and does not track you. The one exception: if you turn on barcode look-ups, the scanned number is sent to musicbrainz.org — nothing from your library — and they see your IP address as with any web request.
+Your library lives on your device. Spindle does not send any data to a server, does not load third-party scripts, and does not track you. Two exceptions, both opt-in: if you turn on barcode look-ups, the scanned number is sent to musicbrainz.org and the cover of the album you pick is fetched from coverartarchive.org — nothing from your library — and they see your IP address as with any web request; and if you tick "Stay unlocked on this device" when logging in, the key that opens your library is kept in this browser until you log out, so anyone holding the device can open it meanwhile.
 
 Creating a library creates a profile in this browser, with a password. That password is never sent anywhere; it derives the key that encrypts your library at rest, using PBKDF2 (600,000 iterations, SHA-256) and HKDF. Without your password the data cannot be read, and there is no password reset. Export a backup regularly: **Profile → Backup**, or the backup panel on the welcome screen if you are locked out. The encrypted backup opens only with the password it was created with.
 
