@@ -61,7 +61,7 @@ export function focusFirstInvalid() {
 // does not open the envelope; the caller decides what that means. verifyKey
 // is null on the stored-key path — nothing reads it after login, the HMAC in
 // the envelope is what persistState() writes back.
-export async function unlockWith(encryptKey, envelope, verifyKey = null) {
+async function unlockWith(encryptKey, envelope, verifyKey = null) {
 	const plaintext = await decryptLibrary(
 		encryptKey,
 		base64ToBytes(envelope.iv),

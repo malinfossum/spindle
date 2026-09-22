@@ -17,7 +17,7 @@ export const SESSION_STORE = "session";
 
 let dbPromise = null;
 
-export function openDb() {
+function openDb() {
 	if (dbPromise) return dbPromise;
 
 	dbPromise = new Promise((resolve, reject) => {
