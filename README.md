@@ -4,7 +4,7 @@ A local music library for organizing physical LP and CD collections, built in va
 
 **Live:** [spindle-music.pages.dev](https://spindle-music.pages.dev)
 
-**Status:** v0.1.0 is the last tagged release. The v0.2 work has landed on `main`: a build step, hash routing, and real security headers on the deployed site.
+**Status:** v0.2.0 is the current release: a build step, hash routing, barcode look-up, and real security headers on the deployed site.
 
 ## Run locally
 

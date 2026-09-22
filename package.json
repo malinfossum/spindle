@@ -1,6 +1,6 @@
 {
 	"name": "spindle",
-	"version": "0.2.0-dev",
+	"version": "0.2.0",
 	"private": true,
 	"type": "module",
 	"description": "A private, offline music library that never leaves your device.",
