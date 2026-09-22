@@ -1511,6 +1511,31 @@ footer {
 	flex-wrap: wrap;
 }
 
+/* The lookups and stay rows pair a <label> with a <select>. Two problems,
+   phone width first: flex-wrap packs a line by each item's unshrunk content
+   size, so the label's full text (e.g. "Hold opplåst på denne enheten") is
+   measured at its unwrapped width for that decision even though it can
+   shrink — a fixed-width select still gets pushed to its own line because
+   the pair's unshrunk sizes together outrun 375px. flex-basis: 0 on the
+   label takes it out of that math and lets it wrap inside whatever space
+   the fixed-width select leaves, so the two stay on one line down to the
+   smallest width this app supports. Second, align-items: center on the row
+   leaves an 18px label and a 44px select sharing only a midpoint, 13px off
+   at the bottom — flex-end on both closes that gap instead. Wider than
+   phone, there is room for the select to show more of the option text, so
+   768px+ below restores its own width. */
+.profile-settings-row > label.profile-settings-label {
+	flex: 1 1 0%;
+	min-width: 0;
+	align-self: flex-end;
+}
+
+.profile-settings-row > select.form-input {
+	flex: 0 0 110px;
+	width: 110px;
+	align-self: flex-end;
+}
+
 .profile-settings-label,
 .backup-label {
 	font-size: 0.85rem;
@@ -1954,6 +1979,21 @@ body.chrome-hidden > footer {
 
 /* ── Welcome refinements: tablet & desktop (≥ 768px) ── */
 @media (min-width: 768px) {
+	/* Room enough here that the phone-width fixed 110px would just waste
+	   space — back to content width, capped by the select's own inline
+	   max-width: 320px, so more of a long option's text shows. This has to
+	   come after the unscoped rule above in source order: the two share a
+	   specificity, and an earlier @media block of the same query would lose
+	   the tie to a later plain rule regardless of which one matches. */
+	.profile-settings-row > label.profile-settings-label {
+		flex: 0 1 auto;
+	}
+
+	.profile-settings-row > select.form-input {
+		flex: 0 1 auto;
+		width: 100%;
+	}
+
 	.welcome {
 		min-height: calc(100vh - 3.5rem);
 		min-height: calc(100dvh - 3.5rem);
