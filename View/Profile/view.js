@@ -54,7 +54,7 @@ export function profilePage() {
                 <span class="profile-settings-label" id="profile-language-label">${t("profile.language")}</span>
                 ${langSwitcher("", "profile-language-label")}
             </div>
-            <div class="profile-settings-row">
+            <div class="profile-settings-row profile-settings-row-stack">
                 <label class="profile-settings-label" for="profile-lookups">${t("profile.lookups")}</label>
                 <select class="form-input" id="profile-lookups"
                         style="max-width: 320px"
@@ -68,7 +68,7 @@ export function profilePage() {
                     <option value="on" ${getPref("lookups") === "on" ? "selected" : ""}>${t("profile.lookupsOn")}</option>
                 </select>
             </div>
-            <div class="profile-settings-row">
+            <div class="profile-settings-row profile-settings-row-stack">
                 <label class="profile-settings-label" for="profile-stay">${t("profile.stay")}</label>
                 <select class="form-input" id="profile-stay"
                         style="max-width: 320px"

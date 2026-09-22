@@ -1511,29 +1511,25 @@ footer {
 	flex-wrap: wrap;
 }
 
-/* The lookups and stay rows pair a <label> with a <select>. Two problems,
-   phone width first: flex-wrap packs a line by each item's unshrunk content
-   size, so the label's full text (e.g. "Hold opplåst på denne enheten") is
-   measured at its unwrapped width for that decision even though it can
-   shrink — a fixed-width select still gets pushed to its own line because
-   the pair's unshrunk sizes together outrun 375px. flex-basis: 0 on the
-   label takes it out of that math and lets it wrap inside whatever space
-   the fixed-width select leaves, so the two stay on one line down to the
-   smallest width this app supports. Second, align-items: center on the row
-   leaves an 18px label and a 44px select sharing only a midpoint, 13px off
-   at the bottom — flex-end on both closes that gap instead. Wider than
-   phone, there is room for the select to show more of the option text, so
-   768px+ below restores its own width. */
-.profile-settings-row > label.profile-settings-label {
-	flex: 1 1 0%;
-	min-width: 0;
-	align-self: flex-end;
+/* The lookups and stay rows pair a <label> with a <select> whose "on" option
+   names the hosts it talks to (profile.lookupsOn runs 76 characters) — the
+   one text in this panel a person most needs to actually read. Squeezing
+   both onto one phone-width line, however the select is sized, only leaves
+   room to show a clipped fragment of that sentence: a native <select> box
+   truncates internally rather than reporting overflow, so scrollWidth stays
+   equal to clientWidth even while "På — sender strekkoden..." renders as
+   "På — senc". Stacking removes the width fight instead of narrowing it:
+   label on its own line, select full width below at whatever size it needs
+   to show its own text. 768px+ below returns to one row, label and select
+   sharing a bottom edge, once there is width to spare. */
+.profile-settings-row-stack {
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.3rem;
 }
 
-.profile-settings-row > select.form-input {
-	flex: 0 0 110px;
-	width: 110px;
-	align-self: flex-end;
+.profile-settings-row-stack > select.form-input {
+	width: 100%;
 }
 
 .profile-settings-label,
@@ -1979,19 +1975,21 @@ body.chrome-hidden > footer {
 
 /* ── Welcome refinements: tablet & desktop (≥ 768px) ── */
 @media (min-width: 768px) {
-	/* Room enough here that the phone-width fixed 110px would just waste
-	   space — back to content width, capped by the select's own inline
-	   max-width: 320px, so more of a long option's text shows. This has to
-	   come after the unscoped rule above in source order: the two share a
-	   specificity, and an earlier @media block of the same query would lose
-	   the tie to a later plain rule regardless of which one matches. */
-	.profile-settings-row > label.profile-settings-label {
-		flex: 0 1 auto;
+	/* Room enough here for the label and select to share a row again: back to
+	   flex-direction: row, and align-items: flex-end (rather than the row's
+	   own center) is what actually closes the gap an 18px label and a 44px
+	   select otherwise leave at the bottom when they're side by side. The
+	   select drops the phone-width 100% for its own content width, still
+	   capped by its inline style="max-width: 320px", so more of a long
+	   option's text shows. */
+	.profile-settings-row-stack {
+		flex-direction: row;
+		align-items: flex-end;
+		gap: 1rem;
 	}
 
-	.profile-settings-row > select.form-input {
-		flex: 0 1 auto;
-		width: 100%;
+	.profile-settings-row-stack > select.form-input {
+		width: auto;
 	}
 
 	.welcome {
