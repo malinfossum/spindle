@@ -68,9 +68,23 @@ export function navigate(page) {
 
 // Called once, from boot.js, in place of the bare updateView() that used to end
 // it. Registers the listener first so nothing can be missed, then renders
-// whatever the URL already says — that single call is what makes a deep link work.
-export function initRouter() {
+// whatever the URL already says — that single call is what makes a deep link
+// work. startPage (v0.5) is where a stored key or its failure lands the app:
+// it replaces the fragment only when the URL names an entry page — welcome,
+// login, register, or nothing — or a page the visitor cannot see right now;
+// a deep link to a page they can see is kept.
+const ENTRY_PAGES = ["welcome", "login", "register"];
+
+export function initRouter(startPage = null) {
 	window.addEventListener("hashchange", onHashChange);
+
+	if (startPage) {
+		const current = readPage();
+		const entry = ENTRY_PAGES.includes(current);
+		const bounced = !isLoggedIn() && !model.app.publicPages.includes(current);
+		if (entry || bounced) replaceFragment(startPage);
+	}
+
 	resolveRoute(readPage());
 }
 

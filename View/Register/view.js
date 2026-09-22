@@ -1,6 +1,7 @@
 import { PASSWORD_STRENGTH_MAX, passwordStrength } from "../../Model/auth.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { authNotice } from "../Universal/authNotice.js";
 import { escapeHtml } from "../Universal/escape.js";
 
 // The strength meter is rendered twice: once as part of the page, and once per
@@ -27,11 +28,7 @@ export function registerPage() {
         <div class="auth-card">
             <div class="auth-title">${t("auth.createTitle")}</div>
 
-            ${
-				model.app.authMessage
-					? `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`
-					: ""
-			}
+            ${authNotice()}
 
             <form data-action-submit="register">
                 <div class="form-row">

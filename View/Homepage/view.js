@@ -12,6 +12,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { getAccessibleAlbums, getRecentAlbums } from "../../Model/selectors.js";
 import { createAlbumCard } from "../Universal/albumCard.js";
+import { authNotice } from "../Universal/authNotice.js";
 import { icon } from "../Universal/icons.js";
 
 export function homeView() {
@@ -28,6 +29,7 @@ export function homeView() {
 
 	if (total === 0) {
 		return /*HTML*/ `
+        ${authNotice()}
         ${capture}
 
         <div class="empty-state">
@@ -37,6 +39,7 @@ export function homeView() {
 	}
 
 	return /*HTML*/ `
+    ${authNotice()}
     ${capture}
 
     <div class="page-header">

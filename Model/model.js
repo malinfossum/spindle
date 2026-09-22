@@ -128,6 +128,17 @@ export const model = {
 			verifyHmacB64: null,
 		},
 
+		// Mirrors the session store (v0.5): true while a key is kept in
+		// IndexedDB for "Stay unlocked on this device". Set by boot from the
+		// store before the first render and by every write to it after — views
+		// render synchronously and IndexedDB does not, so it is mirrored, not
+		// read at render.
+		stayUnlocked: false,
+		// A stored key was found at boot but did not open the envelope — a
+		// backup restored from another device, a corrupt store. Rendered on the
+		// Login page until the next login attempt.
+		sessionStale: false,
+
 		authMessage: "",
 
 		// Result of the last export / import, shown in the backup block on the
@@ -195,6 +206,9 @@ export const model = {
 
 		login: {
 			password: "",
+			// The checkbox. Unchecked every time the form renders: the app does
+			// not remember the choice, the stored key is the choice.
+			stay: false,
 			errors: { password: "" },
 		},
 

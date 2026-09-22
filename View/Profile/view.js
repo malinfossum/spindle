@@ -3,6 +3,7 @@ import { model } from "../../Model/model.js";
 import { formatBytes } from "../../Model/persistence.js";
 import { getPref } from "../../Model/prefs.js";
 import { getAccessibleAlbums, getLoggedInUser } from "../../Model/selectors.js";
+import { authNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
@@ -67,6 +68,17 @@ export function profilePage() {
                     <option value="on" ${getPref("lookups") === "on" ? "selected" : ""}>${t("profile.lookupsOn")}</option>
                 </select>
             </div>
+            <div class="profile-settings-row">
+                <label class="profile-settings-label" for="profile-stay">${t("profile.stay")}</label>
+                <select class="form-input" id="profile-stay"
+                        style="max-width: 320px"
+                        aria-describedby="profile-stay-help"
+                        data-action-change="set-stay">
+                    <option value="off" ${model.app.stayUnlocked ? "" : "selected"}>${t("profile.stayOff")}</option>
+                    <option value="on" ${model.app.stayUnlocked ? "selected" : ""}>${t("profile.stayOn")}</option>
+                </select>
+            </div>
+            <p class="form-hint" id="profile-stay-help">${t("profile.stayHelp")}</p>
 
             <h2 class="profile-settings-heading">${t("backup.title")}</h2>
             ${backupSection({ idPrefix: "profile", allowPlaintext: true })}
@@ -82,6 +94,8 @@ export function profilePage() {
     <div class="page-header">
         <span class="page-title">${t("profile.title", { username: escapeHtml(user.username) })}</span>
     </div>
+
+    ${authNotice()}
 
     <p class="search-result-count">${t("profile.myAlbums", { count: albumCount })}</p>
 
