@@ -37,6 +37,7 @@ import { hasSelectedAlbum, isLoggedIn } from "../../Model/selectors.js";
 import { resetTransientViewState } from "../../Model/viewState.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { initNewAlbum } from "../Edit_Music_Details/editMusic.js";
+import { closeMobileMenu } from "./navbarMobile.js";
 
 // What an empty fragment means. `/` with no `#` is the same page the model's
 // currentPage starts on, so the two can't disagree about where the app opens.
@@ -182,7 +183,17 @@ function replaceFragment(page) {
 // this above one of them and the sample records the fragment the visitor asked
 // for rather than the one they got; the queued echo then no longer matches, and
 // a redirect renders twice.
+// A different fragment is a different page, and a page starts at the top
+// (v0.5). The full hash, not the route name: two albums under the same
+// route are two pages. A same-hash re-render — a library filter, a form
+// error, deleteAlbum() re-entering homePage — keeps its scroll. Instant,
+// not smooth, so prefers-reduced-motion has nothing to object to. Scroll
+// is a View concern the Controller triggers, not state, so nothing here
+// touches the model.
 function renderRoute() {
+	const changed = window.location.hash !== lastResolvedHash;
 	lastResolvedHash = window.location.hash;
+	closeMobileMenu();
 	updateView();
+	if (changed) window.scrollTo(0, 0);
 }
