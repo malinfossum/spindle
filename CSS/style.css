@@ -818,6 +818,12 @@ footer {
 	padding: 1.5rem;
 }
 
+/* The scan button leads the form: full width on a phone, where it is the
+   control you hit one-handed with a sleeve in the other. */
+.form-scan {
+	margin-bottom: 1.25rem;
+}
+
 .form-top {
 	display: flex;
 	flex-direction: column;
@@ -1402,6 +1408,12 @@ footer {
 	.detail-top,
 	.form-top {
 		flex-direction: row;
+	}
+
+	/* Past a phone the card is wide enough that a full-width button reads as a
+	   banner, so it shrinks back to its label. */
+	.form-scan {
+		width: auto;
 	}
 
 	.detail-cover {

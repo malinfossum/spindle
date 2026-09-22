@@ -102,14 +102,6 @@ function buildMusicForm(isEdit) {
                 <button class="btn" id="music-lookup-btn"
                         aria-busy="${busyLookup}"
                         ${busyLookup ? "disabled" : ""}>${t("music.lookup")}</button>
-                ${
-					// Everyone without a working detector sees only the
-					// typed field — no dead button.
-					model.app.canScan
-						? /*HTML*/ `<button class="btn" type="button" id="music-scan-btn"
-                        data-action="barcode-scan">${t("music.scan")}</button>`
-						: ""
-				}
             </form>
             </div>
             <span class="field-error" id="music-barcode-error">${escapeHtml(t(errors.barcode))}</span>
@@ -201,6 +193,22 @@ function buildMusicForm(isEdit) {
 
     <div class="form-card">
         ${formError}
+        ${
+			// The disc is already in your other hand, so scanning is the first move
+			// and it fills the fields underneath. aria-describedby points at the
+			// look-up note further down rather than repeating it: the line that says
+			// where a request goes has to travel with the button that sends one.
+			// Everyone without a working detector sees only the typed field below
+			// — no dead button.
+			model.app.canScan
+				? /*HTML*/ `<button class="btn btn-accent btn-full form-scan"
+                        type="button"
+                        id="music-scan-btn"
+                        data-action="barcode-scan"${
+							lookupsOn ? ' aria-describedby="music-lookup-note"' : ""
+						}>${t("music.scan")}</button>`
+				: ""
+		}
 
         <div class="form-top">
             <!-- The file input is still a real, focusable <input type="file"> —

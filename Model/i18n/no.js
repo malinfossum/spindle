@@ -108,7 +108,7 @@ export const STRINGS_NO = {
 	"music.barcode": "Strekkode",
 	"music.barcodePlaceholder": "13 sifre fra omslaget",
 	"music.lookup": "Slå opp",
-	"music.scan": "Skann",
+	"music.scan": "Skann strekkode",
 	"music.lookupNote":
 		"Oppslag går til musicbrainz.org; et omslag kan hentes fra coverartarchive.org",
 	"music.lookupWorking": "Slår opp…",
