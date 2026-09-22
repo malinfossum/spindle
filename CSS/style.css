@@ -29,6 +29,11 @@
 	/* Same reason as --error-text: no single green clears AA on both the dark
 	   surface and the light one, so this value flips with the theme too. */
 	--success-text: #7ddba0;
+	/* .auth-error sits on a translucent red wash, not a flat surface, so it
+	   needs its own token rather than --error-text: 1.46:1 on the composited
+	   light wash (red at 10% over --surface) with the old flat #ffb4ab, well
+	   under the 4.5:1 floor. This dark value is that same #ffb4ab, unchanged. */
+	--auth-error-text: #ffb4ab;
 
 	/* Welcome landing: the frosted card sits over the vinyl, so its background is
 	   translucent; the vinyl is light-on-dark, so its opacity flips per theme. */
@@ -68,6 +73,9 @@ html[data-theme="light"] {
 	--danger-text: #c0392b;
 	--error-text: #c0392b;
 	--success-text: #166534;
+	/* 4.69:1 against the composited wash (red at 10% over --surface: #ffffff
+	   → #f9ebea), clearing the 4.5:1 floor. */
+	--auth-error-text: #c0392b;
 
 	--welcome-card-bg: rgba(255, 255, 255, 0.65);
 	--welcome-vinyl-opacity: 0.32;
@@ -1437,7 +1445,7 @@ footer {
 	padding: 0.75rem 0.9rem;
 	border: 1px solid rgba(192, 57, 43, 0.35);
 	background: rgba(192, 57, 43, 0.1);
-	color: #ffb4ab;
+	color: var(--auth-error-text);
 	border-radius: 8px;
 	font-size: 0.92rem;
 }
@@ -1519,9 +1527,10 @@ footer {
    truncates internally rather than reporting overflow, so scrollWidth stays
    equal to clientWidth even while "På — sender strekkoden..." renders as
    "På — senc". Stacking removes the width fight instead of narrowing it:
-   label on its own line, select full width below at whatever size it needs
-   to show its own text. 768px+ below returns to one row, label and select
-   sharing a bottom edge, once there is width to spare. */
+   label on its own line, select full width below up to the 320px cap set
+   inline in View/Profile/view.js — the longest option text still truncates
+   there, it just has more room first. 768px+ below returns to one row,
+   label and select sharing a bottom edge, once there is width to spare. */
 .profile-settings-row-stack {
 	flex-direction: column;
 	align-items: stretch;
