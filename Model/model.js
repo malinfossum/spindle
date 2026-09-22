@@ -75,11 +75,12 @@ export function blankLibraryView() {
 // response can never land on a page other than the one that asked for it.
 export function blankLookup() {
 	return {
-		status: "idle", // "idle" | "busy"
-		matches: [], // [{ artist, title, year, format }], distinct
+		status: "idle", // "idle" | "busy" | "off" — off: look-ups are off, the line says where to turn them on
+		matches: [], // [{ artist, title, year, format, releaseGroupId }], distinct
 		owned: null, // an album id when the barcode is already in the library
 		filled: null, // { artist, title } of the last fill, for the status line
-		controller: null, // AbortController of the request in flight
+		cover: null, // null | "added" | "none" | "busy" | "failed" — what the cover request came to (v0.5)
+		controller: null, // AbortController of the request in flight — the lookup, then the cover
 	};
 }
 
