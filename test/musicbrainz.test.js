@@ -198,9 +198,13 @@ test("COVER_URL puts the id in the release-group path", () => {
 	);
 });
 
+// Returns a capture object rather than stashing the requested URL on
+// globalThis — a global left no afterEach to clear it and would have leaked
+// into every test file that runs after this one.
 function stubCoverFetch(status, bytes, headers = {}) {
+	const capture = { url: null };
 	globalThis.fetch = async (url) => {
-		globalThis.__coverUrl = url;
+		capture.url = url;
 		return {
 			ok: status >= 200 && status < 300,
 			status,
@@ -208,16 +212,17 @@ function stubCoverFetch(status, bytes, headers = {}) {
 			blob: async () => new Blob([new Uint8Array(bytes)]),
 		};
 	};
+	return capture;
 }
 
 const RG = "1b022e01-4da6-387b-8658-8678046e4cef";
 
 test("fetchCover returns the blob on 200", async () => {
-	stubCoverFetch(200, [0x89, 0x50, 0x4e, 0x47]);
+	const capture = stubCoverFetch(200, [0x89, 0x50, 0x4e, 0x47]);
 	const result = await fetchCover(RG, new AbortController().signal);
 	assert.equal(result.status, "ok");
 	assert.equal(result.blob.size, 4);
-	assert.equal(globalThis.__coverUrl, COVER_URL(RG));
+	assert.equal(capture.url, COVER_URL(RG));
 });
 
 test("fetchCover maps 404 to none, 503 and 429 to busy, anything else to failed", async () => {
