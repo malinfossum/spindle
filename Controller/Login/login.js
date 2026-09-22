@@ -98,6 +98,7 @@ export async function unlockWith(encryptKey, envelope, verifyKey = null) {
 export async function login() {
 	if (model.app.authBusy) return;
 	model.app.sessionStale = false;
+	model.app.sessionClearFailed = false;
 
 	const password = model.viewState.login.password;
 	if (!password) {
