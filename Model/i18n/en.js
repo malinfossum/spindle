@@ -102,7 +102,7 @@ export const STRINGS_EN = {
 	"music.barcode": "Barcode",
 	"music.barcodePlaceholder": "13 digits from the sleeve",
 	"music.lookup": "Look up",
-	"music.scan": "Scan",
+	"music.scan": "Scan barcode",
 	"music.lookupNote":
 		"Look-ups go to musicbrainz.org; a cover may be fetched from coverartarchive.org",
 	"music.lookupWorking": "Looking up…",
