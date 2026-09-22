@@ -17,70 +17,13 @@
 // One useful consequence: an encrypted backup can copy these rows out verbatim
 // without a key, exactly as it copies the envelope out of localStorage, so
 // export still works while the library is locked.
+//
+// The database itself and its helpers are in db.js (v0.5), shared with the
+// session store.
 
 import { decryptLibrary, encryptLibrary } from "./auth.js";
+import { COVERS_STORE, run, withStore } from "./db.js";
 import { model } from "./model.js";
-
-const DB_NAME = "spindle";
-const DB_VERSION = 1;
-const STORE = "covers";
-
-let dbPromise = null;
-
-function openDb() {
-	if (dbPromise) return dbPromise;
-
-	dbPromise = new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-		request.onupgradeneeded = () => {
-			const db = request.result;
-			if (!db.objectStoreNames.contains(STORE)) {
-				db.createObjectStore(STORE, { keyPath: "id" });
-			}
-		};
-
-		request.onsuccess = () => resolve(request.result);
-		request.onerror = () => reject(request.error);
-		// Another tab is holding an older version open. Nothing here upgrades
-		// across versions yet, so this only matters when one does.
-		request.onblocked = () => reject(new Error("IndexedDB upgrade blocked by another tab"));
-	}).catch((err) => {
-		// A failed open must not be cached as a permanent no: private-mode and
-		// storage-blocked failures can clear between attempts.
-		dbPromise = null;
-		throw err;
-	});
-
-	return dbPromise;
-}
-
-// One place that turns a request into a promise, so no call site writes its own
-// onsuccess/onerror pair.
-function run(store, work) {
-	return new Promise((resolve, reject) => {
-		const request = work(store);
-		request.onsuccess = () => resolve(request.result);
-		request.onerror = () => reject(request.error);
-	});
-}
-
-async function withStore(mode, work) {
-	const db = await openDb();
-	const tx = db.transaction(STORE, mode);
-	const result = await work(tx.objectStore(STORE));
-
-	// Resolve on the transaction, not on the request: a write is not durable
-	// until its transaction commits, and reporting success before then would let
-	// the app navigate away from a save that has not landed.
-	await new Promise((resolve, reject) => {
-		tx.oncomplete = () => resolve();
-		tx.onerror = () => reject(tx.error);
-		tx.onabort = () => reject(tx.error ?? new Error("IndexedDB transaction aborted"));
-	});
-
-	return result;
-}
 
 export function newCoverId() {
 	return crypto.randomUUID();
@@ -92,7 +35,9 @@ export async function putCover(id, dataUrl) {
 	if (!model.app.crypto.unlocked) throw new Error("cannot store a cover while locked");
 
 	const { iv, ciphertext } = await encryptLibrary(model.app.crypto.encryptKey, dataUrl);
-	await withStore("readwrite", (store) => run(store, (s) => s.put({ id, iv, data: ciphertext })));
+	await withStore(COVERS_STORE, "readwrite", (store) =>
+		run(store, (s) => s.put({ id, iv, data: ciphertext })),
+	);
 }
 
 // The decrypted data URL, or null when there is no such row. A row that fails to
@@ -101,7 +46,7 @@ export async function putCover(id, dataUrl) {
 export async function readCover(id) {
 	if (!id || !model.app.crypto.unlocked) return null;
 
-	const row = await withStore("readonly", (store) => run(store, (s) => s.get(id)));
+	const row = await withStore(COVERS_STORE, "readonly", (store) => run(store, (s) => s.get(id)));
 	if (!row) return null;
 
 	try {
@@ -114,18 +59,18 @@ export async function readCover(id) {
 
 export async function deleteCover(id) {
 	if (!id) return;
-	await withStore("readwrite", (store) => run(store, (s) => s.delete(id)));
+	await withStore(COVERS_STORE, "readwrite", (store) => run(store, (s) => s.delete(id)));
 }
 
 // Every row as stored — still encrypted. This is what the backup writes out.
 export async function readAllRows() {
-	return withStore("readonly", (store) => run(store, (s) => s.getAll()));
+	return withStore(COVERS_STORE, "readonly", (store) => run(store, (s) => s.getAll()));
 }
 
 // Replaces the whole store with rows from a backup. Import replaces the library
 // outright, so the covers of the library being replaced go with it.
 export async function replaceAllRows(rows) {
-	await withStore("readwrite", async (store) => {
+	await withStore(COVERS_STORE, "readwrite", async (store) => {
 		await run(store, (s) => s.clear());
 		for (const row of rows) {
 			await run(store, (s) => s.put(row));
