@@ -58,6 +58,11 @@ export function profilePage() {
                 <select class="form-input" id="profile-lookups"
                         style="max-width: 320px"
                         data-action-change="set-lookups">
+                    ${
+						getPref("lookups") === "unset"
+							? /*HTML*/ `<option value="unset" disabled selected>${t("profile.lookupsUnset")}</option>`
+							: ""
+					}
                     <option value="off" ${getPref("lookups") === "off" ? "selected" : ""}>${t("profile.lookupsOff")}</option>
                     <option value="on" ${getPref("lookups") === "on" ? "selected" : ""}>${t("profile.lookupsOn")}</option>
                 </select>

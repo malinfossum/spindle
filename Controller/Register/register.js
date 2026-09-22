@@ -7,9 +7,12 @@ import {
 	randomBytes,
 	validatePassword,
 } from "../../Model/auth.js";
+import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { SCHEMA_VERSION, STORAGE_KEY } from "../../Model/persistence.js";
+import { setPref } from "../../Model/prefs.js";
 import { clearAuthMessage, setAuthMessage } from "../../Model/viewState.js";
+import { openDialog } from "../../View/Universal/dialog.js";
 import { updateView } from "../../View/Universal/updateView.js";
 import { clearRegisterForm, focusFirstInvalid } from "../Login/login.js";
 import { navigate } from "../Universal/router.js";
@@ -113,6 +116,23 @@ export async function register() {
 		model.app.authBusy = false;
 		clearRegisterForm();
 		clearAuthMessage();
+		updateView();
+
+		// Asked here, once, because a library is created once (v0.5). The No
+		// button is an answer and is never asked again; Escape, Back and the
+		// backdrop are someone getting their bearings, and the press dialog
+		// asks on their first Look up instead. Anyone who created a library
+		// before v0.5 has no answer stored and meets that dialog too.
+		const answer = await openDialog({
+			title: t("dialog.lookupsAskTitle"),
+			body: t("dialog.lookupsAskBody"),
+			confirmText: t("dialog.lookupsAskConfirm"),
+			cancelText: t("dialog.lookupsAskCancel"),
+			outcomes: true,
+		});
+		if (answer === "confirm") setPref("lookups", "on");
+		if (answer === "cancel") setPref("lookups", "off");
+
 		navigate("homePage");
 	} catch (err) {
 		console.error("[register] failed:", err);
