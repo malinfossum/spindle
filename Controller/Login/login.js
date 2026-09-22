@@ -268,8 +268,15 @@ export async function restoreSession() {
 
 	const result = readEnvelope();
 	if (!result?.ok) {
-		// The library is gone or unreadable; a key to nothing is cleared quietly.
-		await clearSessionKey().catch(() => {});
+		// The library is gone or unreadable; a key to nothing is cleared quietly
+		// — unless the clear itself fails, which is never quiet: the device
+		// stays unlocked to anyone holding it, and resetTransientViewState()
+		// (run by the router right after this) would wipe an authMessage
+		// before it ever painted, so the flag is the mechanism, not the message.
+		await clearSessionKey().catch((err) => {
+			console.warn("[session] could not clear the stored key:", err);
+			model.app.sessionClearFailed = true;
+		});
 		return "none";
 	}
 
@@ -278,7 +285,10 @@ export async function restoreSession() {
 	} catch (err) {
 		console.warn("[session] stored key rejected:", err);
 		zeroKeys();
-		await clearSessionKey().catch(() => {});
+		await clearSessionKey().catch((clearErr) => {
+			console.warn("[session] could not clear the stored key:", clearErr);
+			model.app.sessionClearFailed = true;
+		});
 		model.app.sessionStale = true;
 		return "stale";
 	}

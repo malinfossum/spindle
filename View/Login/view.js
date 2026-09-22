@@ -18,6 +18,11 @@ export function loginPage() {
 					? `<p class="auth-error" role="alert">${escapeHtml(t("login.sessionStale"))}</p>`
 					: ""
 			}
+            ${
+				model.app.sessionClearFailed
+					? `<p class="auth-error" role="alert">${escapeHtml(t("login.stayClearFailed"))}</p>`
+					: ""
+			}
 
             <form data-action-submit="login">
                 <div class="form-row">

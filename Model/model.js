@@ -138,6 +138,11 @@ export const model = {
 		// backup restored from another device, a corrupt store. Rendered on the
 		// Login page until the next login attempt.
 		sessionStale: false,
+		// The clear that follows a stale key (above) or a gone library
+		// refused — the device is still unlocked to anyone holding it, and
+		// that must never be silent. Rendered on the Login page until the
+		// next login attempt.
+		sessionClearFailed: false,
 
 		authMessage: "",
 
