@@ -82,7 +82,12 @@ export function initRouter(startPage = null) {
 		const current = readPage();
 		const entry = ENTRY_PAGES.includes(current);
 		const bounced = !isLoggedIn() && !model.app.publicPages.includes(current);
-		if (entry || bounced) replaceFragment(startPage);
+		// A stale key means the stored-key unlock failed and login.sessionStale
+		// has something to say — that message has to paint even on a public deep
+		// link like #about, which publicPages would otherwise leave alone. A
+		// restored session keeps the deep link: only entry/bounced sends it home.
+		const stale = startPage === "login";
+		if (stale || entry || bounced) replaceFragment(startPage);
 	}
 
 	resolveRoute(readPage());
