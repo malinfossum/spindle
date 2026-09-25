@@ -143,7 +143,7 @@ renders everything else from it with `sharp`, and the output is committed:
 - the `any` icons (192, 512, and the SVG itself), transparent, so no black corners
 - the `maskable` icons (192, 512), the record inside the safe zone on an
   accent-blue `#4a80d4` plate, and the 180 px Apple touch icon from the same plate
-- `favicon.ico` (16, 32, 48), where 16 and 32 come from `scripts/icon-small.svg`:
+- `favicon.ico` (16, 32, 48), where 16 and 32 come from `public/icons/icon-small.svg`:
   no grooves and no sheen, so the rings do not merge at that size
 - `og-image.png`, 1200 × 630, the welcome page's composition for link previews
 

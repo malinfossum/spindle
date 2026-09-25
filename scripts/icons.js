@@ -8,7 +8,7 @@ import { maskableSvg, ogSvg, recordMarkup } from "./compose.js";
 import { packIco } from "./ico.js";
 
 const icon = readFileSync("public/icons/icon.svg");
-const small = readFileSync("scripts/icon-small.svg");
+const small = readFileSync("public/icons/icon-small.svg");
 const record = recordMarkup(icon.toString("utf8"));
 const maskable = Buffer.from(maskableSvg(record));
 const og = Buffer.from(
