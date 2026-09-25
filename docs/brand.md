@@ -135,6 +135,16 @@ These are checked, not hoped for:
 
 ## Assets
 
-There is no logo file, no favicon and no social image yet. The wordmark is the
-name set in the interface font at 700. When a mark is drawn, the disc icon is
-where it should start.
+The mark is the record from the welcome page, fitted to the edge: lighter vinyl
+with a visible sheen and grooves, the gold label (`#d4af37`, rim `#b8962e`) and
+the spindle hole. It is drawn once, in `public/icons/icon.svg`. `npm run icons`
+renders everything else from it with `sharp`, and the output is committed:
+
+- the `any` icons (192, 512, and the SVG itself), transparent, so no black corners
+- the `maskable` icons (192, 512), the record inside the safe zone on an
+  accent-blue `#4a80d4` plate, and the 180 px Apple touch icon from the same plate
+- `favicon.ico` (16, 32, 48), where 16 and 32 come from `scripts/icon-small.svg`:
+  no grooves and no sheen, so the rings do not merge at that size
+- `og-image.png`, 1200 × 630, the welcome page's composition for link previews
+
+The wordmark is still the name set in the interface font at 700.
