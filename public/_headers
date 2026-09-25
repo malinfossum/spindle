@@ -22,9 +22,15 @@
 # fetch has to be allowed at every hop. It is the line that makes "nothing else
 # leaves" enforced rather than stated. camera is (self) for the live scanner — a
 # file input never needed it; getUserMedia does.
+#
+# connect-src also allows 'self' (v0.6), for the service worker. A worker runs
+# under the CSP of its own script response — this same /* rule — and caching
+# the app is a same-origin fetch. A looser policy for /sw.js alone is not
+# possible here: Pages joins two values of one header with a comma, which
+# enforces both. 'self' lets nothing leave the device.
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://musicbrainz.org https://coverartarchive.org https://archive.org https://*.archive.org; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://musicbrainz.org https://coverartarchive.org https://archive.org https://*.archive.org; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Referrer-Policy: no-referrer
   X-Content-Type-Options: nosniff
