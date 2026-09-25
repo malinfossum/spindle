@@ -11,6 +11,7 @@ test("an event kept and not installed shows the button", () => {
 test("an answered prompt shows the outcome, even if the event came back", () => {
 	assert.equal(installRowState({ ...base, outcome: "accepted" }), "outcome");
 	assert.equal(installRowState({ ...base, outcome: "dismissed", canPrompt: true }), "outcome");
+	assert.equal(installRowState({ ...base, outcome: "dismissed", ios: true }), "outcome");
 });
 
 test("iOS and not running installed shows the instruction", () => {
