@@ -9,6 +9,12 @@
 import { getPref, setPref } from "../../Model/prefs.js";
 import { icon } from "../../View/Universal/icons.js";
 
+// The navbar's --nav-bg per theme, for <meta name="theme-color"> (v0.6). The
+// same two values are in public/themePreload.js and index.html; keep all three
+// in step with CSS/style.css. public/manifest.webmanifest's theme_color is a
+// fourth — it can only hold one value, so it carries the dark one.
+const THEME_COLOR = { dark: "#141414", light: "#ffffff" };
+
 function currentTheme() {
 	return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
@@ -27,6 +33,9 @@ function applyTheme() {
 	for (const btn of document.querySelectorAll(".btn-theme")) {
 		btn.innerHTML = markup;
 	}
+	document
+		.querySelector('meta[name="theme-color"]')
+		?.setAttribute("content", THEME_COLOR[currentTheme()]);
 }
 
 // Applies whatever spindle:v1:prefs holds right now. Used at boot, and again

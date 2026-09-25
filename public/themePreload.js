@@ -21,6 +21,13 @@ try {
 	const stored = JSON.parse(localStorage.getItem("spindle:v1:prefs") || "{}");
 	if (stored.theme === "light" || stored.theme === "dark") {
 		document.documentElement.setAttribute("data-theme", stored.theme);
+		// The navbar's --nav-bg for that theme. The stylesheet has not loaded
+		// yet, so the value is written here; keep it in step with CSS/style.css
+		// and THEME_COLOR in Controller/Universal/theme.js.
+		const themeColor = document.querySelector('meta[name="theme-color"]');
+		if (themeColor) {
+			themeColor.setAttribute("content", stored.theme === "light" ? "#ffffff" : "#141414");
+		}
 	}
 	if (stored.lang === "no" || stored.lang === "en") {
 		document.documentElement.setAttribute("lang", stored.lang);

@@ -1,5 +1,5 @@
 // Boot — the single entry point index.html loads, and the root of the module
-// graph. Everything else in the app is reachable from these seven imports.
+// graph. Everything else in the app is reachable from these nine imports.
 //
 // Until v0.2 this file was loaded last by the last of 41 <script> tags, and
 // that ordering *was* the dependency graph: every function was a global, and a
@@ -14,12 +14,17 @@
 import { applyLang } from "../../View/Universal/chrome.js";
 import { restoreSession } from "../Login/login.js";
 import { initActions } from "./actions.js";
+import { initInstall } from "./install.js";
+import { registerWorker } from "./offline.js";
 import { initRouter } from "./router.js";
 import { initScanSupport } from "./scanSupport.js";
 import "./storageSync.js";
 import { applyStoredTheme } from "./theme.js";
 
 initActions();
+// Before the awaits below: the browser may offer install as soon as the
+// manifest is read.
+initInstall();
 applyStoredTheme();
 applyLang();
 // Before the first paint, so the add page renders with or without its Scan
@@ -34,3 +39,5 @@ const session = await restoreSession();
 // happened to start as. A restored session lands on Home instead of the
 // welcome card; a stale one lands on Login, where the reason is shown.
 initRouter(session === "restored" ? "homePage" : session === "stale" ? "login" : null);
+// After the first paint and not awaited: nothing on screen waits for it.
+registerWorker();

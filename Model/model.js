@@ -144,6 +144,13 @@ export const model = {
 		// next login attempt.
 		sessionClearFailed: false,
 
+		// The Install row (v0.6), mirrored here as plain values. The install event
+		// itself is a DOM object and stays in Controller/Universal/install.js.
+		// ios and standalone are read once at boot; canPrompt and outcome follow
+		// the browser's install events and the press. outcome is "", "accepted"
+		// or "dismissed".
+		install: { canPrompt: false, outcome: "", ios: false, standalone: false },
+
 		authMessage: "",
 
 		// Result of the last export / import, shown in the backup block on the

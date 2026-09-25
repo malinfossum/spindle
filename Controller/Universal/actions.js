@@ -53,6 +53,7 @@ import { editAlbum } from "../Music_Details/editBtn.js";
 import { register } from "../Register/register.js";
 import { exportEncryptedBackup, exportPlaintextBackup, importBackupFile } from "./backup.js";
 import { deleteAlbum } from "./delete.js";
+import { installPressed } from "./install.js";
 import { toggleMobileMenu } from "./navbarMobile.js";
 import { navigate } from "./router.js";
 import { toggleWishlist } from "./save.js";
@@ -137,6 +138,7 @@ const ACTIONS = {
 		handleProfileNavClick();
 	},
 	logout: () => confirmLogout(),
+	install: () => installPressed(),
 	"toggle-menu": () => toggleMobileMenu(),
 	"toggle-theme": () => toggleTheme(),
 	// setLang() only writes the preference. Applying it to the document and asking

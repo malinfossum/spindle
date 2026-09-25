@@ -203,6 +203,12 @@ export const STRINGS_NO = {
 	"profile.stayFailed": "Enheten kunne ikke holdes opplåst.",
 	"profile.stayClearFailed":
 		"Den lagrede nøkkelen kunne ikke fjernes. Logg ut og slett nettstedets data i nettleseren for å være sikker.",
+	"profile.install": "Installer Spindle",
+	"profile.installBtn": "Installer",
+	"profile.installAccepted": "Spindle er installert — åpne den fra hjemskjermen.",
+	"profile.installDismissed": "Ikke installert. Nettleserens meny kan fortsatt installere den.",
+	"profile.installIos":
+		"For å installere Spindle: trykk på Del, og så på «Legg til på Hjem-skjerm».",
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Avbryt",

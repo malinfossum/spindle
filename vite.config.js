@@ -1,5 +1,7 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, relative, sep } from "node:path";
 import { defineConfig } from "vite";
+import { precacheManifest } from "./scripts/precache.js";
 
 // The policy lives in public/_headers, where Cloudflare Pages serves it as a
 // real response header. index.html no longer carries a <meta> copy of it, so
@@ -12,7 +14,7 @@ import { defineConfig } from "vite";
 // anywhere near the built output:
 //
 //   - connect-src, because the HMR client opens a websocket back to localhost —
-//     added beside the one real host, not in place of it.
+//     added beside the real sources, not in place of them.
 //   - worker-src, because when that socket drops Vite reconnects from a worker
 //     created out of a blob: URL, and script-src is the fallback for workers.
 //
@@ -35,7 +37,7 @@ function devPolicy() {
 
 	const policy = match[1].trim();
 	const marker =
-		"connect-src https://musicbrainz.org https://coverartarchive.org https://archive.org https://*.archive.org";
+		"connect-src 'self' https://musicbrainz.org https://coverartarchive.org https://archive.org https://*.archive.org";
 	if (!policy.includes(marker)) {
 		throw new Error(
 			`public/_headers no longer contains "${marker}" — update the dev replacement in vite.config.js`,
@@ -43,7 +45,7 @@ function devPolicy() {
 	}
 
 	return policy
-		.replace(marker, `${marker} 'self' ws: wss:; worker-src 'self' blob:`)
+		.replace(marker, `${marker} ws: wss:; worker-src 'self' blob:`)
 		.replace("; frame-ancestors 'none'", "");
 }
 
@@ -63,8 +65,62 @@ const devCsp = {
 	},
 };
 
+// Fills the two placeholders in sw.js and writes dist/sw.js (v0.6). It runs in
+// closeBundle because by then dist/ holds everything Cloudflare will serve: the
+// bundle, the final index.html and the copies from public/. One walk over it
+// is the file list, with nothing to merge.
+const PLACEHOLDERS = {
+	version: '"__SPINDLE_VERSION__"',
+	files: '["__SPINDLE_FILES__"]',
+};
+
+// writeBundle runs only when the build succeeded. closeBundle runs either way —
+// Vite 8 calls it on a failed build too — and dist/ is then stale or missing;
+// walking it would bury the real error under ENOENT from this plugin.
+let bundleWritten = false;
+
+const offlineWorker = {
+	name: "spindle:offline-worker",
+	apply: "build",
+	writeBundle() {
+		bundleWritten = true;
+	},
+	closeBundle() {
+		if (!bundleWritten) return;
+		const outDir = "dist";
+		const files = readdirSync(outDir, { recursive: true, withFileTypes: true })
+			.filter((entry) => entry.isFile())
+			.map((entry) => {
+				const file = join(entry.parentPath, entry.name);
+				return {
+					path: relative(outDir, file).split(sep).join("/"),
+					contents: readFileSync(file),
+				};
+			});
+		const template = readFileSync("sw.js", "utf8");
+		for (const placeholder of Object.values(PLACEHOLDERS)) {
+			if (!template.includes(placeholder)) {
+				throw new Error(`sw.js no longer contains ${placeholder} — update vite.config.js`);
+			}
+		}
+		// The worker's own source feeds the version too: a change to sw.js alone
+		// must name a new cache, or its install would write into the cache the
+		// running worker serves from.
+		const { urls, version } = precacheManifest([
+			...files,
+			{ path: "sw.js", contents: template },
+		]);
+
+		// Replacer functions, so a $ in a file name can never be read as a pattern.
+		const worker = template
+			.replace(PLACEHOLDERS.version, () => JSON.stringify(version))
+			.replace(PLACEHOLDERS.files, () => JSON.stringify(urls));
+		writeFileSync(join(outDir, "sw.js"), worker);
+	},
+};
+
 export default defineConfig({
-	plugins: [devCsp],
+	plugins: [devCsp, offlineWorker],
 	server: {
 		port: 5070,
 		strictPort: true,
