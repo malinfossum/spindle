@@ -69,7 +69,10 @@ self.addEventListener("activate", (event) => {
 
 async function fromCache(key, request) {
 	const cache = await caches.open(CACHE);
-	return (await cache.match(key)) || fetch(request);
+	// ignoreVary: this cache holds exactly one response per URL, written only
+	// by install above, so Vary can only ever cause a false miss here, never
+	// serve the wrong response.
+	return (await cache.match(key, { ignoreVary: true })) || fetch(request);
 }
 
 self.addEventListener("fetch", (event) => {
