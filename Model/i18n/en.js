@@ -198,6 +198,11 @@ export const STRINGS_EN = {
 	"profile.stayFailed": "This device could not be kept unlocked.",
 	"profile.stayClearFailed":
 		"The stored key could not be removed. Log out and clear this site's data in your browser to be sure.",
+	"profile.install": "Install Spindle",
+	"profile.installBtn": "Install",
+	"profile.installAccepted": "Spindle is installed — open it from your home screen.",
+	"profile.installDismissed": "Not installed. The browser menu can still install it.",
+	"profile.installIos": 'To install Spindle, tap Share, then "Add to Home Screen".',
 
 	// ---- Confirm dialogs ----------------------------------------------------
 	"dialog.cancel": "Cancel",

@@ -1553,6 +1553,14 @@ footer {
 	width: 100%;
 }
 
+/* The Install row (v0.6) has no heading of its own and follows the stay help,
+   so it keeps its distance: without it the row, and the iOS and outcome
+   sentences in .form-hint, read as more of "Stay unlocked". Empty, which it
+   is in most browsers, it takes no space. */
+.profile-install:not(:empty) {
+	margin-top: 1rem;
+}
+
 .profile-settings-label,
 .backup-label {
 	font-size: 0.85rem;

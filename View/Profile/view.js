@@ -1,4 +1,5 @@
 import { t } from "../../Model/i18n/i18n.js";
+import { installRowState } from "../../Model/install.js";
 import { model } from "../../Model/model.js";
 import { formatBytes } from "../../Model/persistence.js";
 import { getPref } from "../../Model/prefs.js";
@@ -8,6 +9,32 @@ import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
 import { langSwitcher } from "../Universal/langSwitcher.js";
+
+// The Install row (v0.6). Exported so Controller/Universal/install.js can
+// re-render this row alone when the browser's install event arrives or leaves
+// while Profile is on screen. The wrapper renders even when empty, so there is
+// always something to replace.
+export function installRowHtml() {
+	const install = model.app.install;
+	const state = installRowState(install);
+	let inner = "";
+	if (state === "button") {
+		inner = /*HTML*/ `
+            <div class="profile-settings-row">
+                <span class="profile-settings-label">${t("profile.install")}</span>
+                <button class="btn" type="button" data-action="install">${t("profile.installBtn")}</button>
+            </div>`;
+	} else if (state === "outcome") {
+		// Focusable so focus can land here when the button it replaces is gone.
+		const key =
+			install.outcome === "accepted" ? "profile.installAccepted" : "profile.installDismissed";
+		inner = /*HTML*/ `
+            <p class="form-hint" id="profile-install-status" role="status" tabindex="-1">${t(key)}</p>`;
+	} else if (state === "ios") {
+		inner = /*HTML*/ `<p class="form-hint">${t("profile.installIos")}</p>`;
+	}
+	return /*HTML*/ `<div class="profile-install" id="profile-install">${inner}</div>`;
+}
 
 export function profilePage() {
 	const user = getLoggedInUser();
@@ -79,6 +106,8 @@ export function profilePage() {
                 </select>
             </div>
             <p class="form-hint" id="profile-stay-help">${t("profile.stayHelp")}</p>
+
+            ${installRowHtml()}
 
             <h2 class="profile-settings-heading">${t("backup.title")}</h2>
             ${backupSection({ idPrefix: "profile", allowPlaintext: true })}
