@@ -6,7 +6,7 @@ import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
 import { forgetCover } from "../../View/Universal/cover.js";
 import { openDialog } from "../../View/Universal/dialog.js";
-import { downscaleCover } from "../../View/Universal/downscale.js";
+import { decodeCover, encodeCover } from "../../View/Universal/downscale.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
 import { appRoot, updateView } from "../../View/Universal/updateView.js";
 import { focusFirstInvalid } from "../Login/login.js";
@@ -297,42 +297,41 @@ export async function saveImage(image) {
 	// which is where a phone writes the GPS coordinates of wherever the picture
 	// was taken.
 	//
-	// If that fails, fall back to the file as it came: build the data URI from the
-	// sniffed MIME rather than file.type, so the stored prefix cannot be spoofed —
-	// strip FileReader's own prefix and re-attach ours.
+	// A photo that cannot be decoded or encoded is refused (v0.7). Until now it
+	// was kept as it came, EXIF included; the bytes were already checked above,
+	// so this is rare, and when it happens the field says so.
 	//
 	// Either way it goes to the form's preview, not to the album: nothing reaches
 	// IndexedDB until the album is saved, so choosing a cover and then cancelling
-	// leaves no row behind.
+	// leaves no row behind. coverBusy disables the file input until the end, and
+	// the render in finally puts a fresh, empty input in its place.
 	const form = model.viewState.musicForm;
 	form.coverBusy = true;
 	errors.coverImg = "";
 	updateView();
 
+	// A large photo takes a moment to decode, and I can leave the form
+	// meanwhile. Add album and Edit both put a new musicInfo in place, so the
+	// same object and the same hash mean it is still the same visit.
+	const visit = model.viewState.musicInfo;
+	const openedOn = window.location.hash;
+	const stale = () => model.viewState.musicInfo !== visit || window.location.hash !== openedOn;
+
+	const bitmap = await decodeCover(file);
 	try {
-		const downscaled = await downscaleCover(file);
-		form.coverPreview = downscaled ?? `data:${mime};base64,${await readFileAsBase64(file)}`;
+		if (stale()) return;
+		const dataUrl = bitmap ? encodeCover(bitmap, null) : null;
+		if (dataUrl) form.coverPreview = dataUrl;
+		else errors.coverImg = "error.coverProcess";
 	} finally {
+		bitmap?.close();
 		form.coverBusy = false;
 		updateView();
 		// The render above replaced the input that was focused, so put focus back
 		// on its replacement — the picker is where someone tabbed to, and where
-		// they would go next to change their mind.
-		const picker = appRoot.querySelector("#music-cover");
-		if (picker) picker.focus();
+		// they would go next to change their mind. Not on a visit that is over.
+		if (!stale()) appRoot.querySelector("#music-cover")?.focus();
 	}
-}
-
-function readFileAsBase64(file) {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onload = () => {
-			const result = reader.result;
-			resolve(result.slice(result.indexOf(",") + 1));
-		};
-		reader.onerror = () => reject(reader.error);
-		reader.readAsDataURL(file);
-	});
 }
 
 // Lokasjon/Sjanger are groups, not single inputs, so clearFieldError (which keys

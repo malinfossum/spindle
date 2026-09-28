@@ -324,6 +324,7 @@ export const STRINGS_NO = {
 	"error.storageNearFull": "Lagringen er nesten full. Slett noen album før du legger til flere.",
 	"error.imageTooLarge": "Bildet er for stort. Maks 12 MB.",
 	"error.imageInvalid": "Ugyldig bildefil. Bruk JPEG, PNG eller WebP.",
+	"error.coverProcess": "Bildet kunne ikke behandles. Prøv et annet bilde.",
 	"error.imageStoreFailed": "Coverbildet kunne ikke lagres. Prøv igjen, eller lagre uten bilde.",
 	"error.barcodeInvalid": "En strekkode er 8 til 14 sifre.",
 	"error.barcodeNoMatch": "Fant ikke noe album for den strekkoden.",

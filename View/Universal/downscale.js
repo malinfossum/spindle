@@ -20,42 +20,90 @@
 // image files, used by the add/edit form, holding no state and rendering no UI.
 //
 // 700px rather than something tighter because a cover is drawn at 120px on a
-// 3x display and someone will eventually want to open one full size. Failure is
-// non-fatal by design — the caller keeps the original file if this returns null,
-// which is what the app did for its whole life until now.
+// 3x display and someone will eventually want to open one full size.
+//
+// v0.7 splits it in three so a picked photo can be cropped between decode and
+// encode: decodeCover() once, sampleCover() for the guess, encodeCover() with
+// the square I chose. A failure is null, and since v0.7 the caller refuses the
+// photo rather than storing the file as it came, because that raw file would
+// carry the EXIF block and would not be cropped either.
 
 const MAX_EDGE = 700;
 const QUALITY = 0.82;
 const OUTPUT_TYPE = "image/webp";
+// The copy the guess runs on. 256 px is plenty to find a sleeve, and small
+// enough that reading every pixel costs nothing.
+const SAMPLE_EDGE = 256;
 
-export async function downscaleCover(file) {
-	let bitmap;
-
+export async function decodeCover(blob) {
 	try {
 		// from-image so a portrait phone photo is stored the way it was taken:
 		// canvas draws raw pixels, and the orientation tag is one of the things
-		// this strips.
-		bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+		// this strips. Every coordinate the crop works in is upright because of it.
+		return await createImageBitmap(blob, { imageOrientation: "from-image" });
 	} catch (err) {
 		console.warn("[downscale] could not decode the image:", err);
 		return null;
 	}
+}
 
+function canvasOf(width, height, options) {
+	const canvas = document.createElement("canvas");
+	canvas.width = width;
+	canvas.height = height;
+	return [canvas, canvas.getContext("2d", options)];
+}
+
+// The pixels guessSquare() reads.
+export function sampleCover(bitmap) {
 	try {
-		const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+		const scale = Math.min(1, SAMPLE_EDGE / Math.max(bitmap.width, bitmap.height));
 		const width = Math.max(1, Math.round(bitmap.width * scale));
 		const height = Math.max(1, Math.round(bitmap.height * scale));
+		const [, ctx] = canvasOf(width, height, { willReadFrequently: true });
+		if (!ctx) return null;
+		ctx.drawImage(bitmap, 0, 0, width, height);
+		return ctx.getImageData(0, 0, width, height);
+	} catch (err) {
+		console.warn("[downscale] could not sample the image:", err);
+		return null;
+	}
+}
 
-		const canvas = document.createElement("canvas");
-		canvas.width = width;
-		canvas.height = height;
+// With no square, the whole image at MAX_EDGE on its long side. With a square,
+// that square only, at min(MAX_EDGE, side): a cover is never enlarged.
+export function encodeCover(bitmap, square) {
+	try {
+		let sx = 0;
+		let sy = 0;
+		let sw = bitmap.width;
+		let sh = bitmap.height;
+		let width;
+		let height;
 
-		const ctx = canvas.getContext("2d");
+		if (square) {
+			const side = Math.max(
+				1,
+				Math.min(Math.round(square.side), bitmap.width, bitmap.height),
+			);
+			sx = Math.min(Math.max(0, Math.round(square.x)), bitmap.width - side);
+			sy = Math.min(Math.max(0, Math.round(square.y)), bitmap.height - side);
+			sw = side;
+			sh = side;
+			width = Math.min(MAX_EDGE, side);
+			height = width;
+		} else {
+			const scale = Math.min(1, MAX_EDGE / Math.max(sw, sh));
+			width = Math.max(1, Math.round(sw * scale));
+			height = Math.max(1, Math.round(sh * scale));
+		}
+
+		const [canvas, ctx] = canvasOf(width, height);
 		if (!ctx) return null;
 
 		// A PNG cover can be transparent, and drawing it over nothing keeps that;
 		// WebP carries alpha, so no white box appears behind a transparent sleeve.
-		ctx.drawImage(bitmap, 0, 0, width, height);
+		ctx.drawImage(bitmap, sx, sy, sw, sh, 0, 0, width, height);
 
 		// A browser that cannot encode WebP returns a PNG data URL instead of
 		// failing. That is still a valid, EXIF-free, correctly sized cover, so it
@@ -65,6 +113,16 @@ export async function downscaleCover(file) {
 	} catch (err) {
 		console.warn("[downscale] could not re-encode the image:", err);
 		return null;
+	}
+}
+
+// The look-up's path: a cover from the archive arrives square and is not
+// cropped, only shrunk.
+export async function downscaleCover(blob) {
+	const bitmap = await decodeCover(blob);
+	if (!bitmap) return null;
+	try {
+		return encodeCover(bitmap, null);
 	} finally {
 		bitmap.close();
 	}

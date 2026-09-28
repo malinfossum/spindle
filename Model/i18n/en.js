@@ -313,6 +313,7 @@ export const STRINGS_EN = {
 	"error.storageNearFull": "Storage is nearly full. Delete some albums before adding more.",
 	"error.imageTooLarge": "The image is too large. Maximum 12 MB.",
 	"error.imageInvalid": "Invalid image file. Use JPEG, PNG or WebP.",
+	"error.coverProcess": "This photo could not be processed. Try another one.",
 	"error.imageStoreFailed": "The cover image could not be saved. Try again, or save without one.",
 	"error.barcodeInvalid": "A barcode is 8 to 14 digits.",
 	"error.barcodeNoMatch": "No album found for that barcode.",
