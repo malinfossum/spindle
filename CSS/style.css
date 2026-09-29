@@ -1747,6 +1747,110 @@ footer {
 	margin-bottom: 0.75rem;
 }
 
+/* The crop dialog (v0.7). Full screen on a phone, where the square wants
+   every pixel; a centred box from 768 px up. The flex layout is scoped to
+   [open] so it never overrides the browser's display: none for a closed
+   dialog. */
+.dialog-crop {
+	width: 100%;
+	max-width: none;
+	height: 100%;
+	max-height: none;
+	border: 0;
+	border-radius: 0;
+	padding: 1rem;
+}
+
+.dialog-crop[open] {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+/* Centred by auto margins, not justify-content: center. When the dialog is
+   taller than the screen (200 % text on a phone turned sideways), centring
+   pushes the title above the top, where no scrolling reaches it; auto margins
+   fall back to the top instead. */
+.dialog-crop[open] > :first-child {
+	margin-top: auto;
+}
+
+.dialog-crop[open] > :last-child {
+	margin-bottom: auto;
+}
+
+.dialog-crop .dialog-title {
+	margin-bottom: 0;
+}
+
+.crop-stage {
+	/* As big as the screen's height allows, but never below 12rem: on a phone
+	   turned sideways at 200 % text, 100dvh − 12rem is below zero. */
+	width: min(100%, max(12rem, calc(100dvh - 12rem)));
+	aspect-ratio: 1;
+	/* overflow: hidden gives a flex item a minimum height of 0, so on a short
+	   screen the column would squash the square into a rectangle and stretch
+	   the photo. It keeps its size, and the dialog scrolls instead. */
+	flex-shrink: 0;
+	margin-inline: auto;
+	overflow: hidden;
+	border-radius: 6px;
+	background: #000;
+	/* The stage takes every touch gesture; the page must not scroll or zoom. */
+	touch-action: none;
+	cursor: grab;
+}
+
+/* An outline, not a box-shadow, so the ring survives forced-colors. */
+.crop-stage:focus-visible {
+	outline: 3px solid var(--accent);
+	outline-offset: 3px;
+}
+
+.crop-stage canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.crop-hint {
+	margin-bottom: 0;
+	text-align: center;
+}
+
+.crop-actions {
+	align-items: flex-end;
+	row-gap: 0.5rem;
+}
+
+.crop-pair {
+	display: flex;
+	gap: 0.5rem;
+}
+
+/* Use stays on the right, on one row or on its own. */
+.crop-answer {
+	margin-left: auto;
+}
+
+.crop-zoom {
+	min-width: 44px;
+	justify-content: center;
+	font-size: 1.1rem;
+}
+
+@media (min-width: 768px) {
+	.dialog-crop {
+		width: calc(100% - 2rem);
+		max-width: 480px;
+		height: fit-content;
+		max-height: calc(100% - 2rem);
+		border: 1px solid var(--border);
+		border-radius: 10px;
+		padding: 1.5rem;
+	}
+}
+
 /* ============================================================
    LOGGED-OUT CHROME  (task H)
    Welcome / login / register / about hide the app navbar + footer

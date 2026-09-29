@@ -5,12 +5,15 @@ import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
 import { forgetCover } from "../../View/Universal/cover.js";
+import { centreSquare } from "../../View/Universal/cropFrame.js";
+import { guessSquare } from "../../View/Universal/cropGuess.js";
 import { openDialog } from "../../View/Universal/dialog.js";
-import { decodeCover, encodeCover } from "../../View/Universal/downscale.js";
+import { decodeCover, encodeCover, sampleCover } from "../../View/Universal/downscale.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
 import { appRoot, updateView } from "../../View/Universal/updateView.js";
 import { focusFirstInvalid } from "../Login/login.js";
 import { navigate } from "../Universal/router.js";
+import { cropPhoto } from "./crop.js";
 
 export function toggleLocationCheckbox(checkbox, index) {
 	const locations = model.viewState.musicInfo.location;
@@ -295,7 +298,8 @@ export async function saveImage(image) {
 	// Re-encoded small before anything stores it: a sleeve is drawn at 120px and
 	// arrives as a multi-megabyte photo. The canvas also drops the EXIF block,
 	// which is where a phone writes the GPS coordinates of wherever the picture
-	// was taken.
+	// was taken. Since v0.7 a crop dialog sits between decode and encode, and
+	// coverBusy stays true while it is open.
 	//
 	// A photo that cannot be decoded or encoded is refused (v0.7). Until now it
 	// was kept as it came, EXIF included; the bytes were already checked above,
@@ -319,8 +323,23 @@ export async function saveImage(image) {
 
 	const bitmap = await decodeCover(file);
 	try {
+		// Left the form while it decoded: the dialog must not open on
+		// whatever page is showing now.
 		if (stale()) return;
-		const dataUrl = bitmap ? encodeCover(bitmap, null) : null;
+		if (!bitmap) {
+			errors.coverImg = "error.coverProcess";
+			return;
+		}
+		// Guess on a small copy, then let me adjust it (v0.7). The dialog
+		// opens every time, on the guess, so I always see what gets saved.
+		const photo = { width: bitmap.width, height: bitmap.height };
+		const sample = sampleCover(bitmap);
+		const guess = sample ? guessSquare(sample, photo) : centreSquare(photo);
+		const square = await cropPhoto(bitmap, guess);
+		// Cancel, Escape or leaving the page: nothing changes, and an earlier
+		// cover stays.
+		if (square === null) return;
+		const dataUrl = encodeCover(bitmap, square);
 		if (dataUrl) form.coverPreview = dataUrl;
 		else errors.coverImg = "error.coverProcess";
 	} finally {
