@@ -1,6 +1,7 @@
 import { deleteCover, newCoverId, putCover } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { blankAlbum, model } from "../../Model/model.js";
+import { commitGenres, genreKey } from "../../Model/musicbrainz.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
@@ -40,6 +41,13 @@ export function toggleGenreCheckbox(checkbox, index) {
 	}
 }
 
+// A genre a look-up proposed (v0.7). Unticking keeps it in the form, unticked,
+// so a mis-tap can be undone.
+export function togglePendingGenre(checkbox, index) {
+	const pending = model.viewState.musicForm.pendingGenres[index];
+	if (pending) pending.checked = checkbox.checked;
+}
+
 function rng() {
 	const number = Math.floor(Math.random() * 999999);
 	for (let i = 0; i < model.data.musicInfo.length; i++) {
@@ -63,6 +71,10 @@ export async function submitChanges(isEdit) {
 
 	const info = model.viewState.musicInfo;
 
+	// A ticked genre a look-up proposed counts, the same as one from my list.
+	const pending = model.viewState.musicForm.pendingGenres;
+	const pendingTicked = pending.some((genre) => genre.checked);
+
 	// Validate every field at once so all problems show together (the old code
 	// fired one alert at a time). Carry over any cover error saveImage already set.
 	const errors = {
@@ -77,11 +89,12 @@ export async function submitChanges(isEdit) {
 			: model.data.location.length
 				? "error.pickLocation"
 				: "error.addLocationFirst",
-		genre: info.genre.length
-			? ""
-			: model.data.genre.length
-				? "error.pickGenre"
-				: "error.addGenreFirst",
+		genre:
+			info.genre.length || pendingTicked
+				? ""
+				: model.data.genre.length
+					? "error.pickGenre"
+					: "error.addGenreFirst",
 		barcode: "",
 		form: "",
 	};
@@ -119,6 +132,17 @@ export async function submitChanges(isEdit) {
 		}
 		replacedCoverId = model.viewState.musicInfo.coverId;
 		model.viewState.musicInfo.coverId = newId;
+	}
+
+	// New genres from a look-up join my list only now (v0.7), after the cover
+	// write, which can still stop the save. Unticked ones are dropped by the
+	// navigation below.
+	if (pendingTicked) {
+		const committed = commitGenres(model.data.genre, pending);
+		model.data.genre = committed.list;
+		for (const index of committed.indexes) {
+			if (!info.genre.includes(index)) info.genre.push(index);
+		}
 	}
 
 	if (!isEdit) {
@@ -190,6 +214,17 @@ export function newGenre(event) {
 			}
 		}
 		model.data.genre.push(genre);
+		// A genre a look-up proposed and I have now added by hand is the same
+		// genre (v0.7): it leaves the pending list, and its tick moves to the
+		// new entry, so the form never shows it twice.
+		const pending = model.viewState.musicForm.pendingGenres;
+		const same = pending.findIndex((p) => genreKey(p.name) === genreKey(genre));
+		if (same !== -1) {
+			if (pending[same].checked) {
+				model.viewState.musicInfo.genre.push(model.data.genre.length - 1);
+			}
+			pending.splice(same, 1);
+		}
 		persistState();
 	}
 

@@ -214,6 +214,12 @@ export const model = {
 			},
 
 			lookup: blankLookup(),
+
+			// Genres a look-up found that are not on my list yet (v0.7), as
+			// { name, checked }. Shown ticked with a New label and stored nowhere
+			// until Save: the rule a cover already follows. Emptied on every
+			// navigation, so Cancel drops them.
+			pendingGenres: [],
 		},
 
 		login: {

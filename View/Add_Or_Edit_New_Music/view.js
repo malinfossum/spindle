@@ -162,6 +162,24 @@ function buildMusicForm(isEdit) {
 		)
 		.join("");
 
+	// Genres a look-up found that my list does not have yet (v0.7). The New
+	// label sits inside the <label>, so a screen reader hears it with the name.
+	const pendingBoxes = model.viewState.musicForm.pendingGenres
+		.map(
+			(pending, i) => /*HTML*/ `
+        <label class="checkbox-option">
+            <input type="checkbox"
+                   name="genre"
+                   ${pending.checked ? "checked" : ""}
+                   data-action-change="music-genre-new"
+                   data-index="${i}">
+            ${escapeHtml(pending.name)}
+            <span class="genre-new">${t("music.genreNew")}</span>
+        </label>
+    `,
+		)
+		.join("");
+
 	// "" first and selected by default: format is optional, and defaulting to CD
 	// would quietly label every album someone never touches this field on.
 	const formatOptions = ["", ...ALBUM_FORMATS]
@@ -365,7 +383,7 @@ function buildMusicForm(isEdit) {
                  aria-labelledby="music-genre-label"
                  aria-describedby="music-genre-error"
                  aria-invalid="${errors.genre ? "true" : "false"}">
-                ${genreBoxes}
+                ${genreBoxes}${pendingBoxes}
                 <button
                 type="button"
                 aria-label="${t("music.addGenreToggle")}"

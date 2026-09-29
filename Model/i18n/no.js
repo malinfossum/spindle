@@ -138,6 +138,7 @@ export const STRINGS_NO = {
 	"music.formatCassette": "Kassett",
 	"music.formatOther": "Annet",
 	"music.genre": "Sjanger",
+	"music.genreNew": "Ny",
 	"music.newGenre": "Ny sjanger?",
 	"music.removeGenre": "Fjern sjanger?",
 	"music.addGenreToggle": "Legg til sjanger",

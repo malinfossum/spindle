@@ -133,6 +133,7 @@ export const STRINGS_EN = {
 	"music.formatCassette": "Cassette",
 	"music.formatOther": "Other",
 	"music.genre": "Genre",
+	"music.genreNew": "New",
 	"music.newGenre": "New genre?",
 	"music.removeGenre": "Remove genre?",
 	"music.addGenreToggle": "Add genre",

@@ -1114,6 +1114,20 @@ footer {
 	height: 15px;
 }
 
+/* The New label on a genre a look-up proposed (v0.7): set apart from the name
+   by size, weight, case and a border, in the muted ink that passes contrast
+   on both themes. */
+.genre-new {
+	font-size: 0.7rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--text-muted);
+	border: 1px solid currentColor;
+	border-radius: 4px;
+	padding: 0 0.3rem;
+}
+
 /* Ønskeliste checkbox i form/detail */
 .checkbox-row {
 	display: flex;

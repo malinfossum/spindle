@@ -35,6 +35,7 @@ import {
 	submitChanges,
 	toggleGenreCheckbox,
 	toggleLocationCheckbox,
+	togglePendingGenre,
 } from "../Edit_Music_Details/editMusic.js";
 import {
 	barcodeTyped,
@@ -356,6 +357,10 @@ const ACTIONS = {
 	},
 	"music-genre": (_event, target) => {
 		toggleGenreCheckbox(target, Number(target.dataset.index));
+		clearMusicGroupError("genre");
+	},
+	"music-genre-new": (_event, target) => {
+		togglePendingGenre(target, Number(target.dataset.index));
 		clearMusicGroupError("genre");
 	},
 
