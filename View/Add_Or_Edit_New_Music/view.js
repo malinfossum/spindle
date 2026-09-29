@@ -42,11 +42,18 @@ function buildMusicForm(isEdit) {
 		busy: "lookup.coverBusy",
 		failed: "lookup.coverFailed",
 	};
+	// The genres (v0.7) follow the cover in the same sentence chain. A cover
+	// sentence ends with its own full stop, and the fill sentence does not.
+	const genreLine = lookup.genres.length
+		? t("lookup.genres", { genres: lookup.genres.map((name) => escapeHtml(name)).join(", ") })
+		: "";
 	const filledLine = lookup.filled
 		? t("music.lookupFilled", {
 				artist: escapeHtml(lookup.filled.artist),
 				title: escapeHtml(lookup.filled.title),
-			}) + (lookup.cover ? `. ${t(COVER_KEYS[lookup.cover])}` : "")
+			}) +
+			(lookup.cover ? `. ${t(COVER_KEYS[lookup.cover])}` : "") +
+			(genreLine ? `${lookup.cover ? " " : ". "}${genreLine}` : "")
 		: "";
 	const lookupStatus = busyLookup
 		? t("music.lookupWorking")

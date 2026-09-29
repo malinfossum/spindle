@@ -1,6 +1,7 @@
-// Barcode → album fields (v0.4), and the cover that follows (v0.5). One
-// number does at most one lookup and one cover request, and nothing goes out
-// before the look-ups question has been answered yes once.
+// Barcode → album fields (v0.4), the cover that follows (v0.5), and the genres
+// beside it (v0.7). One number does at most one lookup, one cover request and
+// one genre request, and nothing goes out before the look-ups question has
+// been answered yes once.
 //
 // The flow is a straight line, runLookup(): check the library, check the pref,
 // send, fill, fetch the cover. The button and the scanner both call it — a
@@ -9,7 +10,13 @@
 
 import { t } from "../../Model/i18n/i18n.js";
 import { blankLookup, model, normalizeBarcode } from "../../Model/model.js";
-import { fetchCover, lookupBarcode } from "../../Model/musicbrainz.js";
+import {
+	fetchCover,
+	fetchGenres,
+	genreKey,
+	lookupBarcode,
+	mergeGenres,
+} from "../../Model/musicbrainz.js";
 import { getPref, setPref } from "../../Model/prefs.js";
 import { findByBarcode } from "../../Model/selectors.js";
 import { openDialog } from "../../View/Universal/dialog.js";
@@ -20,6 +27,10 @@ import { sniffImageType } from "../../View/Universal/sniff.js";
 import { appRoot, updateView } from "../../View/Universal/updateView.js";
 
 const LOOKUP_TIMEOUT_MS = 10_000;
+
+// MusicBrainz allows about one request a second. The genre request waits this
+// long after the barcode search answered; after a pick it has usually passed.
+const RATE_GAP_MS = 1100;
 
 // The four fields a match may fill, in the order focus is offered after a
 // fill, and the input id each one renders as.
@@ -68,15 +79,21 @@ async function fill(match, digits) {
 	lookup.matches = [];
 	lookup.filled = { artist: match.artist, title: match.title };
 	lookup.cover = null;
+	lookup.genres = [];
 	lookup.status = "idle";
-	// The cover request that follows hangs off the same controller, so leaving
-	// the page or editing the number aborts it exactly as it aborts the lookup.
+	// The cover and genre requests that follow hang off the same controller, so
+	// leaving the page, editing the number or starting another look-up aborts
+	// both, exactly as it aborts the lookup.
 	const controller = new AbortController();
 	lookup.controller = controller;
 	updateView();
 	focusById(firstFilled ?? "music-barcode");
 
-	await addCover(match, controller);
+	await Promise.all([addCover(match, controller), addGenres(match, controller)]);
+	// Both are done: the look-up holds no request any more — unless a newer
+	// one has taken over, which owns its own controller.
+	const current = model.viewState.musicForm.lookup;
+	if (current.controller === controller) current.controller = null;
 }
 
 // Fetches the front cover for a filled match — only when the cover field is
@@ -85,12 +102,12 @@ async function fill(match, digits) {
 // then the same downscale, so a fetched cover is stored exactly as a photo.
 // Every exit but two writes lookup.cover and re-renders the line: an abort
 // (the page moved on, the number changed) says nothing, and a cover the
-// person chose while the archive was slow wins silently — they already have
-// what they wanted.
+// person chose, or is choosing in the crop dialog, while the archive was slow
+// wins silently — they already have what they wanted.
 async function addCover(match, controller) {
 	const form = model.viewState.musicForm;
 
-	if (form.coverPreview) return settleCover(null, controller);
+	if (form.coverPreview || form.coverBusy) return settleCover(null, controller);
 	if (match.releaseGroupId === "") return settleCover("none", controller);
 
 	let result;
@@ -111,19 +128,84 @@ async function addCover(match, controller) {
 	if (form.lookup.controller !== controller) return;
 	if (!dataUrl) return settleCover("failed", controller);
 
-	if (form.coverPreview) return settleCover(null, controller);
+	if (form.coverPreview || form.coverBusy) return settleCover(null, controller);
 	form.coverPreview = dataUrl;
 	settleCover("added", controller);
 }
 
-// Ends the cover step: records the result, drops the controller, re-renders,
-// and puts focus back where the fill left it — updateView() replaces the
-// field that had it.
+// Ends the cover step: records the result, re-renders, and puts focus back
+// where the fill left it — updateView() replaces the field that had it. The
+// controller stays: the genre request may still hang off it, and fill()
+// releases it when both are done.
 function settleCover(state, controller) {
 	const lookup = model.viewState.musicForm.lookup;
 	if (lookup.controller !== controller) return;
 	lookup.cover = state;
-	lookup.controller = null;
+	const active = document.activeElement?.id;
+	updateView();
+	if (active) focusById(active);
+}
+
+// Waits ms, or rejects the moment the signal aborts.
+function abortableDelay(ms, signal) {
+	return new Promise((resolve, reject) => {
+		if (signal.aborted) {
+			reject(signal.reason);
+			return;
+		}
+		const timer = setTimeout(resolve, ms);
+		signal.addEventListener(
+			"abort",
+			() => {
+				clearTimeout(timer);
+				reject(signal.reason);
+			},
+			{ once: true },
+		);
+	});
+}
+
+// Ticks the genres MusicBrainz votes for (v0.7). Ticks are only ever added:
+// known genres go on the album's working copy, new ones into pendingGenres,
+// ticked, and neither reaches my list before Save. A busy server, a failure,
+// an abort or no genres at all ticks nothing and says nothing, because the
+// rest of the look-up has already worked.
+async function addGenres(match, controller) {
+	if (match.releaseGroupId === "") return;
+	const form = model.viewState.musicForm;
+
+	let result;
+	try {
+		const wait = RATE_GAP_MS - (performance.now() - form.lookup.answeredAt);
+		if (wait > 0) await abortableDelay(wait, controller.signal);
+		result = await fetchGenres(
+			match.releaseGroupId,
+			AbortSignal.any([controller.signal, AbortSignal.timeout(LOOKUP_TIMEOUT_MS)]),
+		);
+	} catch {
+		return;
+	}
+	// A late answer from an aborted or replaced look-up never ticks anything.
+	if (form.lookup.controller !== controller) return;
+	if (result.status !== "ok" || result.genres.length === 0) return;
+
+	const info = model.viewState.musicInfo;
+	const { indexes, fresh, names } = mergeGenres(model.data.genre, result.genres);
+	for (const index of indexes) {
+		if (!info.genre.includes(index)) info.genre.push(index);
+	}
+	for (const name of fresh) {
+		const same = form.pendingGenres.find(
+			(pending) => genreKey(pending.name) === genreKey(name),
+		);
+		if (same) same.checked = true;
+		else form.pendingGenres.push({ name, checked: true });
+	}
+
+	// Ticked boxes alone say nothing to a screen reader: the status line
+	// names them.
+	form.lookup.genres = names;
+	form.errors.genre = "";
 	const active = document.activeElement?.id;
 	updateView();
 	if (active) focusById(active);
@@ -196,6 +278,9 @@ async function runLookup(digits) {
 		setPref("lookups", "on");
 	}
 
+	// A fill's cover or genre request may still be running: this look-up
+	// replaces it, so it stops now instead of downloading into nothing.
+	lookup.controller?.abort();
 	const controller = new AbortController();
 	lookup.status = "busy";
 	lookup.controller = controller;
@@ -217,6 +302,7 @@ async function runLookup(digits) {
 	// The page moved on (resetLookup() aborted us) or a newer press replaced
 	// us: whatever came back is about a form that is gone.
 	if (model.viewState.musicForm.lookup.controller !== controller) return;
+	lookup.answeredAt = performance.now();
 
 	if (result.status === "busy") return failWith("error.lookupBusy");
 	if (result.status === "failed") return failWith("error.lookupFailed");

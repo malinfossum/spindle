@@ -117,6 +117,7 @@ export const STRINGS_EN = {
 	"lookup.coverBusy": "The cover archive is busy — try Look up again in a moment.",
 	"lookup.coverFailed":
 		"The cover could not be fetched. The details were filled in; add a cover below.",
+	"lookup.genres": "Genre: {genres}.",
 
 	"music.pickMatch": "Which one is it?",
 	"scanner.title": "Scan a barcode",

@@ -122,6 +122,7 @@ export const STRINGS_NO = {
 	"lookup.coverBusy": "Omslagsarkivet er opptatt — prøv Slå opp igjen om litt.",
 	"lookup.coverFailed":
 		"Omslaget kunne ikke hentes. Detaljene ble fylt inn; legg til et omslag under.",
+	"lookup.genres": "Sjanger: {genres}.",
 
 	"music.pickMatch": "Hvilken er det?",
 	"scanner.title": "Skann en strekkode",
