@@ -14,6 +14,8 @@
 // The cover (v0.5) is the second: a release-group id is used only when it is
 // a UUID, and the image is trusted by its bytes, checked by the Controller
 // with the same sniff a chosen file gets.
+// The genres (v0.7) are the third: names are cleaned and capped in pickGenres()
+// before anything else sees them.
 //
 // Verified 2026-09-15: the endpoint answers with Access-Control-Allow-Origin:
 // *, needs no key, and returns 503 when busy as a matter of course. No custom
@@ -193,4 +195,137 @@ export async function fetchCover(releaseGroupId, signal) {
 	if (blob.size > COVER_MAX_BYTES) return { status: "failed" };
 
 	return { status: "ok", blob };
+}
+
+// Genres (v0.7). The same host, one more request: the release group's voted
+// genres. Only the top ones count — at least a quarter of the top genre's
+// votes, at most three — so Nevermind gives grunge and alternative rock and
+// not every genre someone once voted for.
+export const GENRE_SHARE = 0.25;
+export const GENRE_MAX = 3;
+export const GENRE_NAME_MAX = 40;
+
+export function GENRES_URL(releaseGroupId) {
+	if (!isReleaseGroupId(releaseGroupId)) throw new Error("Not a release-group id");
+	return `${HOST}/ws/2/release-group/${releaseGroupId}?inc=genres&fmt=json`;
+}
+
+// Every genre comparison goes through this: lower case, and hyphens and runs
+// of whitespace as one space, so MusicBrainz's "hip hop" finds my "Hip-hop"
+// instead of adding a twin.
+export function genreKey(name) {
+	return name
+		.toLowerCase()
+		.replace(/[-\s]+/g, " ")
+		.trim();
+}
+
+// A control character becomes a space before whitespace is collapsed, so
+// "hip\thop" stays two words. The cap counts characters, not UTF-16 units.
+function cleanGenreName(name) {
+	const flat = name
+		.replace(/\p{Cc}/gu, " ")
+		.replace(/\s+/g, " ")
+		.trim();
+	return [...flat].slice(0, GENRE_NAME_MAX).join("").trim();
+}
+
+// The trust boundary for the genre response. Anything that is not an array
+// gives nothing; an entry needs a string name and a finite vote count above
+// zero. Sorted by votes, ties by name, so the result never depends on the
+// order the response came in.
+export function pickGenres(genres) {
+	if (!Array.isArray(genres)) return [];
+
+	const valid = [];
+	for (const entry of genres) {
+		if (!entry || typeof entry !== "object") continue;
+		if (typeof entry.name !== "string") continue;
+		if (typeof entry.count !== "number" || !Number.isFinite(entry.count) || entry.count <= 0) {
+			continue;
+		}
+		const name = cleanGenreName(entry.name);
+		if (name !== "") valid.push({ name, count: entry.count });
+	}
+	if (valid.length === 0) return [];
+
+	valid.sort((a, b) => b.count - a.count || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+
+	const floor = valid[0].count * GENRE_SHARE;
+	const seen = new Set();
+	const picked = [];
+	for (const { name, count } of valid) {
+		if (count < floor || picked.length === GENRE_MAX) break;
+		const key = genreKey(name);
+		if (seen.has(key)) continue;
+		seen.add(key);
+		picked.push(name);
+	}
+	return picked;
+}
+
+function capitalise(name) {
+	return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+// Picked names against my list: the positions to tick, the names that are
+// new (with a capital first letter, "alternative rock" → "Alternative rock"),
+// and every name as it will show, in vote order, for the status line.
+export function mergeGenres(list, picked) {
+	const indexes = [];
+	const fresh = [];
+	const names = [];
+	for (const name of picked) {
+		const key = genreKey(name);
+		const index = list.findIndex((existing) => genreKey(existing) === key);
+		if (index === -1) {
+			const shown = capitalise(name);
+			fresh.push(shown);
+			names.push(shown);
+		} else if (!indexes.includes(index)) {
+			indexes.push(index);
+			names.push(list[index]);
+		}
+	}
+	return { indexes, fresh, names };
+}
+
+// At Save: the ticked new names join the list, unless the same genre is on
+// it by now (I may have added it by hand meanwhile), and the album gets each
+// one's position. Returns a new list; the one passed in is not touched.
+export function commitGenres(list, pending) {
+	const next = [...list];
+	const indexes = [];
+	for (const { name, checked } of pending) {
+		if (!checked) continue;
+		const key = genreKey(name);
+		let index = next.findIndex((existing) => genreKey(existing) === key);
+		if (index === -1) {
+			next.push(name);
+			index = next.length - 1;
+		}
+		if (!indexes.includes(index)) indexes.push(index);
+	}
+	return { list: next, indexes };
+}
+
+// The genres of a release group, already picked. A rejection is fetch's own
+// (aborted, timed out, offline) and is left to the caller, as lookupBarcode()
+// does. Busy and failed are one case here: the look-up has already filled the
+// form, and a genre that does not arrive says nothing.
+export async function fetchGenres(releaseGroupId, signal) {
+	if (!isReleaseGroupId(releaseGroupId)) return { status: "failed" };
+
+	const response = await fetch(GENRES_URL(releaseGroupId), { signal });
+	if (!response.ok) return { status: "failed" };
+
+	let body;
+	try {
+		body = await response.json();
+	} catch {
+		return { status: "failed" };
+	}
+	if (!body || typeof body !== "object") return { status: "failed" };
+
+	return { status: "ok", genres: pickGenres(body.genres) };
 }
