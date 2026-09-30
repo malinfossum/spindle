@@ -70,6 +70,13 @@ export function resetLookup() {
 	model.viewState.musicForm.lookup = blankLookup();
 }
 
+// Genres a look-up proposed belong to one visit to the form. Cancel is a
+// navigation, and so is Save once it has committed them, so this is what
+// drops them either way.
+function resetPendingGenres() {
+	model.viewState.musicForm.pendingGenres = [];
+}
+
 // How many past searches the dropdown offers. Short on purpose: it is a way
 // back to the search made a minute ago, not a log of the session.
 const SEARCH_HISTORY_LIMIT = 6;
@@ -111,5 +118,6 @@ export function resetTransientViewState() {
 	resetMusicFieldErrors();
 	resetMusicPanels();
 	resetLookup();
+	resetPendingGenres();
 	closeSuggestions();
 }

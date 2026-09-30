@@ -22,8 +22,8 @@ Spindle needs a secure context for encryption. Opening `index.html` directly via
 - Browse your collection as album cards
 - Search by artist, title, or genre
 - View and edit album details: notes, release year, genre, and shelf location
-- Add new albums with a cover image upload
-- Barcode look-up on MusicBrainz, with the album cover from the Cover Art Archive (opt-in, sends only the barcode)
+- Add new albums with a cover photo, cropped to a square you adjust before it is saved
+- Barcode look-up on MusicBrainz, with the album cover from the Cover Art Archive and the album's genres ticked for you (opt-in, sends nothing from your library)
 - Wishlist for albums you don't own yet
 - A local profile with custom genres and locations
 - Encrypted backup and restore, plus an opt-in readable export

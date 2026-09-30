@@ -1,16 +1,20 @@
 import { deleteCover, newCoverId, putCover } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
 import { blankAlbum, model } from "../../Model/model.js";
+import { commitGenres, genreKey } from "../../Model/musicbrainz.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
 import { forgetCover } from "../../View/Universal/cover.js";
+import { centreSquare } from "../../View/Universal/cropFrame.js";
+import { guessSquare } from "../../View/Universal/cropGuess.js";
 import { openDialog } from "../../View/Universal/dialog.js";
-import { downscaleCover } from "../../View/Universal/downscale.js";
+import { decodeCover, encodeCover, sampleCover } from "../../View/Universal/downscale.js";
 import { sniffImageType } from "../../View/Universal/sniff.js";
 import { appRoot, updateView } from "../../View/Universal/updateView.js";
 import { focusFirstInvalid } from "../Login/login.js";
 import { navigate } from "../Universal/router.js";
+import { cropPhoto } from "./crop.js";
 
 export function toggleLocationCheckbox(checkbox, index) {
 	const locations = model.viewState.musicInfo.location;
@@ -37,6 +41,13 @@ export function toggleGenreCheckbox(checkbox, index) {
 	}
 }
 
+// A genre a look-up proposed (v0.7). Unticking keeps it in the form, unticked,
+// so a mis-tap can be undone.
+export function togglePendingGenre(checkbox, index) {
+	const pending = model.viewState.musicForm.pendingGenres[index];
+	if (pending) pending.checked = checkbox.checked;
+}
+
 function rng() {
 	const number = Math.floor(Math.random() * 999999);
 	for (let i = 0; i < model.data.musicInfo.length; i++) {
@@ -60,6 +71,14 @@ export async function submitChanges(isEdit) {
 
 	const info = model.viewState.musicInfo;
 
+	// A ticked genre a look-up proposed counts, the same as one from my list.
+	// The ticks are copied now, so the genres that pass validation are the ones
+	// saved, even if a box changes while the cover is being written.
+	const ticked = model.viewState.musicForm.pendingGenres
+		.filter((genre) => genre.checked)
+		.map((genre) => ({ ...genre }));
+	const pendingTicked = ticked.length > 0;
+
 	// Validate every field at once so all problems show together (the old code
 	// fired one alert at a time). Carry over any cover error saveImage already set.
 	const errors = {
@@ -74,11 +93,12 @@ export async function submitChanges(isEdit) {
 			: model.data.location.length
 				? "error.pickLocation"
 				: "error.addLocationFirst",
-		genre: info.genre.length
-			? ""
-			: model.data.genre.length
-				? "error.pickGenre"
-				: "error.addGenreFirst",
+		genre:
+			info.genre.length || pendingTicked
+				? ""
+				: model.data.genre.length
+					? "error.pickGenre"
+					: "error.addGenreFirst",
 		barcode: "",
 		form: "",
 	};
@@ -116,6 +136,17 @@ export async function submitChanges(isEdit) {
 		}
 		replacedCoverId = model.viewState.musicInfo.coverId;
 		model.viewState.musicInfo.coverId = newId;
+	}
+
+	// New genres from a look-up join my list only now (v0.7), after the cover
+	// write, which can still stop the save. Unticked ones are dropped by the
+	// navigation below.
+	if (pendingTicked) {
+		const committed = commitGenres(model.data.genre, ticked);
+		model.data.genre = committed.list;
+		for (const index of committed.indexes) {
+			if (!info.genre.includes(index)) info.genre.push(index);
+		}
 	}
 
 	if (!isEdit) {
@@ -187,6 +218,17 @@ export function newGenre(event) {
 			}
 		}
 		model.data.genre.push(genre);
+		// A genre a look-up proposed and I have now added by hand is the same
+		// genre (v0.7): it leaves the pending list, and its tick moves to the
+		// new entry, so the form never shows it twice.
+		const pending = model.viewState.musicForm.pendingGenres;
+		const same = pending.findIndex((p) => genreKey(p.name) === genreKey(genre));
+		if (same !== -1) {
+			if (pending[same].checked) {
+				model.viewState.musicInfo.genre.push(model.data.genre.length - 1);
+			}
+			pending.splice(same, 1);
+		}
 		persistState();
 	}
 
@@ -273,10 +315,13 @@ export async function saveImage(image) {
 	const file = image.files[0];
 	if (!file) return;
 
-	const errors = model.viewState.musicForm.errors;
+	// Errors are read from the form each time, never held: Save during a slow
+	// decode can replace form.errors, and a message written to the old object
+	// would never show.
+	const form = model.viewState.musicForm;
 
 	if (file.size > MAX_UPLOAD_BYTES) {
-		errors.coverImg = "error.imageTooLarge";
+		form.errors.coverImg = "error.imageTooLarge";
 		image.value = "";
 		updateView();
 		focusFirstInvalid();
@@ -285,7 +330,7 @@ export async function saveImage(image) {
 
 	const mime = await sniffImageType(file);
 	if (!mime) {
-		errors.coverImg = "error.imageInvalid";
+		form.errors.coverImg = "error.imageInvalid";
 		image.value = "";
 		updateView();
 		focusFirstInvalid();
@@ -295,44 +340,58 @@ export async function saveImage(image) {
 	// Re-encoded small before anything stores it: a sleeve is drawn at 120px and
 	// arrives as a multi-megabyte photo. The canvas also drops the EXIF block,
 	// which is where a phone writes the GPS coordinates of wherever the picture
-	// was taken.
+	// was taken. Since v0.7 a crop dialog sits between decode and encode, and
+	// coverBusy stays true while it is open.
 	//
-	// If that fails, fall back to the file as it came: build the data URI from the
-	// sniffed MIME rather than file.type, so the stored prefix cannot be spoofed —
-	// strip FileReader's own prefix and re-attach ours.
+	// A photo that cannot be decoded or encoded is refused (v0.7). Until now it
+	// was kept as it came, EXIF included; the bytes were already checked above,
+	// so this is rare, and when it happens the field says so.
 	//
 	// Either way it goes to the form's preview, not to the album: nothing reaches
 	// IndexedDB until the album is saved, so choosing a cover and then cancelling
-	// leaves no row behind.
-	const form = model.viewState.musicForm;
+	// leaves no row behind. coverBusy disables the file input until the end, and
+	// the render in finally puts a fresh, empty input in its place.
 	form.coverBusy = true;
-	errors.coverImg = "";
+	form.errors.coverImg = "";
 	updateView();
 
+	// A large photo takes a moment to decode, and I can leave the form
+	// meanwhile. Add album and Edit both put a new musicInfo in place, so the
+	// same object and the same hash mean it is still the same visit.
+	const visit = model.viewState.musicInfo;
+	const openedOn = window.location.hash;
+	const stale = () => model.viewState.musicInfo !== visit || window.location.hash !== openedOn;
+
+	const bitmap = await decodeCover(file);
 	try {
-		const downscaled = await downscaleCover(file);
-		form.coverPreview = downscaled ?? `data:${mime};base64,${await readFileAsBase64(file)}`;
+		// Left the form while it decoded: the dialog must not open on
+		// whatever page is showing now.
+		if (stale()) return;
+		if (!bitmap) {
+			form.errors.coverImg = "error.coverProcess";
+			return;
+		}
+		// Guess on a small copy, then let me adjust it (v0.7). The dialog
+		// opens every time, on the guess, so I always see what gets saved.
+		const photo = { width: bitmap.width, height: bitmap.height };
+		const sample = sampleCover(bitmap);
+		const guess = sample ? guessSquare(sample, photo) : centreSquare(photo);
+		const square = await cropPhoto(bitmap, guess);
+		// Cancel, Escape or leaving the page: nothing changes, and an earlier
+		// cover stays.
+		if (square === null) return;
+		const dataUrl = encodeCover(bitmap, square);
+		if (dataUrl) form.coverPreview = dataUrl;
+		else form.errors.coverImg = "error.coverProcess";
 	} finally {
+		bitmap?.close();
 		form.coverBusy = false;
 		updateView();
 		// The render above replaced the input that was focused, so put focus back
 		// on its replacement — the picker is where someone tabbed to, and where
-		// they would go next to change their mind.
-		const picker = appRoot.querySelector("#music-cover");
-		if (picker) picker.focus();
+		// they would go next to change their mind. Not on a visit that is over.
+		if (!stale()) appRoot.querySelector("#music-cover")?.focus();
 	}
-}
-
-function readFileAsBase64(file) {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onload = () => {
-			const result = reader.result;
-			resolve(result.slice(result.indexOf(",") + 1));
-		};
-		reader.onerror = () => reject(reader.error);
-		reader.readAsDataURL(file);
-	});
 }
 
 // Lokasjon/Sjanger are groups, not single inputs, so clearFieldError (which keys

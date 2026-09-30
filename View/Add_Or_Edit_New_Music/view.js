@@ -42,11 +42,18 @@ function buildMusicForm(isEdit) {
 		busy: "lookup.coverBusy",
 		failed: "lookup.coverFailed",
 	};
+	// The genres (v0.7) follow the cover in the same sentence chain. A cover
+	// sentence ends with its own full stop, and the fill sentence does not.
+	const genreLine = lookup.genres.length
+		? t("lookup.genres", { genres: lookup.genres.map((name) => escapeHtml(name)).join(", ") })
+		: "";
 	const filledLine = lookup.filled
 		? t("music.lookupFilled", {
 				artist: escapeHtml(lookup.filled.artist),
 				title: escapeHtml(lookup.filled.title),
-			}) + (lookup.cover ? `. ${t(COVER_KEYS[lookup.cover])}` : "")
+			}) +
+			(lookup.cover ? `. ${t(COVER_KEYS[lookup.cover])}` : "") +
+			(genreLine ? `${lookup.cover ? " " : ". "}${genreLine}` : "")
 		: "";
 	const lookupStatus = busyLookup
 		? t("music.lookupWorking")
@@ -157,6 +164,24 @@ function buildMusicForm(isEdit) {
                    data-action-change="music-genre"
                    data-index="${i}">
             ${escapeHtml(loc)}
+        </label>
+    `,
+		)
+		.join("");
+
+	// Genres a look-up found that my list does not have yet (v0.7). The New
+	// label sits inside the <label>, so a screen reader hears it with the name.
+	const pendingBoxes = model.viewState.musicForm.pendingGenres
+		.map(
+			(pending, i) => /*HTML*/ `
+        <label class="checkbox-option">
+            <input type="checkbox"
+                   name="genre"
+                   ${pending.checked ? "checked" : ""}
+                   data-action-change="music-genre-new"
+                   data-index="${i}">
+            ${escapeHtml(pending.name)}
+            <span class="genre-new">${t("music.genreNew")}</span>
         </label>
     `,
 		)
@@ -365,7 +390,7 @@ function buildMusicForm(isEdit) {
                  aria-labelledby="music-genre-label"
                  aria-describedby="music-genre-error"
                  aria-invalid="${errors.genre ? "true" : "false"}">
-                ${genreBoxes}
+                ${genreBoxes}${pendingBoxes}
                 <button
                 type="button"
                 aria-label="${t("music.addGenreToggle")}"
