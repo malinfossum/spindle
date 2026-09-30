@@ -8,6 +8,7 @@ import {
 	keyStep,
 	panBy,
 	sideLimits,
+	wheelFactor,
 	ZOOM_STEP,
 	zoomAt,
 	zoomBy,
@@ -88,4 +89,24 @@ test("keyStep: arrows move 2 %, Shift 10 %, + and - zoom, other keys are not our
 	assert.equal(keyStep(frame, PHOTO, "a", false), null);
 	assert.equal(keyStep(frame, PHOTO, "Enter", false), null);
 	assert.equal(keyStep(frame, PHOTO, "constructor", false), null);
+});
+
+test("wheelFactor: one mouse notch is one zoom step, either way", () => {
+	assert.ok(Math.abs(wheelFactor(-100) - ZOOM_STEP) < 1e-9);
+	assert.ok(Math.abs(wheelFactor(100) - 1 / ZOOM_STEP) < 1e-9);
+	assert.ok(Math.abs(wheelFactor(-3, 1) - ZOOM_STEP) < 1e-9);
+	assert.ok(Math.abs(wheelFactor(-1, 2) - ZOOM_STEP) < 1e-9);
+	assert.equal(wheelFactor(0), 1);
+});
+
+test("wheelFactor: a trackpad's small deltas add up to the same zoom as one notch", () => {
+	let total = 1;
+	for (let i = 0; i < 25; i++) total *= wheelFactor(-4);
+	assert.ok(Math.abs(total - ZOOM_STEP) < 1e-9);
+	assert.ok(wheelFactor(-4) < 1.01);
+});
+
+test("wheelFactor: one event never zooms more than one notch", () => {
+	assert.ok(Math.abs(wheelFactor(-1000) - ZOOM_STEP) < 1e-9);
+	assert.ok(Math.abs(wheelFactor(1000) - 1 / ZOOM_STEP) < 1e-9);
 });

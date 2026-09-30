@@ -72,6 +72,19 @@ export function zoomBy(
 	return zoomAt(frame, photo, frame.side / factor, px, py);
 }
 
+// One mouse-wheel notch is about 100 px (Chrome, Edge, Safari), 3 lines
+// (Firefox) or a page. A trackpad sends many small deltas instead, so the zoom
+// follows the distance rather than the number of events, and one event never
+// zooms more than one notch.
+export const WHEEL_NOTCH_PX = 100;
+
+export function wheelFactor(deltaY, deltaMode = 0) {
+	let notches = deltaY / WHEEL_NOTCH_PX;
+	if (deltaMode === 1) notches = deltaY / 3;
+	if (deltaMode === 2) notches = Math.sign(deltaY);
+	return ZOOM_STEP ** -Math.max(-1, Math.min(1, notches));
+}
+
 // The photo moved by (dx, dy) photo pixels under a square that stays put.
 export function panBy(frame, photo, dx, dy) {
 	return clampFrame({ ...frame, x: frame.x - dx, y: frame.y - dy }, photo);

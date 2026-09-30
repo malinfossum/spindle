@@ -1821,6 +1821,10 @@ footer {
 	background: #000;
 	/* The stage takes every touch gesture; the page must not scroll or zoom. */
 	touch-action: none;
+	/* A drag that starts on the stage moves the photo, never selects the
+	   hint or the title. */
+	-webkit-user-select: none;
+	user-select: none;
 	cursor: grab;
 }
 
