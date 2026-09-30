@@ -1,6 +1,6 @@
 import { deleteCover, newCoverId, putCover } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
-import { blankAlbum, model } from "../../Model/model.js";
+import { blankAlbum, model, removeListEntry } from "../../Model/model.js";
 import { commitGenres, genreKey } from "../../Model/musicbrainz.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
@@ -253,7 +253,7 @@ export async function removeLocation(event) {
 		});
 
 		if (confirmed) {
-			model.data.location.splice(locationIdx, 1);
+			removeListEntry("location", locationIdx);
 			emptyGenreLocationList();
 			persistState();
 		}
@@ -279,7 +279,7 @@ export async function removeGenre(event) {
 		});
 
 		if (confirmed) {
-			model.data.genre.splice(genreIdx, 1);
+			removeListEntry("genre", genreIdx);
 			emptyGenreLocationList();
 			persistState();
 		}

@@ -218,9 +218,10 @@ export const STRINGS_EN = {
 	"dialog.deleteAlbumTitle": "Delete album?",
 	"dialog.deleteAlbumBody": "Delete “{title}” from your library?",
 	"dialog.deleteLocationTitle": "Delete location?",
-	"dialog.deleteLocationBody": "Delete “{name}” from the location list?",
+	"dialog.deleteLocationBody":
+		"Delete “{name}” from the location list? Albums that have it lose it.",
 	"dialog.deleteGenreTitle": "Delete genre?",
-	"dialog.deleteGenreBody": "Delete “{name}” from the genre list?",
+	"dialog.deleteGenreBody": "Delete “{name}” from the genre list? Albums that have it lose it.",
 	"dialog.logoutTitle": "Log out?",
 	"dialog.logoutBody":
 		"The library locks, and you need the password to open it again. Everything you have saved stays encrypted in this browser.",

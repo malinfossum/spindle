@@ -70,6 +70,28 @@ export function blankLibraryView() {
 	};
 }
 
+// Albums store positions in my genre and location lists, not names. Removing
+// an entry moves every later one down a place, so everything that holds a
+// position moves with it: the saved albums, the album on the form and the
+// library's filter. A position on the removed entry simply goes.
+export function removeListEntry(field, index) {
+	// splice(-1, 1) would remove the last entry, so a position that is not
+	// there removes nothing.
+	if (!Number.isInteger(index) || index < 0 || index >= model.data[field].length) return;
+	model.data[field].splice(index, 1);
+	const shift = (positions) =>
+		positions.filter((p) => p !== index).map((p) => (p > index ? p - 1 : p));
+
+	for (const album of model.data.musicInfo) album[field] = shift(album[field]);
+	model.viewState.musicInfo[field] = shift(model.viewState.musicInfo[field]);
+
+	const filter = model.viewState.library[field];
+	if (filter === "") return;
+	const position = Number(filter);
+	model.viewState.library[field] =
+		position === index ? "" : String(position > index ? position - 1 : position);
+}
+
 // The add/edit form's lookup, idle. Transient: resetLookup() in viewState.js
 // puts it back on every navigation, aborting a request in flight first, so a
 // response can never land on a page other than the one that asked for it.
