@@ -211,12 +211,7 @@ export function newGenre(event) {
 
 	const genre = model.viewState.editMusicInfo.genre.trim();
 
-	if (genre !== "") {
-		for (let i = 0; i < model.data.genre.length; i++) {
-			if (model.data.genre[i].toLowerCase() === genre.toLowerCase()) {
-				return;
-			}
-		}
+	if (genre !== "" && !model.data.genre.some((name) => genreKey(name) === genreKey(genre))) {
 		model.data.genre.push(genre);
 		// A genre a look-up proposed and I have now added by hand is the same
 		// genre (v0.7): it leaves the pending list, and its tick moves to the
