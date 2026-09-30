@@ -248,7 +248,9 @@ export async function removeLocation(event) {
 		});
 
 		if (confirmed) {
-			removeListEntry("location", locationIdx);
+			// I look the position up again: a stale one would remove the wrong entry.
+			const idx = model.data.location.indexOf(location);
+			if (idx !== -1) removeListEntry("location", idx);
 			emptyGenreLocationList();
 			persistState();
 		}
@@ -274,7 +276,9 @@ export async function removeGenre(event) {
 		});
 
 		if (confirmed) {
-			removeListEntry("genre", genreIdx);
+			// I look the position up again: a stale one would remove the wrong entry.
+			const idx = model.data.genre.indexOf(genre);
+			if (idx !== -1) removeListEntry("genre", idx);
 			emptyGenreLocationList();
 			persistState();
 		}

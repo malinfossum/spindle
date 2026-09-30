@@ -49,8 +49,9 @@ function focusById(id) {
 // What has focus, and where its caret is, so a re-render can put both back.
 // A number field has no caret API (selectionStart is null there), so only
 // its focus returns. The genre and location boxes have no id, so they are
-// found by their action and position instead; positions cannot shift before
-// Save.
+// found by their action and position instead. Positions cannot shift between
+// the snapshot and the restore, because both run in the same synchronous
+// render.
 function focusSnapshot() {
 	const node = document.activeElement;
 	let selector = null;
@@ -172,10 +173,9 @@ async function addCover(match, controller) {
 }
 
 // Ends the cover step: records the result, re-renders, and puts focus and the
-// caret back where the fill left them — updateView() replaces the field that
-// had them. The
-// controller stays: the genre request may still hang off it, and fill()
-// releases it when both are done.
+// caret back where the fill left them: updateView() replaces the field that
+// had them. The controller stays: the genre request may still hang off it,
+// and fill() releases it when both are done.
 function settleCover(state, controller) {
 	const lookup = model.viewState.musicForm.lookup;
 	if (lookup.controller !== controller) return;
