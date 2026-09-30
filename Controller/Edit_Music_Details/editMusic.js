@@ -72,8 +72,12 @@ export async function submitChanges(isEdit) {
 	const info = model.viewState.musicInfo;
 
 	// A ticked genre a look-up proposed counts, the same as one from my list.
-	const pending = model.viewState.musicForm.pendingGenres;
-	const pendingTicked = pending.some((genre) => genre.checked);
+	// The ticks are copied now, so the genres that pass validation are the ones
+	// saved, even if a box changes while the cover is being written.
+	const ticked = model.viewState.musicForm.pendingGenres
+		.filter((genre) => genre.checked)
+		.map((genre) => ({ ...genre }));
+	const pendingTicked = ticked.length > 0;
 
 	// Validate every field at once so all problems show together (the old code
 	// fired one alert at a time). Carry over any cover error saveImage already set.
@@ -138,7 +142,7 @@ export async function submitChanges(isEdit) {
 	// write, which can still stop the save. Unticked ones are dropped by the
 	// navigation below.
 	if (pendingTicked) {
-		const committed = commitGenres(model.data.genre, pending);
+		const committed = commitGenres(model.data.genre, ticked);
 		model.data.genre = committed.list;
 		for (const index of committed.indexes) {
 			if (!info.genre.includes(index)) info.genre.push(index);
@@ -311,10 +315,13 @@ export async function saveImage(image) {
 	const file = image.files[0];
 	if (!file) return;
 
-	const errors = model.viewState.musicForm.errors;
+	// Errors are read from the form each time, never held: Save during a slow
+	// decode can replace form.errors, and a message written to the old object
+	// would never show.
+	const form = model.viewState.musicForm;
 
 	if (file.size > MAX_UPLOAD_BYTES) {
-		errors.coverImg = "error.imageTooLarge";
+		form.errors.coverImg = "error.imageTooLarge";
 		image.value = "";
 		updateView();
 		focusFirstInvalid();
@@ -323,7 +330,7 @@ export async function saveImage(image) {
 
 	const mime = await sniffImageType(file);
 	if (!mime) {
-		errors.coverImg = "error.imageInvalid";
+		form.errors.coverImg = "error.imageInvalid";
 		image.value = "";
 		updateView();
 		focusFirstInvalid();
@@ -344,9 +351,8 @@ export async function saveImage(image) {
 	// IndexedDB until the album is saved, so choosing a cover and then cancelling
 	// leaves no row behind. coverBusy disables the file input until the end, and
 	// the render in finally puts a fresh, empty input in its place.
-	const form = model.viewState.musicForm;
 	form.coverBusy = true;
-	errors.coverImg = "";
+	form.errors.coverImg = "";
 	updateView();
 
 	// A large photo takes a moment to decode, and I can leave the form
@@ -362,7 +368,7 @@ export async function saveImage(image) {
 		// whatever page is showing now.
 		if (stale()) return;
 		if (!bitmap) {
-			errors.coverImg = "error.coverProcess";
+			form.errors.coverImg = "error.coverProcess";
 			return;
 		}
 		// Guess on a small copy, then let me adjust it (v0.7). The dialog
@@ -376,7 +382,7 @@ export async function saveImage(image) {
 		if (square === null) return;
 		const dataUrl = encodeCover(bitmap, square);
 		if (dataUrl) form.coverPreview = dataUrl;
-		else errors.coverImg = "error.coverProcess";
+		else form.errors.coverImg = "error.coverProcess";
 	} finally {
 		bitmap?.close();
 		form.coverBusy = false;

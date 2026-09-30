@@ -82,7 +82,7 @@ export function blankLookup() {
 		cover: null, // null | "added" | "none" | "busy" | "failed" — what the cover request came to (v0.5)
 		answeredAt: 0, // performance.now() when the barcode search answered; the genre request waits 1.1 s from it (v0.7)
 		genres: [], // names the genre request ticked, in vote order, for the status line (v0.7)
-		controller: null, // AbortController of the request in flight — the lookup, then the cover
+		controller: null, // AbortController of the request in flight — the lookup, then the cover and the genres
 	};
 }
 

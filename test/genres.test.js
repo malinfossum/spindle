@@ -54,6 +54,15 @@ test("pickGenres drops malformed entries and cleans the names it keeps", () => {
 	assert.deepEqual(picked, ["x".repeat(40), "indie rock"]);
 });
 
+test("pickGenres turns a lone control or format character into a space", () => {
+	const picked = pickGenres([
+		{ name: "hip\u0001hop", count: 10 },
+		{ name: "post‮rock", count: 9 },
+		{ name: "shoe​gaze", count: 8 },
+	]);
+	assert.deepEqual(picked, ["hip hop", "post rock", "shoe gaze"]);
+});
+
 test("pickGenres keeps one of two spellings of the same genre", () => {
 	const picked = pickGenres([
 		{ name: "hip hop", count: 10 },

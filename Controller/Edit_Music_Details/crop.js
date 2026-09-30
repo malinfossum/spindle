@@ -82,6 +82,9 @@ export async function cropPhoto(bitmap, guess) {
 	const lift = (event) => pointers.delete(event.pointerId);
 	stage.addEventListener("pointerup", lift);
 	stage.addEventListener("pointercancel", lift);
+	// Belt and braces: a pointer the stage loses by any other path is forgotten
+	// too, so a stale finger can never turn the next drag into a pinch.
+	stage.addEventListener("lostpointercapture", lift);
 
 	// The wheel zooms around the cursor, 10 % a notch.
 	stage.addEventListener(

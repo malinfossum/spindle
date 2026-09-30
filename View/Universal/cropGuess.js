@@ -30,6 +30,9 @@ export const FOREGROUND_DISTANCE = 100;
 // sleeve now has to fill over half the photo's width and height to be found.
 export const LINE_SHARE = 0.5;
 // The box must be roughly square and cover at least a quarter of the photo.
+// With LINE_SHARE at 1/2 an upright sleeve always passes the area check, but a
+// sleeve shot at an angle passes only its middle rows and columns: its box can
+// be about 0.4 by 0.4 of the photo, and this check sends that to the centre.
 export const MIN_RATIO = 0.8;
 export const MAX_RATIO = 1.25;
 export const MIN_AREA_SHARE = 0.25;

@@ -4,7 +4,7 @@
 // been answered yes once.
 //
 // The flow is a straight line, runLookup(): check the library, check the pref,
-// send, fill, fetch the cover. The button and the scanner both call it — a
+// send, fill, fetch the cover and the genres. The button and the scanner both call it — a
 // scan is the press. Each stop renders and says where focus goes, because
 // updateView() replaces #app and would otherwise drop it on <body>.
 

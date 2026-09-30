@@ -220,11 +220,13 @@ export function genreKey(name) {
 		.trim();
 }
 
-// A control character becomes a space before whitespace is collapsed, so
-// "hip\thop" stays two words. The cap counts characters, not UTF-16 units.
+// A control or format character becomes a space before whitespace is
+// collapsed, so "hip\thop" stays two words, and a bidi override or a zero-width
+// space cannot make a name look reversed or give it an invisible twin. The cap
+// counts characters, not UTF-16 units.
 function cleanGenreName(name) {
 	const flat = name
-		.replace(/\p{Cc}/gu, " ")
+		.replace(/[\p{Cc}\p{Cf}]/gu, " ")
 		.replace(/\s+/g, " ")
 		.trim();
 	return [...flat].slice(0, GENRE_NAME_MAX).join("").trim();
