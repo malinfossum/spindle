@@ -668,6 +668,15 @@ footer {
 	flex-wrap: wrap;
 }
 
+/* A tag is one line while it fits, but never wider than the card's text
+   column: an album with three long genres would otherwise run under View and
+   Delete. It wraps rather than truncates, so no genre is hidden. */
+.album-meta .tag {
+	max-width: 100%;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
 /* Raised back above .album-open::after so these keep their own clicks. */
 .album-actions {
 	position: relative;
