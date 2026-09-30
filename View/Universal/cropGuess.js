@@ -20,10 +20,15 @@ export const RING_SHARE = 0.04;
 // the background is not plain (a full shelf) and there is nothing to measure.
 export const BUSY_RING_SHARE = 0.3;
 // How far a pixel must be from the background, over R, G, B and alpha, to
-// count as sleeve. The largest possible distance is 510.
-export const FOREGROUND_DISTANCE = 60;
+// count as sleeve. The largest possible distance is 510. Raised from 60 to
+// 100 on 2026-09-30: a wooden table lit from one side, where the lit half of
+// the table read as sleeve.
+export const FOREGROUND_DISTANCE = 100;
 // A row or column is part of the sleeve when more than this share of it is.
-export const LINE_SHARE = 0.2;
+// Raised from 1/5 to 1/2 on 2026-09-30, for the same table: its lit rows were
+// still 30 to 46 % "sleeve" at any threshold, the CD's rows 65 to 85 %. So a
+// sleeve now has to fill over half the photo's width and height to be found.
+export const LINE_SHARE = 0.5;
 // The box must be roughly square and cover at least a quarter of the photo.
 export const MIN_RATIO = 0.8;
 export const MAX_RATIO = 1.25;

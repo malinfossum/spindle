@@ -23,18 +23,18 @@ const TABLE = [120, 90, 60, 255];
 const SLEEVE = [230, 230, 220, 255];
 
 test("a sleeve on a plain table gives its own square", () => {
-	const sample = image(100, 75, TABLE, { x: 30, y: 10, w: 50, h: 50 }, SLEEVE);
-	assert.deepEqual(guessSquare(sample, PHOTO), { x: 300, y: 100, side: 500 });
+	const sample = image(100, 75, TABLE, { x: 30, y: 10, w: 60, h: 60 }, SLEEVE);
+	assert.deepEqual(guessSquare(sample, PHOTO), { x: 300, y: 100, side: 600 });
 });
 
 test("a sleeve on a transparent ground is found by its alpha", () => {
-	const sample = image(100, 75, [0, 0, 0, 0], { x: 30, y: 10, w: 50, h: 50 }, [0, 0, 0, 255]);
-	assert.deepEqual(guessSquare(sample, PHOTO), { x: 300, y: 100, side: 500 });
+	const sample = image(100, 75, [0, 0, 0, 0], { x: 30, y: 10, w: 60, h: 60 }, [0, 0, 0, 255]);
+	assert.deepEqual(guessSquare(sample, PHOTO), { x: 300, y: 100, side: 600 });
 });
 
 test("a box that is nearly square becomes its longer side, centred on the box", () => {
-	const sample = image(100, 75, TABLE, { x: 30, y: 10, w: 45, h: 50 }, SLEEVE);
-	assert.deepEqual(guessSquare(sample, PHOTO), { x: 275, y: 100, side: 500 });
+	const sample = image(100, 75, TABLE, { x: 30, y: 10, w: 55, h: 60 }, SLEEVE);
+	assert.deepEqual(guessSquare(sample, PHOTO), { x: 275, y: 100, side: 600 });
 });
 
 test("a sleeve wider than the photo is tall keeps its centre", () => {
