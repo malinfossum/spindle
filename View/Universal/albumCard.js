@@ -34,10 +34,14 @@ export function createAlbumCard(album) {
                     data-id="${album.id}">${escapeHtml(album.title)}</button>
             <div class="album-artist">${escapeHtml(album.artist)}</div>
             <div class="album-meta">
-                <span class="tag">${escapeHtml(genre)}</span>
-                <span class="tag">${icon("pin", { size: 13 })}${escapeHtml(location)}</span>
-                <span class="tag">${icon("calendar", { size: 13 })}${album.releaseYear || "—"}</span>
-                ${album.wishlist ? `<span class="tag">${icon("star", { size: 13 })}${t("music.wishlist")}</span>` : ""}
+                <div class="album-meta-row">
+                    <span class="tag">${escapeHtml(genre)}</span>
+                </div>
+                <div class="album-meta-row">
+                    <span class="tag">${icon("pin", { size: 13 })}${escapeHtml(location)}</span>
+                    <span class="tag">${icon("calendar", { size: 13 })}${album.releaseYear || "—"}</span>
+                </div>
+                ${album.wishlist ? `<div class="album-meta-row"><span class="tag">${icon("star", { size: 13 })}${t("music.wishlist")}</span></div>` : ""}
             </div>
         </div>
 
