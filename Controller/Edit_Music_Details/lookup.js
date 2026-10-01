@@ -46,6 +46,37 @@ function focusById(id) {
 	if (node) node.focus();
 }
 
+// What has focus, and where its caret is, so a re-render can put both back.
+// A number field has no caret API (selectionStart is null there), so only
+// its focus returns. The genre and location boxes have no id, so they are
+// found by their action and position instead. Positions cannot shift between
+// the snapshot and the restore, because both run in the same synchronous
+// render.
+function focusSnapshot() {
+	const node = document.activeElement;
+	let selector = null;
+	if (node?.id) selector = `#${node.id}`;
+	else if (node?.dataset?.actionChange && node.dataset.index !== undefined) {
+		selector = `[data-action-change="${node.dataset.actionChange}"][data-index="${node.dataset.index}"]`;
+	}
+	if (!selector) return null;
+	const caret =
+		typeof node.selectionStart === "number"
+			? [node.selectionStart, node.selectionEnd, node.selectionDirection]
+			: null;
+	return { selector, caret };
+}
+
+function restoreFocus(snapshot) {
+	if (!snapshot) return;
+	const node = appRoot.querySelector(snapshot.selector);
+	if (!node) return;
+	node.focus();
+	if (snapshot.caret && typeof node.setSelectionRange === "function") {
+		node.setSelectionRange(...snapshot.caret);
+	}
+}
+
 function failWith(errorKey) {
 	const form = model.viewState.musicForm;
 	form.errors.barcode = errorKey;
@@ -89,11 +120,14 @@ async function fill(match, digits) {
 	updateView();
 	focusById(firstFilled ?? "music-barcode");
 
-	await Promise.all([addCover(match, controller), addGenres(match, controller)]);
-	// Both are done: the look-up holds no request any more — unless a newer
-	// one has taken over, which owns its own controller.
-	const current = model.viewState.musicForm.lookup;
-	if (current.controller === controller) current.controller = null;
+	try {
+		await Promise.all([addCover(match, controller), addGenres(match, controller)]);
+	} finally {
+		// Both are done, or one threw: the look-up holds no request any more,
+		// unless a newer one has taken over, which owns its own controller.
+		const current = model.viewState.musicForm.lookup;
+		if (current.controller === controller) current.controller = null;
+	}
 }
 
 // Fetches the front cover for a filled match — only when the cover field is
@@ -123,8 +157,13 @@ async function addCover(match, controller) {
 
 	if (result.status !== "ok") return settleCover(result.status, controller);
 
-	const mime = await sniffImageType(result.blob);
-	const dataUrl = mime ? await downscaleCover(result.blob) : null;
+	let dataUrl = null;
+	try {
+		const mime = await sniffImageType(result.blob);
+		dataUrl = mime ? await downscaleCover(result.blob) : null;
+	} catch {
+		// A cover I cannot read is a failed cover, not a broken look-up.
+	}
 	if (form.lookup.controller !== controller) return;
 	if (!dataUrl) return settleCover("failed", controller);
 
@@ -133,17 +172,17 @@ async function addCover(match, controller) {
 	settleCover("added", controller);
 }
 
-// Ends the cover step: records the result, re-renders, and puts focus back
-// where the fill left it — updateView() replaces the field that had it. The
-// controller stays: the genre request may still hang off it, and fill()
-// releases it when both are done.
+// Ends the cover step: records the result, re-renders, and puts focus and the
+// caret back where the fill left them: updateView() replaces the field that
+// had them. The controller stays: the genre request may still hang off it,
+// and fill() releases it when both are done.
 function settleCover(state, controller) {
 	const lookup = model.viewState.musicForm.lookup;
 	if (lookup.controller !== controller) return;
 	lookup.cover = state;
-	const active = document.activeElement?.id;
+	const focus = focusSnapshot();
 	updateView();
-	if (active) focusById(active);
+	restoreFocus(focus);
 }
 
 // Waits ms, or rejects the moment the signal aborts.
@@ -206,9 +245,9 @@ async function addGenres(match, controller) {
 	// names them.
 	form.lookup.genres = names;
 	form.errors.genre = "";
-	const active = document.activeElement?.id;
+	const focus = focusSnapshot();
 	updateView();
-	if (active) focusById(active);
+	restoreFocus(focus);
 }
 
 // The button. Validates the field, then hands over to the one path.
@@ -286,6 +325,7 @@ async function runLookup(digits) {
 	lookup.controller = controller;
 	lookup.filled = null;
 	lookup.cover = null;
+	lookup.genres = [];
 	lookup.matches = [];
 	updateView();
 

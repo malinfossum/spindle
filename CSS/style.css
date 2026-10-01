@@ -661,11 +661,35 @@ footer {
 	margin-top: 0.15rem;
 }
 
+/* Every card reads in the same order: genres on the first row, then location
+   and release year side by side on the second, then the wishlist tag on a row
+   of its own so it stands out. Before, all tags shared one
+   wrapping row, so where the year landed depended on how long the genres were. */
 .album-meta {
 	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 	gap: 0.35rem;
 	margin-top: 0.4rem;
+}
+
+/* Location and year sit side by side while they fit. On a phone the text
+   column is only ~130 px wide, so a long location pushes the year under it
+   rather than squeezing itself into a sliver; the order never changes. */
+.album-meta-row {
+	display: flex;
 	flex-wrap: wrap;
+	gap: 0.35rem;
+	max-width: 100%;
+}
+
+/* A tag is one line while it fits, but never wider than the card's text
+   column: an album with three long genres would otherwise run under View and
+   Delete. It wraps rather than truncates, so no genre is hidden. */
+.album-meta .tag {
+	max-width: 100%;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 /* Raised back above .album-open::after so these keep their own clicks. */
@@ -1812,6 +1836,10 @@ footer {
 	background: #000;
 	/* The stage takes every touch gesture; the page must not scroll or zoom. */
 	touch-action: none;
+	/* A drag that starts on the stage moves the photo, never selects the
+	   hint or the title. */
+	-webkit-user-select: none;
+	user-select: none;
 	cursor: grab;
 }
 

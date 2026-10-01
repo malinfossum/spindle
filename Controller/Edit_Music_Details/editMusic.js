@@ -1,6 +1,6 @@
 import { deleteCover, newCoverId, putCover } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
-import { blankAlbum, model } from "../../Model/model.js";
+import { blankAlbum, model, removeListEntry } from "../../Model/model.js";
 import { commitGenres, genreKey } from "../../Model/musicbrainz.js";
 import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
@@ -211,12 +211,7 @@ export function newGenre(event) {
 
 	const genre = model.viewState.editMusicInfo.genre.trim();
 
-	if (genre !== "") {
-		for (let i = 0; i < model.data.genre.length; i++) {
-			if (model.data.genre[i].toLowerCase() === genre.toLowerCase()) {
-				return;
-			}
-		}
+	if (genre !== "" && !model.data.genre.some((name) => genreKey(name) === genreKey(genre))) {
 		model.data.genre.push(genre);
 		// A genre a look-up proposed and I have now added by hand is the same
 		// genre (v0.7): it leaves the pending list, and its tick moves to the
@@ -253,7 +248,9 @@ export async function removeLocation(event) {
 		});
 
 		if (confirmed) {
-			model.data.location.splice(locationIdx, 1);
+			// I look the position up again: a stale one would remove the wrong entry.
+			const idx = model.data.location.indexOf(location);
+			if (idx !== -1) removeListEntry("location", idx);
 			emptyGenreLocationList();
 			persistState();
 		}
@@ -279,7 +276,9 @@ export async function removeGenre(event) {
 		});
 
 		if (confirmed) {
-			model.data.genre.splice(genreIdx, 1);
+			// I look the position up again: a stale one would remove the wrong entry.
+			const idx = model.data.genre.indexOf(genre);
+			if (idx !== -1) removeListEntry("genre", idx);
 			emptyGenreLocationList();
 			persistState();
 		}

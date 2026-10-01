@@ -11,6 +11,7 @@ import {
 	clampFrame,
 	keyStep,
 	panBy,
+	wheelFactor,
 	ZOOM_STEP,
 	zoomAt,
 	zoomBy,
@@ -86,14 +87,14 @@ export async function cropPhoto(bitmap, guess) {
 	// too, so a stale finger can never turn the next drag into a pinch.
 	stage.addEventListener("lostpointercapture", lift);
 
-	// The wheel zooms around the cursor, 10 % a notch.
+	// The wheel zooms around the cursor, 10 % a notch, by distance on a trackpad.
 	stage.addEventListener(
 		"wheel",
 		(event) => {
 			if (event.deltaY === 0) return;
 			event.preventDefault();
 			const [px, py] = pointAt(event.clientX, event.clientY);
-			update(zoomBy(frame, photo, event.deltaY < 0 ? ZOOM_STEP : 1 / ZOOM_STEP, px, py));
+			update(zoomBy(frame, photo, wheelFactor(event.deltaY, event.deltaMode), px, py));
 		},
 		{ passive: false },
 	);

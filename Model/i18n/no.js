@@ -224,9 +224,11 @@ export const STRINGS_NO = {
 	"dialog.deleteAlbumTitle": "Slette album?",
 	"dialog.deleteAlbumBody": "Vil du slette «{title}» fra biblioteket?",
 	"dialog.deleteLocationTitle": "Slette lokasjon?",
-	"dialog.deleteLocationBody": "Vil du slette «{name}» fra lokasjonslisten?",
+	"dialog.deleteLocationBody":
+		"Vil du slette «{name}» fra lokasjonslisten? Album som har den, mister den.",
 	"dialog.deleteGenreTitle": "Slette sjanger?",
-	"dialog.deleteGenreBody": "Vil du slette «{name}» fra sjangerlisten?",
+	"dialog.deleteGenreBody":
+		"Vil du slette «{name}» fra sjangerlisten? Album som har den, mister den.",
 	"dialog.logoutTitle": "Logge ut?",
 	"dialog.logoutBody":
 		"Biblioteket låses, og du trenger passordet for å åpne det igjen. Alt du har lagret blir liggende kryptert i denne nettleseren.",

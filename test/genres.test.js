@@ -150,3 +150,36 @@ test("fetchGenres gives no genres when the body has none", async () => {
 	globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => ({}) });
 	assert.deepEqual(await fetchGenres(NEVERMIND_ID), { status: "ok", genres: [] });
 });
+
+test("pickGenres keeps a genre at exactly a quarter of the top votes, and not below it", () => {
+	const genres = [
+		{ name: "grunge", count: 48 },
+		{ name: "alternative rock", count: 12 },
+		{ name: "rock", count: 11.99 },
+	];
+	assert.deepEqual(pickGenres(genres), ["grunge", "alternative rock"]);
+});
+
+test("pickGenres cuts a name at 40 characters, not 40 UTF-16 units", () => {
+	const [name] = pickGenres([{ name: "🎸".repeat(45), count: 1 }]);
+	assert.equal([...name].length, 40);
+	assert.equal(name, "🎸".repeat(40));
+});
+
+test("fetchGenres hands its signal to fetch", async () => {
+	let seen;
+	globalThis.fetch = async (_url, options) => {
+		seen = options?.signal;
+		return { ok: true, status: 200, json: async () => ({ genres: NEVERMIND }) };
+	};
+	const signal = new AbortController().signal;
+	await fetchGenres(NEVERMIND_ID, signal);
+	assert.equal(seen, signal);
+});
+
+test("fetchGenres leaves a rejection from fetch to the caller", async () => {
+	globalThis.fetch = async () => {
+		throw new DOMException("The operation was aborted.", "AbortError");
+	};
+	await assert.rejects(fetchGenres(NEVERMIND_ID), { name: "AbortError" });
+});
