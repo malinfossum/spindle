@@ -300,6 +300,16 @@ test("settleTwist snaps to straight within 1°, and leaves anything else", () =>
 	assert.equal(settleTwist(-12), -12);
 });
 
+test("settleTwist leaves a tilt the twist never changed: a pinch keeps a slider-set 1°", () => {
+	assert.equal(settleTwist(1, 1), 1);
+	assert.equal(settleTwist(-0.5, -0.5), -0.5);
+	assert.equal(settleTwist(0.5, 12), 0);
+});
+
+test("setTilt: the slider path never snaps, so 0.5° is reachable", () => {
+	assert.equal(setTilt(frameFromSquare(centreSquare(PHOTO)), PHOTO, 0.5).tilt, 0.5);
+});
+
 test("angleDelta: a twist across ±180° is a small turn, not a full one", () => {
 	assert.equal(angleDelta(170, -170), 20);
 	assert.equal(angleDelta(-170, 170), -20);

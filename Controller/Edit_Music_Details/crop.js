@@ -158,8 +158,9 @@ export async function cropPhoto(bitmap, start) {
 			return;
 		}
 		// The gesture is over. Close to straight is straight.
+		const { startTilt } = twist;
 		twist = null;
-		const settled = settleTwist(frame.tilt);
+		const settled = settleTwist(frame.tilt, startTilt);
 		if (settled !== frame.tilt) update(setTilt(frame, photo, settled));
 	};
 	stage.addEventListener("pointerup", lift);

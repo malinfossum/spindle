@@ -254,8 +254,10 @@ export function twistTilt(startTilt, turned) {
 }
 
 // The tilt a twist leaves behind when it ends: straight, when it ended within
-// TWIST_SNAP of it.
-export function settleTwist(tilt) {
+// TWIST_SNAP of it. A gesture that never changed the tilt (a plain pinch)
+// leaves it alone, so a 0.5° set with the slider survives a zoom.
+export function settleTwist(tilt, startTilt) {
+	if (tilt === startTilt) return tilt;
 	return Math.abs(tilt) <= TWIST_SNAP ? 0 : tilt;
 }
 
