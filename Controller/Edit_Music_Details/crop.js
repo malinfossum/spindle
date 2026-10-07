@@ -1,8 +1,8 @@
 // Pointer, wheel and key handling for the crop dialog (v0.7). The frame lives
 // here; View/Universal/cropFrame.js does its maths and
-// View/Universal/cropDialog.js draws it. cropPhoto() resolves with the square
-// I chose, in the photo's pixels, or null for Cancel, Escape and leaving the
-// page.
+// View/Universal/cropDialog.js draws it. cropPhoto() starts from a frame and
+// resolves with the frame I chose, in the photo's pixels, or null for Cancel,
+// Escape and leaving the page.
 
 import { openCropDialog } from "../../View/Universal/cropDialog.js";
 import {
@@ -11,15 +11,16 @@ import {
 	clampFrame,
 	keyStep,
 	panBy,
+	screenToPhoto,
 	wheelFactor,
 	ZOOM_STEP,
 	zoomAt,
 	zoomBy,
 } from "../../View/Universal/cropFrame.js";
 
-export async function cropPhoto(bitmap, guess) {
+export async function cropPhoto(bitmap, start) {
 	const photo = { width: bitmap.width, height: bitmap.height };
-	let frame = clampFrame(guess, photo);
+	let frame = clampFrame(start, photo);
 	const view = openCropDialog(bitmap);
 	const { stage } = view;
 
@@ -43,7 +44,11 @@ export async function cropPhoto(bitmap, guess) {
 	const pointAt = (clientX, clientY) => {
 		const box = stage.getBoundingClientRect();
 		const scale = photoPerPx();
-		return [frame.x + (clientX - box.left) * scale, frame.y + (clientY - box.top) * scale];
+		return screenToPhoto(
+			frame,
+			(clientX - box.left - box.width / 2) * scale,
+			(clientY - box.top - box.height / 2) * scale,
+		);
 	};
 
 	// One pointer drags; two pinch around their midpoint.

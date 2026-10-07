@@ -12,6 +12,7 @@
 // Escape are the ways out.
 
 import { t } from "../../Model/i18n/i18n.js";
+import { frameTransform } from "./cropFrame.js";
 
 // The stage redraws on every move, and a 48-megapixel phone photo is larger
 // than many phone GPUs take as one texture. So the stage draws from a copy at
@@ -134,21 +135,14 @@ export function openCropDialog(bitmap) {
 		}
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
-		ctx.imageSmoothingQuality = "high";
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.clearRect(0, 0, px, px);
-		// The frame is in the full photo's pixels; the copy may be smaller.
-		const s = preview.scale;
-		ctx.drawImage(
-			preview.source,
-			frame.x * s,
-			frame.y * s,
-			frame.side * s,
-			frame.side * s,
-			0,
-			0,
-			px,
-			px,
-		);
+		ctx.imageSmoothingQuality = "high";
+		// Turned, tilted and zoomed by the frame, from the copy when there is
+		// one. The saved cover is drawn through the same transform.
+		ctx.setTransform(...frameTransform(frame, px, preview.scale));
+		ctx.drawImage(preview.source, 0, 0);
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
 	}
 
 	// A zoom button that disables itself while focused would drop focus to
