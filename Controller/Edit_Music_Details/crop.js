@@ -1,9 +1,11 @@
-// Pointer, wheel and key handling for the crop dialog (v0.7). The frame lives
-// here; View/Universal/cropFrame.js does its maths and
+// Pointer, wheel and key handling for the crop dialog (v0.7), and since v0.8
+// the turn button and the straighten slider. The frame
+// lives here; View/Universal/cropFrame.js does its maths and
 // View/Universal/cropDialog.js draws it. cropPhoto() starts from a frame and
 // resolves with the frame I chose, in the photo's pixels, or null for Cancel,
 // Escape and leaving the page.
 
+import { formatNumber, t } from "../../Model/i18n/i18n.js";
 import { openCropDialog } from "../../View/Universal/cropDialog.js";
 import {
 	canZoomIn,
@@ -12,31 +14,71 @@ import {
 	keyStep,
 	panBy,
 	screenToPhoto,
+	setTilt,
+	turnQuarter,
 	wheelFactor,
 	ZOOM_STEP,
 	zoomAt,
 	zoomBy,
+	zoomLevel,
 } from "../../View/Universal/cropFrame.js";
+
+// The straighten grid stays this long after the last change of tilt, then
+// fades over GRID_FADE (or goes at once under reduced motion).
+const GRID_LINGER = 500;
+const GRID_FADE = 200;
 
 export async function cropPhoto(bitmap, start) {
 	const photo = { width: bitmap.width, height: bitmap.height };
 	let frame = clampFrame(start, photo);
 	const view = openCropDialog(bitmap);
 	const { stage } = view;
+	const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 	// One draw per frame, however many moves arrive in between.
 	let queued = 0;
-	const update = (next) => {
-		frame = next;
-		view.setZoomLimits(canZoomIn(frame, photo), canZoomOut(frame, photo));
+	let grid = 0;
+	const paint = () => {
 		if (!queued) {
 			queued = requestAnimationFrame(() => {
 				queued = 0;
-				view.draw(frame);
+				view.draw(frame, grid);
 			});
 		}
 	};
+	const update = (next) => {
+		frame = next;
+		view.setZoomLimits(canZoomIn(frame, photo), canZoomOut(frame, photo));
+		view.showTilt(frame.tilt);
+		paint();
+	};
 	update(frame);
+
+	// The grid shows while the tilt changes, and fades once it has stopped.
+	let gridTimer = 0;
+	let fading = 0;
+	const fadeGrid = () => {
+		if (calm.matches) {
+			grid = 0;
+			paint();
+			return;
+		}
+		const began = performance.now();
+		const step = (now) => {
+			grid = Math.max(0, 1 - (now - began) / GRID_FADE);
+			paint();
+			fading = grid > 0 ? requestAnimationFrame(step) : 0;
+		};
+		fading = requestAnimationFrame(step);
+	};
+	const showGrid = () => {
+		cancelAnimationFrame(fading);
+		fading = 0;
+		grid = 1;
+		paint();
+		clearTimeout(gridTimer);
+		gridTimer = setTimeout(fadeGrid, GRID_LINGER);
+	};
 
 	// How many photo pixels one CSS pixel of the stage covers, and a screen
 	// point as a photo point.
@@ -119,8 +161,26 @@ export async function cropPhoto(bitmap, start) {
 		update(next);
 	});
 
-	view.zoomIn.addEventListener("click", () => update(zoomBy(frame, photo, ZOOM_STEP)));
-	view.zoomOut.addEventListener("click", () => update(zoomBy(frame, photo, 1 / ZOOM_STEP)));
+	// Every button press says what it did (v0.8). The slider needs no line:
+	// its own value is spoken.
+	const sayZoom = () =>
+		view.say(t("crop.zoomLevel", { n: formatNumber(zoomLevel(frame, photo)) }));
+	view.zoomIn.addEventListener("click", () => {
+		update(zoomBy(frame, photo, ZOOM_STEP));
+		sayZoom();
+	});
+	view.zoomOut.addEventListener("click", () => {
+		update(zoomBy(frame, photo, 1 / ZOOM_STEP));
+		sayZoom();
+	});
+	view.rotate.addEventListener("click", () => {
+		update(turnQuarter(frame, photo));
+		view.say(t("crop.rotated", { n: formatNumber(frame.quarter * 90) }));
+	});
+	view.tilt.addEventListener("input", () => {
+		update(setTilt(frame, photo, Number(view.tilt.value)));
+		showGrid();
+	});
 	view.cancel.addEventListener("click", () => view.finish("cancel"));
 	view.use.addEventListener("click", () => view.finish("use"));
 
@@ -131,5 +191,7 @@ export async function cropPhoto(bitmap, start) {
 	const outcome = await view.closed;
 	resize.disconnect();
 	cancelAnimationFrame(queued);
+	cancelAnimationFrame(fading);
+	clearTimeout(gridTimer);
 	return outcome === "use" ? frame : null;
 }

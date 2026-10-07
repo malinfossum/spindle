@@ -63,3 +63,10 @@ export function setLang(lang) {
 export function getHtmlLang(lang = getLang()) {
 	return (LANGUAGES[lang] ?? LANGUAGES[FALLBACK_LANG]).htmlLang;
 }
+
+// A number as the language writes it: 3.5 in English, 3,5 in Norwegian, with
+// a real minus sign and at most one decimal. The crop dialog's degrees and
+// zoom use it.
+export function formatNumber(value, lang = getLang()) {
+	return new Intl.NumberFormat(getHtmlLang(lang), { maximumFractionDigits: 1 }).format(value);
+}
