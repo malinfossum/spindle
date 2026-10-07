@@ -1,5 +1,5 @@
 // Pointer, wheel and key handling for the crop dialog (v0.7), and since v0.8
-// the turn button and the straighten slider. The frame
+// the turn button, the straighten slider and the two-finger twist. The frame
 // lives here; View/Universal/cropFrame.js does its maths and
 // View/Universal/cropDialog.js draws it. cropPhoto() starts from a frame and
 // resolves with the frame I chose, in the photo's pixels, or null for Cancel,
@@ -8,6 +8,7 @@
 import { formatNumber, t } from "../../Model/i18n/i18n.js";
 import { openCropDialog } from "../../View/Universal/cropDialog.js";
 import {
+	angleDelta,
 	canZoomIn,
 	canZoomOut,
 	clampFrame,
@@ -15,10 +16,11 @@ import {
 	panBy,
 	screenToPhoto,
 	setTilt,
+	settleTwist,
 	turnQuarter,
+	twistTilt,
 	wheelFactor,
 	ZOOM_STEP,
-	zoomAt,
 	zoomBy,
 	zoomLevel,
 } from "../../View/Universal/cropFrame.js";
@@ -93,11 +95,21 @@ export async function cropPhoto(bitmap, start) {
 		);
 	};
 
-	// One pointer drags; two pinch around their midpoint.
+	// One pointer drags; two pinch around their midpoint and twist. A twist
+	// remembers the tilt when the second finger landed, how far the fingers
+	// have turned since, and the angle of the line between them last time.
 	const pointers = new Map();
+	let twist = null;
+	const pair = () => [...pointers.values()].slice(0, 2);
+	const lineAngle = (a, b) => (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
+
 	stage.addEventListener("pointerdown", (event) => {
 		stage.setPointerCapture(event.pointerId);
 		pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+		if (pointers.size === 2) {
+			const [a, b] = pair();
+			twist = { startTilt: frame.tilt, turned: 0, angle: lineAngle(a, b) };
+		}
 	});
 	stage.addEventListener("pointermove", (event) => {
 		const last = pointers.get(event.pointerId);
@@ -117,17 +129,39 @@ export async function cropPhoto(bitmap, start) {
 			return;
 		}
 
-		const [a, b] = [...pointers.values()];
+		const [a, b] = pair();
 		const before = Math.hypot(a.x - b.x, a.y - b.y);
 		pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
-		const [c, d] = [...pointers.values()];
+		const [c, d] = pair();
 		const after = Math.hypot(c.x - d.x, c.y - d.y);
 		if (before === 0 || after === 0) return;
+
+		const angle = lineAngle(c, d);
+		twist.turned += angleDelta(twist.angle, angle);
+		twist.angle = angle;
+		const tilt = twistTilt(twist.startTilt, twist.turned);
+		if (tilt !== frame.tilt) showGrid();
+
 		const [mx, my] = pointAt((c.x + d.x) / 2, (c.y + d.y) / 2);
 		// Fingers apart (after > before) is a smaller square: zoom in.
-		update(zoomAt(frame, photo, frame.side * (before / after), mx, my));
+		update(setTilt(frame, photo, tilt, mx, my, before / after));
 	});
-	const lift = (event) => pointers.delete(event.pointerId);
+	// pointerup, pointercancel and lostpointercapture can all arrive for one
+	// finger; only the first one counts.
+	const lift = (event) => {
+		if (!pointers.delete(event.pointerId) || !twist) return;
+		if (pointers.size >= 2) {
+			// A third finger lifted, or one of the pair: carry on from the pair
+			// that is left, without a jump.
+			const [a, b] = pair();
+			twist.angle = lineAngle(a, b);
+			return;
+		}
+		// The gesture is over. Close to straight is straight.
+		twist = null;
+		const settled = settleTwist(frame.tilt);
+		if (settled !== frame.tilt) update(setTilt(frame, photo, settled));
+	};
 	stage.addEventListener("pointerup", lift);
 	stage.addEventListener("pointercancel", lift);
 	// Belt and braces: a pointer the stage loses by any other path is forgotten
