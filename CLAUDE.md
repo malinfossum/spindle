@@ -19,9 +19,9 @@ history rewrite does not clear it. After committing, confirm with
 `git commit --amend --reset-author` before pushing.
 
 No attribution trailers, ever: no `Co-Authored-By`, no `Claude-Session`, no
-"Generated with" line — in commits, PR titles or PR bodies. The check in
-`.github/workflows/commit-identity.yml` rejects any pull request that breaks either rule,
-and `main` requires it to pass.
+"Generated with" line — in commits, PR titles or PR bodies. Ward's identity module, called
+from `.github/workflows/ward.yml`, rejects any pull request that breaks either rule, and
+`main` requires Ward's `ward / gate` check, which goes red with it.
 
 ## Voice and format
 
