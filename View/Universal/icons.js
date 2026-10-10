@@ -32,6 +32,8 @@ const PATHS = {
 	moon: '<path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 7.4 7.4 0 1 0 20 14.2z"/>',
 	sun: '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.28 4.28l1.56 1.56M18.16 18.16l1.56 1.56M2.5 12h2.2M19.3 12h2.2M4.28 19.72l1.56-1.56M18.16 5.84l1.56-1.56"/>',
 	menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+	// A quarter turn clockwise: an open circle with its arrowhead at the gap.
+	rotate: '<path d="M20 12a8 8 0 1 1-4-6.93"/><path d="M15 1.2l1 3.87-3.86 1.04"/>',
 };
 
 // size is the drawn box in CSS pixels; strokeWidth thins out as it grows, so a
