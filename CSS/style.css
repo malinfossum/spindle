@@ -1709,8 +1709,9 @@ footer {
 	min-width: 0;
 }
 
-/* Each select has its hint under it, so the next row keeps its distance and
-   does not read as more of the one above. */
+/* Settings rows keep one distance from each other, whether a hint sits
+   between them or not, so a row never reads as more of the one above. */
+.profile-settings-row + .profile-settings-row,
 .profile-settings-row + .form-hint + .profile-settings-row {
 	margin-top: 0.75rem;
 }
