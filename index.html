@@ -10,7 +10,10 @@
          the header can express frame-ancestors. The dev server injects a
          relaxed copy of that same file while serving — see vite.config.js. -->
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- interactive-widget: on Android the on-screen keyboard shrinks the layout
+         viewport instead of panning over it, so a dialog with a text field
+         (delete library) stays centred in the space above the keyboard. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <title>Spindle</title>
     <meta name="description" content="A private, offline music library that never leaves your device.">
 
