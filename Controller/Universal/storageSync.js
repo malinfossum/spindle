@@ -14,6 +14,7 @@ import { invalidatePrefsCache, PREFS_KEY } from "../../Model/prefs.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { applyLang } from "../../View/Universal/chrome.js";
 import { updateView } from "../../View/Universal/updateView.js";
+import { finishDelete } from "./deleteLibrary.js";
 import { applyStoredTheme } from "./theme.js";
 
 function handlePrefsChangedElsewhere() {
@@ -42,6 +43,19 @@ function handleLibraryChangedElsewhere() {
 	updateView();
 }
 
+// v0.9. Another tab deleted the library. An unlocked tab here holds a decrypted
+// copy of something that no longer exists: lock it rather than mark it stale,
+// since there is nothing to reload into. A locked tab only re-renders, and the
+// start page then leads with Create library.
+function handleLibraryDeletedElsewhere() {
+	if (!isLoggedIn()) {
+		model.app.libraryStale = false;
+		updateView();
+		return;
+	}
+	finishDelete("delete.otherTab");
+}
+
 window.addEventListener("storage", (event) => {
 	if (event.storageArea !== localStorage) return;
 
@@ -53,5 +67,6 @@ window.addEventListener("storage", (event) => {
 	}
 
 	if (event.key === PREFS_KEY) handlePrefsChangedElsewhere();
+	else if (event.key === STORAGE_KEY && event.newValue === null) handleLibraryDeletedElsewhere();
 	else if (event.key === STORAGE_KEY) handleLibraryChangedElsewhere();
 });
