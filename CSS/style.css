@@ -1823,8 +1823,8 @@ footer {
 
 .crop-stage {
 	/* As big as the screen's height allows, but never below 12rem: on a phone
-	   turned sideways at 200 % text, 100dvh − 12rem is below zero. */
-	width: min(100%, max(12rem, calc(100dvh - 12rem)));
+	   turned sideways at 200 % text, 100dvh − 19rem is below zero. */
+	width: min(100%, max(12rem, calc(100dvh - 19rem)));
 	aspect-ratio: 1;
 	/* overflow: hidden gives a flex item a minimum height of 0, so on a short
 	   screen the column would squash the square into a rectangle and stretch
@@ -1860,6 +1860,112 @@ footer {
 	text-align: center;
 }
 
+/* The straighten row (v0.8). The label sits above, smaller and muted, so the
+   slider keeps its width at 320 px and 200 % text and the label reads as a
+   label. */
+.crop-tilt {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.crop-tilt label {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+}
+
+.crop-tilt-line {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.crop-tilt-value {
+	min-width: 5ch;
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Styled from the theme's tokens rather than left native: a native track
+   draws light-mode colours on the dark theme, and its colours cannot be read
+   from computed styles to measure. The input is 44 px tall, so the whole row
+   is the hit area. */
+.crop-tilt input[type="range"] {
+	flex: 1;
+	min-width: 0;
+	height: 44px;
+	margin: 0;
+	background: transparent;
+	-webkit-appearance: none;
+	appearance: none;
+	cursor: pointer;
+}
+
+.crop-tilt input[type="range"]::-webkit-slider-runnable-track {
+	height: 4px;
+	border-radius: 2px;
+	background: var(--text-muted);
+}
+
+.crop-tilt input[type="range"]::-moz-range-track {
+	height: 4px;
+	border-radius: 2px;
+	background: var(--text-muted);
+}
+
+.crop-tilt input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 24px;
+	height: 24px;
+	margin-top: -10px;
+	border: 2px solid var(--card-bg);
+	border-radius: 50%;
+	background: var(--accent);
+}
+
+.crop-tilt input[type="range"]::-moz-range-thumb {
+	width: 24px;
+	height: 24px;
+	border: 2px solid var(--card-bg);
+	border-radius: 50%;
+	background: var(--accent);
+}
+
+/* An outline, not a box-shadow, so the ring survives forced-colors. */
+.crop-tilt input[type="range"]:focus-visible {
+	outline: 3px solid var(--accent);
+	outline-offset: 3px;
+}
+
+@media (forced-colors: active) {
+	.crop-tilt input[type="range"]::-webkit-slider-runnable-track {
+		background: CanvasText;
+	}
+
+	.crop-tilt input[type="range"]::-moz-range-track {
+		background: CanvasText;
+	}
+
+	.crop-tilt input[type="range"]::-webkit-slider-thumb {
+		background: Highlight;
+	}
+
+	.crop-tilt input[type="range"]::-moz-range-thumb {
+		background: Highlight;
+	}
+}
+
+/* What the zoom and turn buttons did. It keeps its height while empty, so
+   the first line it says does not push the buttons down. */
+.crop-status {
+	min-height: 1.5em;
+	margin: 0;
+	text-align: center;
+	font-size: 0.875rem;
+	color: var(--text-muted);
+}
+
 .crop-actions {
 	align-items: flex-end;
 	row-gap: 0.5rem;
@@ -1875,8 +1981,9 @@ footer {
 	margin-left: auto;
 }
 
-.crop-zoom {
+.crop-tool {
 	min-width: 44px;
+	padding-inline: 0.6rem;
 	justify-content: center;
 	font-size: 1.1rem;
 }

@@ -12,7 +12,7 @@
 //
 // Every number below is a first guess, tuned on real photos of my sleeves.
 
-import { centreSquare, clampFrame } from "./cropFrame.js";
+import { centreSquare, clampFrame, frameFromSquare, squareOf } from "./cropFrame.js";
 
 // The ring: the outer 4 % of each side.
 export const RING_SHARE = 0.04;
@@ -102,12 +102,14 @@ export function guessSquare(image, photo) {
 	// on the box, then scaled back to the full photo.
 	const scale = photo.width / width;
 	const side = Math.min(Math.max(boxW, boxH) * scale, photo.width, photo.height);
-	return clampFrame(
-		{
-			x: (left + boxW / 2) * scale - side / 2,
-			y: (top + boxH / 2) * scale - side / 2,
-			side,
-		},
-		photo,
+	return squareOf(
+		clampFrame(
+			frameFromSquare({
+				x: (left + boxW / 2) * scale - side / 2,
+				y: (top + boxH / 2) * scale - side / 2,
+				side,
+			}),
+			photo,
+		),
 	);
 }

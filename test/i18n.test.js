@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { STRINGS_EN } from "../Model/i18n/en.js";
+import { formatNumber } from "../Model/i18n/i18n.js";
 import { STRINGS_NO } from "../Model/i18n/no.js";
 
 // In v0.5 a rewrite of en.js dropped about 130 keys and every other test
@@ -30,4 +31,12 @@ test("no string is empty", () => {
 			assert.ok(typeof value === "string" && value.trim() !== "", `${name}: ${key}`);
 		}
 	}
+});
+
+test("formatNumber: a decimal comma in Norwegian, a point in English, one decimal at most", () => {
+	assert.equal(formatNumber(3.5, "no"), "3,5");
+	assert.equal(formatNumber(-3.5, "no"), "−3,5");
+	assert.equal(formatNumber(90, "no"), "90");
+	assert.equal(formatNumber(3.5, "en"), "3.5");
+	assert.equal(formatNumber(1.4641, "en"), "1.5");
 });

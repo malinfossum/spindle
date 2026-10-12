@@ -24,9 +24,11 @@
 //
 // v0.7 splits it in three so a picked photo can be cropped between decode and
 // encode: decodeCover() once, sampleCover() for the guess, encodeCover() with
-// the square I chose. A failure is null, and since v0.7 the caller refuses the
+// the frame I chose. A failure is null, and since v0.7 the caller refuses the
 // photo rather than storing the file as it came, because that raw file would
 // carry the EXIF block and would not be cropped either.
+
+import { frameTransform, squareOf } from "./cropFrame.js";
 
 const MAX_EDGE = 700;
 const QUALITY = 0.82;
@@ -70,10 +72,45 @@ export function sampleCover(bitmap) {
 	}
 }
 
-// With no square, the whole image at MAX_EDGE on its long side. With a square,
-// that square only, at min(MAX_EDGE, side): a cover is never enlarged.
-export function encodeCover(bitmap, square) {
+// A browser that cannot encode WebP returns a PNG data URL instead of
+// failing. That is still a valid, EXIF-free, correctly sized cover, so it is
+// accepted rather than treated as an error.
+function toCover(canvas) {
+	const dataUrl = canvas.toDataURL(OUTPUT_TYPE, QUALITY);
+	return dataUrl.startsWith("data:image/") ? dataUrl : null;
+}
+
+// A turned or tilted square, drawn through the same transform as the crop
+// dialog's stage (v0.8). Without tilt the side and the corner are rounded to
+// whole pixels first, so a quarter turn moves pixels without blurring them.
+// With tilt, the frame's edge inset keeps every sampled pixel inside the
+// photo, so the corners of the cover are opaque.
+function encodeTurned(bitmap, frame) {
+	let drawn = frame;
+	if (frame.tilt === 0) {
+		const side = Math.max(1, Math.min(Math.round(frame.side), bitmap.width, bitmap.height));
+		const x = Math.min(Math.max(0, Math.round(frame.cx - side / 2)), bitmap.width - side);
+		const y = Math.min(Math.max(0, Math.round(frame.cy - side / 2)), bitmap.height - side);
+		drawn = { ...frame, cx: x + side / 2, cy: y + side / 2, side };
+	}
+	const out = Math.max(1, Math.min(MAX_EDGE, Math.round(drawn.side)));
+	const [canvas, ctx] = canvasOf(out, out);
+	if (!ctx) return null;
+	ctx.imageSmoothingQuality = "high";
+	ctx.setTransform(...frameTransform(drawn, out));
+	ctx.drawImage(bitmap, 0, 0);
+	return toCover(canvas);
+}
+
+// With no frame, the whole image at MAX_EDGE on its long side. With a frame,
+// its square only, at min(MAX_EDGE, side): a cover is never enlarged. A frame
+// that is neither turned nor tilted takes v0.7's path below, unchanged, and
+// saves the same bytes as v0.7 did.
+export function encodeCover(bitmap, frame) {
 	try {
+		if (frame && (frame.quarter !== 0 || frame.tilt !== 0)) return encodeTurned(bitmap, frame);
+		const square = frame ? squareOf(frame) : null;
+
 		let sx = 0;
 		let sy = 0;
 		let sw = bitmap.width;
@@ -104,12 +141,7 @@ export function encodeCover(bitmap, square) {
 		// A PNG cover can be transparent, and drawing it over nothing keeps that;
 		// WebP carries alpha, so no white box appears behind a transparent sleeve.
 		ctx.drawImage(bitmap, sx, sy, sw, sh, 0, 0, width, height);
-
-		// A browser that cannot encode WebP returns a PNG data URL instead of
-		// failing. That is still a valid, EXIF-free, correctly sized cover, so it
-		// is accepted rather than treated as an error.
-		const dataUrl = canvas.toDataURL(OUTPUT_TYPE, QUALITY);
-		return dataUrl.startsWith("data:image/") ? dataUrl : null;
+		return toCover(canvas);
 	} catch (err) {
 		console.warn("[downscale] could not re-encode the image:", err);
 		return null;

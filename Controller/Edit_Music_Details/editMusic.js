@@ -6,7 +6,7 @@ import { isStorageNearFull, persistState } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
 import { clearAuthMessage } from "../../Model/viewState.js";
 import { forgetCover } from "../../View/Universal/cover.js";
-import { centreSquare } from "../../View/Universal/cropFrame.js";
+import { centreSquare, frameFromSquare } from "../../View/Universal/cropFrame.js";
 import { guessSquare } from "../../View/Universal/cropGuess.js";
 import { openDialog } from "../../View/Universal/dialog.js";
 import { decodeCover, encodeCover, sampleCover } from "../../View/Universal/downscale.js";
@@ -375,11 +375,11 @@ export async function saveImage(image) {
 		const photo = { width: bitmap.width, height: bitmap.height };
 		const sample = sampleCover(bitmap);
 		const guess = sample ? guessSquare(sample, photo) : centreSquare(photo);
-		const square = await cropPhoto(bitmap, guess);
+		const frame = await cropPhoto(bitmap, frameFromSquare(guess));
 		// Cancel, Escape or leaving the page: nothing changes, and an earlier
 		// cover stays.
-		if (square === null) return;
-		const dataUrl = encodeCover(bitmap, square);
+		if (frame === null) return;
+		const dataUrl = encodeCover(bitmap, frame);
 		if (dataUrl) form.coverPreview = dataUrl;
 		else form.errors.coverImg = "error.coverProcess";
 	} finally {
