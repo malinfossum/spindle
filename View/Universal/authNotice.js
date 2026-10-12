@@ -11,5 +11,11 @@ import { escapeHtml } from "./escape.js";
 
 export function authNotice() {
 	if (!model.app.authMessage) return "";
-	return /*HTML*/ `<p class="auth-error" role="alert">${escapeHtml(t(model.app.authMessage))}</p>`;
+	const text = escapeHtml(t(model.app.authMessage));
+	// v0.9: a finished delete is news, not an error. The id lets the start page's
+	// heading name it as its description, so it is read once on focus.
+	if (model.app.authTone === "info") {
+		return /*HTML*/ `<p class="auth-notice" id="auth-notice" role="status">${text}</p>`;
+	}
+	return /*HTML*/ `<p class="auth-error" role="alert">${text}</p>`;
 }

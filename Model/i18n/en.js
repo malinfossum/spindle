@@ -74,6 +74,11 @@ export const STRINGS_EN = {
 	"login.stayClearFailed":
 		"Logged out, but the stored key could not be removed. Clear this site's data in your browser to be sure.",
 	"login.sessionStale": "This device was unlocked, but the library has changed. Log in again.",
+	"login.forgot": "Can't open the library?",
+	"login.forgotBody":
+		"There is no password recovery, and a damaged library cannot be repaired. If you have a backup, restore it below and log in with the password it was made with.",
+	"login.forgotDeleteHint":
+		"Removes the library from this browser so you can start again. This cannot be undone.",
 
 	// ---- Add / edit album ---------------------------------------------------
 	"music.addTitle": "Add album",
@@ -198,6 +203,9 @@ export const STRINGS_EN = {
 	"profile.logoutBtn": "Log out",
 	"profile.logoutHint":
 		"Locks the library in this browser. You need the password to open it again.",
+	"profile.delete": "Delete library",
+	"profile.deleteHint":
+		"Removes the library, its covers and the look-up choice from this browser. Theme and language stay. This cannot be undone.",
 	"profile.lookups": "Barcode look-ups",
 	"profile.lookupsOff": "Off",
 	"profile.lookupsOn":
@@ -255,7 +263,7 @@ export const STRINGS_EN = {
 	"storage.needsHttps":
 		"Spindle needs HTTPS or Live Server for encryption. Open it through VS Code Live Server, not straight from the file system.",
 	"storage.corrupt":
-		"The stored library is damaged — restore from a backup, or create a new library.",
+		'The stored library is damaged. Restore a backup, or delete it under "Can\'t open the library?" on the login page.',
 	"storage.otherTab":
 		"The library was changed in another tab. Your changes are no longer saved here — reload the page to continue.",
 	"storage.tooNew":
@@ -303,6 +311,20 @@ export const STRINGS_EN = {
 	"backup.errTooLarge": "That file is too large to be a backup.",
 	"backup.errReadFailed": "The file could not be read.",
 	"backup.errWriteFailed": "The backup could not be saved in this browser.",
+
+	// ---- Delete library (v0.9) ----------------------------------------------
+	"delete.button": "Delete library…",
+	"delete.title": "Delete the library?",
+	"delete.body":
+		"Your albums, covers and look-up choice are removed from this browser. Theme and language stay. Backup files you exported earlier are not touched and can still be restored. This cannot be undone.",
+	"delete.word": "DELETE",
+	"delete.wordLabel": "Type {word} to confirm",
+	"delete.wordMismatch": "Type {word} exactly as shown.",
+	"delete.confirm": "Delete library",
+	"delete.done": "The library was deleted from this browser.",
+	"delete.failed":
+		"The library could not be deleted. Nothing was removed. Close other Spindle tabs and try again.",
+	"delete.otherTab": "This library was deleted in another tab.",
 
 	// ---- Validation errors --------------------------------------------------
 	"error.fillUsername": "Enter a username.",

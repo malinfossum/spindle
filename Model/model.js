@@ -176,6 +176,8 @@ export const model = {
 		install: { canPrompt: false, outcome: "", ios: false, standalone: false },
 
 		authMessage: "",
+		// "error" or "info" (v0.9). Only the delete-library notices are info.
+		authTone: "error",
 
 		// Result of the last export / import, shown in the backup block on the
 		// profile and welcome pages. A string key plus a tone, resolved by t() at

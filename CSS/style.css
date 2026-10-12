@@ -1507,6 +1507,18 @@ footer {
 	font-size: 0.92rem;
 }
 
+.auth-notice {
+	margin-bottom: 1rem;
+	padding: 0.75rem 0.9rem;
+	border: 1px solid var(--border);
+	border-left: 3px solid var(--accent);
+	background: var(--surface2);
+	color: var(--text);
+	border-radius: 8px;
+	font-size: 0.92rem;
+	text-align: left;
+}
+
 .storage-banner {
 	margin: 0 0 1rem;
 	padding: 0.75rem 0.9rem;

@@ -80,6 +80,11 @@ export const STRINGS_NO = {
 	"login.stayClearFailed":
 		"Logget ut, men den lagrede nøkkelen kunne ikke fjernes. Slett nettstedets data i nettleseren for å være sikker.",
 	"login.sessionStale": "Enheten var opplåst, men biblioteket er endret. Logg inn på nytt.",
+	"login.forgot": "Får du ikke åpnet biblioteket?",
+	"login.forgotBody":
+		"Passordet kan ikke gjenopprettes, og et skadet bibliotek kan ikke repareres. Har du en sikkerhetskopi, kan du gjenopprette den her og logge inn med passordet den ble laget med.",
+	"login.forgotDeleteHint":
+		"Fjerner biblioteket fra denne nettleseren, så du kan begynne på nytt. Dette kan ikke angres.",
 
 	// ---- Add / edit album ---------------------------------------------------
 	"music.addTitle": "Legg til album",
@@ -204,6 +209,9 @@ export const STRINGS_NO = {
 	"profile.logoutBtn": "Logg ut",
 	"profile.logoutHint":
 		"Låser biblioteket i denne nettleseren. Du trenger passordet for å åpne det igjen.",
+	"profile.delete": "Slett biblioteket",
+	"profile.deleteHint":
+		"Fjerner biblioteket, coverbildene og valget om oppslag fra denne nettleseren. Tema og språk blir værende. Dette kan ikke angres.",
 	"profile.lookups": "Strekkodeoppslag",
 	"profile.lookupsOff": "Av",
 	"profile.lookupsOn":
@@ -263,7 +271,7 @@ export const STRINGS_NO = {
 	"storage.needsHttps":
 		"Spindle krever HTTPS eller Live Server for kryptering. Åpne via VS Code Live Server, ikke direkte fra fil-systemet.",
 	"storage.corrupt":
-		"Lagret bibliotek er skadet — gjenopprett fra en sikkerhetskopi, eller opprett et nytt bibliotek.",
+		"Det lagrede biblioteket er skadet. Gjenopprett en sikkerhetskopi, eller slett det under «Får du ikke åpnet biblioteket?» på innloggingssiden.",
 	"storage.otherTab":
 		"Biblioteket ble endret i en annen fane. Endringene dine lagres ikke lenger her — last inn siden på nytt for å fortsette.",
 	"storage.tooNew":
@@ -313,6 +321,20 @@ export const STRINGS_NO = {
 	"backup.errTooLarge": "Filen er for stor til å være en sikkerhetskopi.",
 	"backup.errReadFailed": "Filen kunne ikke leses.",
 	"backup.errWriteFailed": "Sikkerhetskopien kunne ikke lagres i nettleseren.",
+
+	// ---- Delete library (v0.9) ----------------------------------------------
+	"delete.button": "Slett biblioteket …",
+	"delete.title": "Slette biblioteket?",
+	"delete.body":
+		"Albumene, coverbildene og valget om oppslag fjernes fra denne nettleseren. Tema og språk blir værende. Sikkerhetskopier du har eksportert, blir ikke rørt og kan fortsatt gjenopprettes. Dette kan ikke angres.",
+	"delete.word": "SLETT",
+	"delete.wordLabel": "Skriv {word} for å bekrefte",
+	"delete.wordMismatch": "Skriv {word} nøyaktig slik det står.",
+	"delete.confirm": "Slett biblioteket",
+	"delete.done": "Biblioteket er slettet fra denne nettleseren.",
+	"delete.failed":
+		"Biblioteket kunne ikke slettes. Ingenting ble fjernet. Lukk andre Spindle-faner og prøv igjen.",
+	"delete.otherTab": "Biblioteket ble slettet i en annen fane.",
 
 	// ---- Validation errors --------------------------------------------------
 	// Stored as keys on model.viewState.*.errors and resolved at render time, so
