@@ -17,16 +17,16 @@ export const STRINGS_NO = {
 	"nav.search": "Søk",
 	"nav.login": "Logg inn",
 	"nav.profile": "Profil",
-	"nav.themeToggle": "Bytt tema (mørkt eller lyst)",
 	"nav.menuToggle": "Meny",
 	"footer.copyright": "Spindle ©",
 
-	// ---- Language switcher --------------------------------------------------
-	"lang.group": "Språk",
-	"lang.no": "NO",
-	"lang.en": "EN",
-	"lang.noFull": "Norsk",
-	"lang.enFull": "Engelsk",
+	// ---- Preference pickers -------------------------------------------------
+	// Language names are not here: the rows show each language's own name,
+	// which Intl.DisplayNames supplies (getLangName in i18n.js).
+	"picker.language": "Språk",
+	"picker.theme": "Tema",
+	"theme.light": "Lyst",
+	"theme.dark": "Mørkt",
 
 	// ---- Welcome ------------------------------------------------------------
 	"welcome.tagline": "Ditt fysiske musikkbibliotek — trygt lagret på din egen enhet.",

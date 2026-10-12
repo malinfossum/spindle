@@ -14,9 +14,11 @@
 // parts that depend on auth state too, syncChrome() the part that depends on
 // which page is open.
 
-import { getHtmlLang, t } from "../../Model/i18n/i18n.js";
+import { getHtmlLang, getLang, t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
+import { getPref } from "../../Model/prefs.js";
 import { getLoggedInUser, isLoggedIn } from "../../Model/selectors.js";
+import { themePicker } from "./pickers.js";
 import { renderSuggestions, syncSearchInputs } from "./searchSuggest.js";
 
 export function syncNavbar() {
@@ -81,6 +83,23 @@ export function syncChrome() {
 export function applyLang() {
 	document.documentElement.setAttribute("lang", getHtmlLang());
 	applyStaticText();
+	syncNavTheme();
+}
+
+// The navbar's theme picker. Its name and rows depend on the language and its
+// icon on the theme, so it is drawn again only when one of those two changes:
+// updateView() calls this on every render, and redrawing an open picker for an
+// unrelated render would snap it shut under the user's finger. A theme change
+// redraws it directly through refreshPickers(), and the next call here then
+// draws it once more, which costs nothing anyone can see.
+let navThemeKey = "";
+export function syncNavTheme() {
+	const slot = document.getElementById("nav-theme");
+	if (!slot) return;
+	const key = `${getLang()}|${getPref("theme")}`;
+	if (key === navThemeKey) return;
+	navThemeKey = key;
+	slot.innerHTML = themePicker("nav");
 }
 
 // The language-only half of the chrome. Called from updateView() as well, so a
@@ -114,10 +133,6 @@ export function applyStaticText() {
 
 	const burger = document.getElementById("nav-burger");
 	if (burger) burger.setAttribute("aria-label", t("nav.menuToggle"));
-
-	for (const btn of document.querySelectorAll(".btn-theme")) {
-		btn.setAttribute("aria-label", t("nav.themeToggle"));
-	}
 
 	// syncNavbar() above owns the login/logout and profile buttons — their text
 	// depends on auth state as well as language, so it stays the single writer

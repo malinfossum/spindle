@@ -11,7 +11,13 @@ import { notFoundPage } from "../NotFound/view.js";
 import { profilePage } from "../Profile/view.js";
 import { registerPage } from "../Register/view.js";
 import { welcomePage } from "../Welcome/view.js";
-import { applyStaticText, syncChrome, syncNavbar, syncSuggestions } from "./chrome.js";
+import {
+	applyStaticText,
+	syncChrome,
+	syncNavbar,
+	syncNavTheme,
+	syncSuggestions,
+} from "./chrome.js";
 import { hydrateCovers } from "./cover.js";
 
 // The element every page renders into. It used to sit on model.app, which put
@@ -45,6 +51,7 @@ export function updateView() {
 	// reaches them. Re-apply the current language to that static chrome here so
 	// it can't drift out of sync with the page.
 	applyStaticText();
+	syncNavTheme();
 	syncSuggestions();
 
 	// Covers are read out of IndexedDB, which is asynchronous, so the render above

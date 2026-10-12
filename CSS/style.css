@@ -149,8 +149,8 @@ body {
 	padding: 0;
 }
 
-/* The page links are <a href="#page"> since v0.3 item 8 and the burger and
-   theme toggle are still <button>s; both take the same box. Same (0,1,1)
+/* The page links are <a href="#page"> since v0.3 item 8 and the burger is
+   still a <button>; both take the same box. Same (0,1,1)
    specificity either way, so the override notes below hold for both. */
 .Navbar button,
 .Navbar a {
@@ -225,7 +225,7 @@ body {
 }
 
 /* .Navbar button is (0,1,1) and would otherwise win the background and padding
-   here — the same specificity trap .btn-theme documents above. */
+   here. It is the same specificity trap the picker rows document below. */
 .Navbar .search-go {
 	position: absolute;
 	right: 0;
@@ -305,52 +305,153 @@ body {
 	color: var(--text-muted);
 }
 
-/* Theme toggle button — appears in the navbar and, unscoped, on the welcome
-   page. The second selector in each list below exists purely to outrank
-   .Navbar button (0,1,1): a bare .btn-theme is only (0,1,0), so inside the
-   navbar .Navbar button would otherwise win the border, font-size and
-   padding declarations and the toggle would fall back to the generic button
-   look. Selectors in a comma list are matched independently — the
-   welcome-page instance has no .Navbar ancestor, so it matches only
-   .btn-theme at (0,1,0); the navbar instance matches both and cascades on
-   .Navbar .btn-theme at (0,2,0), which beats .Navbar button. Same
-   declaration block for both selectors, so there's nothing to keep in sync
-   by hand. */
-.btn-theme,
-.Navbar .btn-theme {
-	background: none;
-	border: 1px solid var(--border);
-	color: var(--text-muted);
-	font-size: 1rem;
-	/* Same 44x44 minimum as .lang-opt — it sits directly beside the language
-	   switcher on the welcome page, so it has to match both in size and in reach. */
-	padding: 0;
-	min-width: 44px;
-	min-height: 44px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 6px;
-	cursor: pointer;
-	flex-shrink: 0;
-}
-
-/* Unlike the base rule above, this pair was never actually contested:
-   .Navbar button:hover (line 154) already sets the same background and
-   color as .btn-theme:hover. The .Navbar .btn-theme:hover selector is kept
-   only so this rule mirrors the base rule's shape, not to win a fight. */
-.btn-theme:hover,
-.Navbar .btn-theme:hover {
-	background: var(--surface2);
-	color: var(--text);
-}
-
 /* ── Icons ──
    Inline SVG from View/Universal/icons.js. Each one is sized by its own width
    and height attributes; these rules only stop it behaving like text — a
    baseline-aligned inline box that a line-height can shift off centre. */
 .icon {
 	display: block;
+	flex-shrink: 0;
+}
+
+/* ── Preference pickers ──
+   The language and theme pickers from View/Universal/pickers.js, in the shape
+   of my workbench design system's components/picker.css: a <details> with an
+   icon-only trigger and a list of rows hung under it. They appear on the
+   welcome page, in the navbar and on Profile. The trigger keeps the look the
+   old theme toggle had: 44x44, the control border, muted until hovered. */
+.picker {
+	position: relative;
+	display: inline-block;
+	flex-shrink: 0;
+}
+
+/* No disclosure triangle: the icon is the whole trigger. inline-flex drops the
+   marker in Chrome and Firefox; Safari needs the pseudo-element. */
+.picker > summary {
+	list-style: none;
+	cursor: pointer;
+}
+
+.picker > summary::-webkit-details-marker {
+	display: none;
+}
+
+.picker-trigger {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px. A fixed size rather than
+	   a minimum, so two triggers side by side always share one bottom edge. */
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	background: none;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	color: var(--text-muted);
+	transition:
+		background 0.15s,
+		color 0.15s;
+}
+
+/* An open picker keeps its trigger lit, so it is clear which list is showing. */
+.picker-trigger:hover,
+.picker[open] > .picker-trigger {
+	background: var(--surface2);
+	color: var(--text);
+}
+
+/* Browsers do not all draw a ring on <summary>, so it is stated here. */
+.picker-trigger:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+/* Hung from the trigger's right edge, so a picker at the right of the screen
+   never pushes its list past it at 320px. Content-sized and capped to the
+   viewport, so at 200% text size the list wraps its rows instead of running
+   off the side, and a height cap with scroll instead of clipping.
+   Controller/Universal/picker.js shifts the list right when it would run off
+   the left edge. No animation. */
+.picker-list {
+	position: absolute;
+	top: calc(100% + 4px);
+	right: 0;
+	z-index: 200;
+	width: max-content;
+	min-width: min(12rem, 100vw - 2rem);
+	max-width: min(22rem, 100vw - 2rem);
+	max-height: min(60vh, 24rem);
+	overflow-y: auto;
+	margin: 0;
+	padding: 0.25rem;
+	list-style: none;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	box-shadow: 0 4px 16px var(--shadow);
+}
+
+/* One row per choice, the whole row pressable, 44px tall at least, long names
+   wrap. The second selector in each pair outranks .Navbar button (0,1,1), which
+   would otherwise centre, shrink and grey the rows of the navbar's picker. */
+.picker-row,
+.Navbar .picker-row {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 0.5rem;
+	width: 100%;
+	min-height: 44px;
+	padding: 0.5rem 0.75rem;
+	border: 0;
+	border-radius: 6px;
+	background: transparent;
+	color: var(--text);
+	font: inherit;
+	text-align: start;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	cursor: pointer;
+}
+
+.picker-row:hover,
+.Navbar .picker-row:hover {
+	background: var(--surface2);
+	color: var(--text);
+}
+
+.picker-row:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: -2px;
+}
+
+/* The active row: an accent wash, heavier text and the check. The state itself
+   lives in aria-current and the trigger's name; these only show it. */
+.picker-row[aria-current],
+.Navbar .picker-row[aria-current] {
+	background: var(--tag-bg);
+	font-weight: 600;
+}
+
+.picker-row > .icon {
+	margin-left: auto;
+}
+
+@media (forced-colors: active) {
+	.picker-row[aria-current],
+	.Navbar .picker-row[aria-current] {
+		forced-color-adjust: none;
+		background: Highlight;
+		color: HighlightText;
+	}
+}
+
+/* The navbar's slot for its picker. It must not give up width: the search
+   field is the one that shrinks. */
+.nav-theme {
+	display: flex;
 	flex-shrink: 0;
 }
 
@@ -2066,48 +2167,6 @@ body.chrome-hidden > footer {
 	align-items: center;
 	justify-content: flex-end;
 	gap: 0.5rem;
-}
-
-.lang-switch {
-	display: inline-flex;
-	border: 1px solid var(--border);
-	border-radius: 6px;
-	overflow: hidden;
-}
-
-.lang-opt {
-	background: none;
-	border: none;
-	color: var(--text-muted);
-	font-family: inherit;
-	font-size: 0.75rem;
-	font-weight: 600;
-	/* WCAG 2.5.5 Target Size (Enhanced): 44x44 CSS px, roughly a fingertip. These
-	   two options sit edge to edge, so the usual trick — an invisible, expanded hit
-	   area on a pseudo-element — is not available: the two areas would overlap and
-	   part of the visible NO button would activate EN. A segmented control has to
-	   be genuinely big enough. */
-	min-width: 44px;
-	min-height: 44px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	padding: 0 0.55rem;
-	cursor: pointer;
-}
-
-.lang-opt:hover {
-	color: var(--text);
-}
-
-.lang-opt:focus-visible {
-	outline: 2px solid var(--accent);
-	outline-offset: -2px;
-}
-
-.lang-opt.is-active {
-	background: var(--surface2);
-	color: var(--text);
 }
 
 .welcome-vinyl {

@@ -11,16 +11,16 @@ export const STRINGS_EN = {
 	"nav.search": "Search",
 	"nav.login": "Log in",
 	"nav.profile": "Profile",
-	"nav.themeToggle": "Switch theme (dark or light)",
 	"nav.menuToggle": "Menu",
 	"footer.copyright": "Spindle ©",
 
-	// ---- Language switcher --------------------------------------------------
-	"lang.group": "Language",
-	"lang.no": "NO",
-	"lang.en": "EN",
-	"lang.noFull": "Norwegian",
-	"lang.enFull": "English",
+	// ---- Preference pickers -------------------------------------------------
+	// Language names are not here: the rows show each language's own name,
+	// which Intl.DisplayNames supplies (getLangName in i18n.js).
+	"picker.language": "Language",
+	"picker.theme": "Theme",
+	"theme.light": "Light",
+	"theme.dark": "Dark",
 
 	// ---- Welcome ------------------------------------------------------------
 	"welcome.tagline": "Your physical music library — kept safe on your own device.",

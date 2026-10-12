@@ -8,7 +8,7 @@ import { authNotice, deleteFailedNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
-import { langSwitcher } from "../Universal/langSwitcher.js";
+import { langPicker } from "../Universal/pickers.js";
 
 // The Install row (v0.6). Exported so Controller/Universal/install.js can
 // re-render this row alone when the browser's install event arrives or leaves
@@ -78,8 +78,8 @@ export function profilePage() {
         <div class="profile-settings">
             <h2 class="profile-settings-heading">${t("profile.settings")}</h2>
             <div class="profile-settings-row">
-                <span class="profile-settings-label" id="profile-language-label">${t("profile.language")}</span>
-                ${langSwitcher("", "profile-language-label")}
+                <span class="profile-settings-label">${t("profile.language")}</span>
+                ${langPicker("profile")}
             </div>
             <div class="profile-settings-row profile-settings-row-stack">
                 <label class="profile-settings-label" for="profile-lookups">${t("profile.lookups")}</label>

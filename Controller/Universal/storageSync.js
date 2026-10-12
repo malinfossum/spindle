@@ -20,13 +20,15 @@ import { applyStoredTheme } from "./theme.js";
 function handlePrefsChangedElsewhere() {
 	// prefs.js keeps an in-memory mirror, so re-reading is not enough on its own —
 	// the cache has to be dropped or the old language and theme would win.
+	// The re-render replaces whatever had focus, so put it back on the same id.
+	// A delete in another tab (v0.9) sends this event right after the library
+	// one, and would otherwise knock focus off the start page's heading. Read
+	// before the theme is applied: that redraws the theme pickers, and a
+	// focused picker trigger would already be gone by the line after.
+	const focusedId = document.activeElement?.id;
 	invalidatePrefsCache();
 	applyStoredTheme();
 	applyLang();
-	// The re-render replaces whatever had focus, so put it back on the same id.
-	// A delete in another tab (v0.9) sends this event right after the library
-	// one, and would otherwise knock focus off the start page's heading.
-	const focusedId = document.activeElement?.id;
 	updateView();
 	if (focusedId) document.getElementById(focusedId)?.focus();
 }
