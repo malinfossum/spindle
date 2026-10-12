@@ -11,7 +11,7 @@ import { STORAGE_KEY } from "../../Model/persistence.js";
 import { setPref } from "../../Model/prefs.js";
 import { setAuthMessage } from "../../Model/viewState.js";
 import { openDialog } from "../../View/Universal/dialog.js";
-import { updateView } from "../../View/Universal/updateView.js";
+import { appRoot, updateView } from "../../View/Universal/updateView.js";
 import { logout } from "../Login/login.js";
 
 export async function confirmDeleteLibrary() {
@@ -37,6 +37,11 @@ export async function confirmDeleteLibrary() {
 		console.warn("[delete] the stores would not clear; nothing removed:", result.error);
 		setAuthMessage("delete.failed");
 		updateView();
+		// The re-render replaced the button, so focus would fall to <body>. Back on
+		// the button, then the notice under it scrolled fully into view: focus()
+		// alone stops at the button's own edge.
+		appRoot.querySelector('[data-action="delete-library"]')?.focus();
+		appRoot.querySelector(".delete-failed")?.scrollIntoView({ block: "nearest" });
 		return;
 	}
 

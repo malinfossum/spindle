@@ -4,7 +4,7 @@ import { model } from "../../Model/model.js";
 import { formatBytes } from "../../Model/persistence.js";
 import { getPref } from "../../Model/prefs.js";
 import { getAccessibleAlbums, getLoggedInUser } from "../../Model/selectors.js";
-import { authNotice } from "../Universal/authNotice.js";
+import { authNotice, deleteFailedNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
@@ -125,6 +125,7 @@ export function profilePage() {
                         aria-describedby="profile-delete-hint"
                         data-action="delete-library">${t("delete.button")}</button>
             </div>
+            ${deleteFailedNotice()}
         </div>`;
 
 	return /*HTML*/ `

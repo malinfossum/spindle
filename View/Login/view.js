@@ -1,7 +1,7 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";
-import { authNotice } from "../Universal/authNotice.js";
+import { authNotice, deleteFailedNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 
@@ -33,6 +33,7 @@ export function loginPage() {
                             aria-describedby="login-delete-hint"
                             data-action="delete-library">${t("delete.button")}</button>
                 </div>
+                ${deleteFailedNotice()}
             </details>`;
 
 	return /*HTML*/ `
