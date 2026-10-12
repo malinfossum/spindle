@@ -176,6 +176,8 @@ export const model = {
 		install: { canPrompt: false, outcome: "", ios: false, standalone: false },
 
 		authMessage: "",
+		// "error" or "info" (v0.9). Only the delete-library notices are info.
+		authTone: "error",
 
 		// Result of the last export / import, shown in the backup block on the
 		// profile and welcome pages. A string key plus a tone, resolved by t() at
@@ -289,6 +291,8 @@ export const model = {
 		// panel would snap shut on a language switch if its open state lived in
 		// the DOM. Anything that must survive a re-render belongs on the model.
 		welcomeBackupOpen: false,
+		// v0.9. The login page's "Can't open the library?" panel, same reason.
+		loginForgotOpen: false,
 	},
 
 	data: {

@@ -27,6 +27,7 @@ Spindle needs a secure context for encryption. Opening `index.html` directly via
 - Wishlist for albums you don't own yet
 - A local profile with custom genres and locations
 - Encrypted backup and restore, plus an opt-in readable export
+- Delete the library from Profile, or from the login page when it will not open
 - Norwegian and English interface, switchable in the app
 - Light and dark theme, remembered between visits
 - Installable as an app, and once installed it opens without a network

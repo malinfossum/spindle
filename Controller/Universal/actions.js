@@ -54,11 +54,13 @@ import { editAlbum } from "../Music_Details/editBtn.js";
 import { register } from "../Register/register.js";
 import { exportEncryptedBackup, exportPlaintextBackup, importBackupFile } from "./backup.js";
 import { deleteAlbum } from "./delete.js";
+import { confirmDeleteLibrary } from "./deleteLibrary.js";
 import { installPressed } from "./install.js";
 import { toggleMobileMenu } from "./navbarMobile.js";
+import { initPickers, pickerKeys, pickerLeft, pickerToggled } from "./picker.js";
 import { navigate } from "./router.js";
 import { toggleWishlist } from "./save.js";
-import { toggleTheme } from "./theme.js";
+import { setTheme } from "./theme.js";
 import { viewMusicDetails } from "./viewMusicDetails.js";
 
 const FORM_PANELS = {
@@ -87,6 +89,20 @@ function runSearch(query) {
 	model.viewState.library.preset = "all";
 	syncSearchInputs();
 	navigate("library");
+}
+
+// A row in the language or theme picker was chosen. The pickers are drawn
+// again after a change, which destroys the row that was pressed, so focus goes
+// back to the trigger of the picker that was used, found by its id. Its new
+// name ("Theme: Light") is what a screen reader hears as the result of the
+// press. Choosing the row that is already active changes nothing: the list
+// just closes, and focus goes to the same trigger.
+function pickerChosen(target, changed) {
+	const details = target.closest("details.picker");
+	const triggerId = details?.querySelector("summary")?.id;
+	if (details?.isConnected) details.open = false;
+	if (changed && details?.dataset.picker === "lang") updateView();
+	if (triggerId) document.getElementById(triggerId)?.focus();
 }
 
 function focusLibraryControl(action) {
@@ -139,20 +155,31 @@ const ACTIONS = {
 		handleProfileNavClick();
 	},
 	logout: () => confirmLogout(),
+	"delete-library": () => confirmDeleteLibrary(),
 	install: () => installPressed(),
 	"toggle-menu": () => toggleMobileMenu(),
-	"toggle-theme": () => toggleTheme(),
-	// setLang() only writes the preference. Applying it to the document and asking
-	// for the re-render are the Controller's job, not the Model's — including
-	// deciding not to. Activating the option that is already selected must not
-	// re-render: the switcher is inside #app, so the button the user just pressed
-	// would be destroyed and focus would drop to <body> with nothing to announce.
-	"set-lang": (_event, target) => {
-		if (target.dataset.lang === getLang()) return;
-		setLang(target.dataset.lang);
-		applyLang();
-		updateView();
+	// The language and theme pickers. The three handlers below the two choices
+	// are the keyboard and focus rules every picker shares (picker.js).
+	// setTheme() redraws the theme pickers in place rather than calling
+	// updateView(): the navbar's picker is on every page, the add form included,
+	// and a full render there would throw away what was typed.
+	"set-theme": (_event, target) => {
+		pickerChosen(target, setTheme(target.dataset.value));
 	},
+	// setLang() only writes the preference. Applying it to the document and asking
+	// for the re-render are the Controller's job, not the Model's, including
+	// deciding not to: the already active language changes nothing.
+	"set-lang": (_event, target) => {
+		const changed = target.dataset.lang !== getLang();
+		if (changed) {
+			setLang(target.dataset.lang);
+			applyLang();
+		}
+		pickerChosen(target, changed);
+	},
+	"picker-toggle": (event, target) => pickerToggled(event, target),
+	"picker-keys": (event, target) => pickerKeys(event, target),
+	"picker-leave": (event, target) => pickerLeft(event, target),
 
 	// Turning look-ups off deletes nothing: barcodes already on albums stay,
 	// and the next Look up simply asks again. setPref() whitelists the value.
@@ -432,10 +459,14 @@ const ACTIONS = {
 	"welcome-backup-toggle": (_event, target) => {
 		model.viewState.welcomeBackupOpen = target.open;
 	},
+	"login-forgot-toggle": (_event, target) => {
+		model.viewState.loginForgotOpen = target.open;
+	},
 };
 
 // Called once from the boot script in index.html. Binding to the document
 // covers the static navbar, the rendered #app, and the footer in one pass.
 export function initActions() {
 	bindActions(document, ACTIONS);
+	initPickers();
 }

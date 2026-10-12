@@ -4,11 +4,11 @@ import { model } from "../../Model/model.js";
 import { formatBytes } from "../../Model/persistence.js";
 import { getPref } from "../../Model/prefs.js";
 import { getAccessibleAlbums, getLoggedInUser } from "../../Model/selectors.js";
-import { authNotice } from "../Universal/authNotice.js";
+import { authNotice, deleteFailedNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 import { icon } from "../Universal/icons.js";
-import { langSwitcher } from "../Universal/langSwitcher.js";
+import { langPicker } from "../Universal/pickers.js";
 
 // The Install row (v0.6). Exported so Controller/Universal/install.js can
 // re-render this row alone when the browser's install event arrives or leaves
@@ -78,13 +78,14 @@ export function profilePage() {
         <div class="profile-settings">
             <h2 class="profile-settings-heading">${t("profile.settings")}</h2>
             <div class="profile-settings-row">
-                <span class="profile-settings-label" id="profile-language-label">${t("profile.language")}</span>
-                ${langSwitcher("", "profile-language-label")}
+                <span class="profile-settings-label">${t("profile.language")}</span>
+                ${langPicker("profile")}
             </div>
             <div class="profile-settings-row profile-settings-row-stack">
                 <label class="profile-settings-label" for="profile-lookups">${t("profile.lookups")}</label>
                 <select class="form-input" id="profile-lookups"
                         style="max-width: 320px"
+                        aria-describedby="profile-lookups-help"
                         data-action-change="set-lookups">
                     ${
 						getPref("lookups") === "unset"
@@ -95,6 +96,7 @@ export function profilePage() {
                     <option value="on" ${getPref("lookups") === "on" ? "selected" : ""}>${t("profile.lookupsOn")}</option>
                 </select>
             </div>
+            <p class="form-hint" id="profile-lookups-help">${t("profile.lookupsHelp")}</p>
             <div class="profile-settings-row profile-settings-row-stack">
                 <label class="profile-settings-label" for="profile-stay">${t("profile.stay")}</label>
                 <select class="form-input" id="profile-stay"
@@ -117,6 +119,15 @@ export function profilePage() {
                 <span class="profile-settings-label">${t("profile.logoutHint")}</span>
                 <button class="btn" type="button" data-action="logout">${t("profile.logoutBtn")}</button>
             </div>
+
+            <h2 class="profile-settings-heading">${t("profile.delete")}</h2>
+            <div class="profile-settings-row">
+                <span class="profile-settings-label" id="profile-delete-hint">${t("profile.deleteHint")}</span>
+                <button class="btn btn-danger" type="button"
+                        aria-describedby="profile-delete-hint"
+                        data-action="delete-library">${t("delete.button")}</button>
+            </div>
+            ${deleteFailedNotice()}
         </div>`;
 
 	return /*HTML*/ `

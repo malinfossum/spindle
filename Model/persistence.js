@@ -154,6 +154,10 @@ async function actuallyPersist() {
 		const { iv, ciphertext } = await encryptLibrary(encryptKey, plaintext);
 		// Logged out, or another tab saved, while we were encrypting.
 		if (!model.app.crypto.unlocked || model.app.libraryStale) return;
+		// Deleted while we were encrypting (v0.9), here or in another tab that
+		// we have not heard from yet. A save only ever replaces a stored library;
+		// Register and restore create one, and neither writes through here.
+		if (localStorage.getItem(STORAGE_KEY) === null) return;
 
 		const envelope = {
 			schemaVersion: SCHEMA_VERSION,

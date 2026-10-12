@@ -64,6 +64,23 @@ export function getHtmlLang(lang = getLang()) {
 	return (LANGUAGES[lang] ?? LANGUAGES[FALLBACK_LANG]).htmlLang;
 }
 
+// The codes the language picker offers, in row order.
+export function getLanguages() {
+	return Object.keys(LANGUAGES);
+}
+
+// A language's name in that language ("Norsk", "English") for the picker rows
+// and its trigger. Intl.DisplayNames knows every autonym, so no string table
+// carries them and none can get one wrong. It gives "norsk" in lower case, so
+// the first letter is raised here. The bare tag when the browser has no
+// Intl.DisplayNames.
+export function getLangName(lang = getLang()) {
+	const tag = getHtmlLang(lang);
+	if (typeof Intl.DisplayNames !== "function") return tag;
+	const name = new Intl.DisplayNames([tag], { type: "language" }).of(tag) || tag;
+	return name.charAt(0).toLocaleUpperCase(tag) + name.slice(1);
+}
+
 // A number as the language writes it: 3.5 in English, 3,5 in Norwegian, with
 // a real minus sign and at most one decimal. The crop dialog's degrees and
 // zoom use it.

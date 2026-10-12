@@ -1,11 +1,40 @@
 import { t } from "../../Model/i18n/i18n.js";
 import { model } from "../../Model/model.js";
-import { authNotice } from "../Universal/authNotice.js";
+import { loadState } from "../../Model/persistence.js";
+import { authNotice, deleteFailedNotice } from "../Universal/authNotice.js";
+import { backupSection } from "../Universal/backup.js";
 import { escapeHtml } from "../Universal/escape.js";
 
 export function loginPage() {
 	const busy = model.app.authBusy;
 	const errors = model.viewState.login.errors;
+
+	// v0.9. The way out when the library will not open: a forgotten password or
+	// a damaged envelope. Restore is the first answer, delete the last. Only shown
+	// when something is stored. It borrows the start page panel's class, which
+	// already gives the summary its 44 px and the disclosure triangle.
+	const stored = loadState();
+	const forgotOpen = model.viewState.loginForgotOpen || !!model.app.backupMessage.key;
+	const forgotPanel =
+		stored.kind === "none"
+			? ""
+			: /*HTML*/ `
+            <details class="welcome-backup login-forgot" ${forgotOpen ? "open" : ""}
+                     data-action-toggle="login-forgot-toggle">
+                <summary>${t("login.forgot")}</summary>
+                <p class="backup-hint">${t("login.forgotBody")}</p>
+                ${backupSection({ idPrefix: "login", canExport: stored.kind === "encrypted" })}
+                <div class="backup-row">
+                    <div class="backup-text">
+                        <span class="backup-label">${t("profile.delete")}</span>
+                        <p class="backup-hint" id="login-delete-hint">${t("login.forgotDeleteHint")}</p>
+                    </div>
+                    <button class="btn btn-danger" type="button"
+                            aria-describedby="login-delete-hint"
+                            data-action="delete-library">${t("delete.button")}</button>
+                </div>
+                ${deleteFailedNotice()}
+            </details>`;
 
 	return /*HTML*/ `
     <div class="auth-wrapper">
@@ -55,6 +84,8 @@ export function loginPage() {
                     ${busy ? t("auth.verifying") : t("auth.login")}
                 </button>
             </form>
+
+            ${forgotPanel}
 
             <p class="auth-footer">
                 ${t("auth.noLibrary")}

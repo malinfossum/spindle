@@ -13,10 +13,12 @@ import { blankLookup, model } from "./model.js";
 
 export function clearAuthMessage() {
 	model.app.authMessage = "";
+	model.app.authTone = "error";
 }
 
-export function setAuthMessage(message) {
+export function setAuthMessage(message, tone = "error") {
 	model.app.authMessage = message;
+	model.app.authTone = tone;
 }
 
 function clearBackupMessage() {

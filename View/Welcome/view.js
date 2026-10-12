@@ -3,8 +3,7 @@ import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";
 import { authNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
-import { icon } from "../Universal/icons.js";
-import { langSwitcher } from "../Universal/langSwitcher.js";
+import { langPicker, themePicker } from "../Universal/pickers.js";
 
 export function welcomePage() {
 	// First-time visitors should be nudged toward "Create library", returning ones
@@ -12,15 +11,6 @@ export function welcomePage() {
 	// shape — it never decrypts — so we can safely tell which library state we're in
 	// and give the likely action the accent button + first position.
 	const hasLibrary = loadState().kind === "encrypted";
-
-	// Duplicates the rule in Controller/Universal/theme.js on purpose: importing
-	// themeIcon() from there would put a View file back on the Controller, the
-	// exact edge this branch removed. Two lines of duplication is cheaper than
-	// that edge — do not "fix" this by adding the import back.
-	const themeIcon =
-		document.documentElement.getAttribute("data-theme") === "light"
-			? icon("sun")
-			: icon("moon");
 
 	const createBtn = /*HTML*/ `
         <a class="btn btn-full ${hasLibrary ? "" : "btn-accent"}" href="#register" data-action="nav">
@@ -51,11 +41,8 @@ export function welcomePage() {
 	return /*HTML*/ `
     <section class="welcome" aria-labelledby="welcome-heading">
         <div class="welcome-top">
-            ${langSwitcher("welcome-lang")}
-            <button class="btn-theme welcome-theme"
-                    type="button"
-                    data-action="toggle-theme"
-                    aria-label="${t("nav.themeToggle")}">${themeIcon}</button>
+            ${langPicker("welcome")}
+            ${themePicker("welcome")}
         </div>
 
         <div class="welcome-vinyl" aria-hidden="true">
@@ -63,7 +50,8 @@ export function welcomePage() {
         </div>
 
         <div class="welcome-card">
-            <h1 class="welcome-brand" id="welcome-heading">Spindle</h1>
+            <h1 class="welcome-brand" id="welcome-heading" tabindex="-1"
+                ${model.app.authMessage && model.app.authTone === "info" ? 'aria-describedby="auth-notice"' : ""}>Spindle</h1>
             <p class="welcome-tagline">
                 ${t("welcome.tagline")}
             </p>

@@ -10,7 +10,10 @@
          the header can express frame-ancestors. The dev server injects a
          relaxed copy of that same file while serving — see vite.config.js. -->
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- interactive-widget: on Android the on-screen keyboard shrinks the layout
+         viewport instead of panning over it, so a dialog with a text field
+         (delete library) stays centred in the space above the keyboard. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <title>Spindle</title>
     <meta name="description" content="A private, offline music library that never leaves your device.">
 
@@ -124,13 +127,20 @@
         </div>
 
 
-        <!-- The moon is the first-paint placeholder, the same kind of placeholder
-             as the Norwegian navbar labels above: applyStoredTheme() replaces it
-             with the icon the stored theme actually calls for the moment the
-             module graph runs. Drawn here rather than left empty so the button is
-             never a blank box for a frame. Both shapes live in
-             View/Universal/icons.js. -->
-        <button class="btn-theme" data-action="toggle-theme" id="themeBtn" aria-label="Bytt tema (mørkt eller lyst)"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 7.4 7.4 0 1 0 20 14.2z"/></svg></button>
+        <!-- The theme picker. What sits in the slot here is the first-paint
+             placeholder, the same kind of placeholder as the Norwegian navbar
+             labels above: a closed picker with the moon, which syncNavTheme() in
+             View/Universal/chrome.js replaces with the real one (the stored
+             theme's icon, name and checked row) the moment the module graph
+             runs. Drawn here rather than left empty so the slot is never a blank
+             box for a frame. The markup is themePicker() in
+             View/Universal/pickers.js; both icon shapes live in icons.js. -->
+        <div class="nav-theme" id="nav-theme">
+            <details class="picker" data-picker="theme" data-id-prefix="nav">
+                <summary class="picker-trigger" id="nav-theme-trigger"><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 14.2A8.4 8.4 0 0 1 9.8 4 7.4 7.4 0 1 0 20 14.2z"/></svg><span class="visually-hidden">Tema: Mørkt</span></summary>
+                <ul class="picker-list" aria-label="Tema"></ul>
+            </details>
+        </div>
 
     </header>
 

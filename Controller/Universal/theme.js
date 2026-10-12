@@ -3,11 +3,11 @@
 // the Content-Security-Policy say script-src 'self' with no hashes and no
 // 'unsafe-inline'.
 //
-// The pre-paint half of this lives in View/Universal/themePreload.js and runs
-// from <head>, long before this file loads.
+// The pre-paint half of this lives in public/themePreload.js and runs from
+// <head>, long before this file loads.
 
 import { getPref, setPref } from "../../Model/prefs.js";
-import { icon } from "../../View/Universal/icons.js";
+import { refreshPickers } from "../../View/Universal/pickers.js";
 
 // The navbar's --nav-bg per theme, for <meta name="theme-color"> (v0.6). The
 // same two values are in public/themePreload.js and index.html; keep all three
@@ -15,39 +15,28 @@ import { icon } from "../../View/Universal/icons.js";
 // fourth — it can only hold one value, so it carries the dark one.
 const THEME_COLOR = { dark: "#141414", light: "#ffffff" };
 
-function currentTheme() {
-	return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-}
-
-function themeIcon() {
-	return currentTheme() === "light" ? icon("sun") : icon("moon");
-}
-
 function applyTheme() {
-	document.documentElement.setAttribute("data-theme", currentTheme());
-	// Update every theme toggle (navbar + welcome). The navbar one is hidden
-	// on the logged-out flow, so the welcome page carries its own.
-	// innerHTML rather than textContent because the icon is SVG markup now. The
-	// string comes from icons.js and contains nothing user-entered.
-	const markup = themeIcon();
-	for (const btn of document.querySelectorAll(".btn-theme")) {
-		btn.innerHTML = markup;
-	}
-	document
-		.querySelector('meta[name="theme-color"]')
-		?.setAttribute("content", THEME_COLOR[currentTheme()]);
+	const theme = getPref("theme");
+	document.documentElement.setAttribute("data-theme", theme);
+	document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[theme]);
+	// Every theme picker on screen (the navbar's, and the welcome page's while
+	// it is open) shows the theme in its icon, its name and its checked row, so
+	// each one is drawn again rather than patched.
+	refreshPickers("theme");
 }
 
 // Applies whatever spindle:v1:prefs holds right now. Used at boot, and again
 // when another tab changes the theme (task N).
 export function applyStoredTheme() {
-	document.documentElement.setAttribute("data-theme", getPref("theme"));
 	applyTheme();
 }
 
-export function toggleTheme() {
-	const next = currentTheme() === "light" ? "dark" : "light";
-	document.documentElement.setAttribute("data-theme", next);
-	setPref("theme", next);
+// A row in the theme picker. Returns whether anything changed, so the caller
+// knows whether the picker was drawn again. setPref() whitelists the value.
+export function setTheme(theme) {
+	if (theme === getPref("theme")) return false;
+	setPref("theme", theme);
+	if (getPref("theme") !== theme) return false;
 	applyTheme();
+	return true;
 }
