@@ -291,6 +291,8 @@ export const model = {
 		// panel would snap shut on a language switch if its open state lived in
 		// the DOM. Anything that must survive a re-render belongs on the model.
 		welcomeBackupOpen: false,
+		// v0.9. The login page's "Can't open the library?" panel, same reason.
+		loginForgotOpen: false,
 	},
 
 	data: {

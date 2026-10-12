@@ -54,6 +54,7 @@ import { editAlbum } from "../Music_Details/editBtn.js";
 import { register } from "../Register/register.js";
 import { exportEncryptedBackup, exportPlaintextBackup, importBackupFile } from "./backup.js";
 import { deleteAlbum } from "./delete.js";
+import { confirmDeleteLibrary } from "./deleteLibrary.js";
 import { installPressed } from "./install.js";
 import { toggleMobileMenu } from "./navbarMobile.js";
 import { navigate } from "./router.js";
@@ -139,6 +140,7 @@ const ACTIONS = {
 		handleProfileNavClick();
 	},
 	logout: () => confirmLogout(),
+	"delete-library": () => confirmDeleteLibrary(),
 	install: () => installPressed(),
 	"toggle-menu": () => toggleMobileMenu(),
 	"toggle-theme": () => toggleTheme(),

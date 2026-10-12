@@ -63,7 +63,8 @@ export function welcomePage() {
         </div>
 
         <div class="welcome-card">
-            <h1 class="welcome-brand" id="welcome-heading">Spindle</h1>
+            <h1 class="welcome-brand" id="welcome-heading" tabindex="-1"
+                ${model.app.authMessage && model.app.authTone === "info" ? 'aria-describedby="auth-notice"' : ""}>Spindle</h1>
             <p class="welcome-tagline">
                 ${t("welcome.tagline")}
             </p>

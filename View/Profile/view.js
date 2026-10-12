@@ -117,6 +117,14 @@ export function profilePage() {
                 <span class="profile-settings-label">${t("profile.logoutHint")}</span>
                 <button class="btn" type="button" data-action="logout">${t("profile.logoutBtn")}</button>
             </div>
+
+            <h2 class="profile-settings-heading">${t("profile.delete")}</h2>
+            <div class="profile-settings-row">
+                <span class="profile-settings-label" id="profile-delete-hint">${t("profile.deleteHint")}</span>
+                <button class="btn btn-danger" type="button"
+                        aria-describedby="profile-delete-hint"
+                        data-action="delete-library">${t("delete.button")}</button>
+            </div>
         </div>`;
 
 	return /*HTML*/ `
