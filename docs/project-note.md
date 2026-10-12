@@ -92,7 +92,7 @@ so clearing the site's data deletes the library unless you have exported a backu
 
 ## Status
 
-Spindle is finished at v1.0.3, its sixth tagged release. 108 commits between 14 May and
+Spindle is finished at v1.0.3, its sixth tagged release. 109 commits between 14 May and
 13 October 2026; the first is the import of the team project it grew from. 123 tests, all
 passing. Every version since v0.1 has a plan written up front, under `docs/`.
 

@@ -44,10 +44,7 @@ The albums and covers below are made up for the demo.
 
 <img src="docs/images/library-desktop-dark.png" width="800" alt="The library on desktop in the dark theme: genre, location, format, decade and sort filters above a list of albums, each with its cover, artist, genres, shelf location and year.">
 
-<p>
-  <img src="docs/images/library-phone-light.png" width="260" alt="The library on a phone in the light theme, with the filters folded behind a Filters button.">
-  <img src="docs/images/album-phone-light.png" width="260" alt="One album on a phone in the light theme: cover, artist, title, location, year, format, genre and a note.">
-</p>
+<img src="docs/images/phones.png" width="800" alt="Three phone screens side by side. Left, the library in the dark theme with the filters folded behind a Filters button. Middle, one album in the light theme: cover, artist, title, location, year, format, genre and a note. Right, the wishlist in the dark theme with three albums.">
 
 ## Stack
 
