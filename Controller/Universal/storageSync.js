@@ -23,7 +23,12 @@ function handlePrefsChangedElsewhere() {
 	invalidatePrefsCache();
 	applyStoredTheme();
 	applyLang();
+	// The re-render replaces whatever had focus, so put it back on the same id.
+	// A delete in another tab (v0.9) sends this event right after the library
+	// one, and would otherwise knock focus off the start page's heading.
+	const focusedId = document.activeElement?.id;
 	updateView();
+	if (focusedId) document.getElementById(focusedId)?.focus();
 }
 
 function handleLibraryChangedElsewhere() {
