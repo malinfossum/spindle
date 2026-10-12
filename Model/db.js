@@ -80,3 +80,17 @@ export async function withStore(storeName, mode, work) {
 
 	return result;
 }
+
+// v0.9, delete library. Both stores in one transaction, so the covers and the
+// stay-unlocked key go together or not at all. withStore() opens one store only.
+export async function clearLibraryStores() {
+	const db = await openDb();
+	const tx = db.transaction([COVERS_STORE, SESSION_STORE], "readwrite");
+	tx.objectStore(COVERS_STORE).clear();
+	tx.objectStore(SESSION_STORE).clear();
+	await new Promise((resolve, reject) => {
+		tx.oncomplete = () => resolve();
+		tx.onerror = () => reject(tx.error);
+		tx.onabort = () => reject(tx.error ?? new Error("IndexedDB transaction aborted"));
+	});
+}

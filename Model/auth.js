@@ -217,9 +217,10 @@ export function zeroKeys() {
 // that will not clone a CryptoKey — and the caller says so to the person;
 // a checked box that quietly did nothing is the lie the standing rule exists
 // to prevent. Called from login() (store), boot (read), logout() and the
-// Profile toggle (clear). Restore backup clears through logout(). A change-
-// password or delete-library feature, if one is ever built, must call
-// clearSessionKey() too — neither exists today.
+// Profile toggle (clear). Restore backup clears through logout(). Delete
+// library (v0.9) clears the whole session store through clearLibraryStores()
+// in db.js. A change-password feature, if one is ever built, must call
+// clearSessionKey() too.
 const SESSION_ID = "session";
 
 export async function storeSessionKey(key) {
