@@ -133,7 +133,11 @@ export function openDialog({
 		// A click landing outside the dialog box is the backdrop → cancel. Testing
 		// the coordinates (not event.target) means clicks on the dialog's own
 		// padding aren't mistaken for the backdrop, which target checks get wrong.
+		// The target still has to be the dialog itself: a button pressed with Enter
+		// or Space fires a click at (0, 0), which is outside the box, and the
+		// unarmed confirm (v0.9) must stay open when that happens.
 		dialog.addEventListener("click", (event) => {
+			if (event.target !== dialog) return;
 			const box = dialog.getBoundingClientRect();
 			const clickedInside =
 				event.clientX >= box.left &&
