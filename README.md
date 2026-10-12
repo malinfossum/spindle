@@ -4,7 +4,7 @@ A local music library for organizing physical LP and CD collections, built in va
 
 **Live:** [spindle-music.pages.dev](https://spindle-music.pages.dev)
 
-**Status:** v0.2.0 is the current release: a build step, hash routing, barcode look-up, and real security headers on the deployed site.
+**Status:** finished at v1.0.0. Read the [project note](docs/project-note.md) for how it works, how it is built and where it stands.
 
 ## Run locally
 
@@ -20,7 +20,7 @@ Spindle needs a secure context for encryption. Opening `index.html` directly via
 ## Features
 
 - Browse your collection as album cards
-- Search by artist, title, or genre
+- Search by artist, title, or genre, and filter by genre, shelf location, format, or decade
 - View and edit album details: notes, release year, genre, and shelf location
 - Add new albums with a cover photo, cropped to a square you can move, zoom, turn and straighten before it is saved
 - Barcode look-up on MusicBrainz, with the album cover from the Cover Art Archive and the album's genres ticked for you (opt-in, sends nothing from your library)
@@ -40,12 +40,6 @@ Spindle needs a secure context for encryption. Opening `index.html` directly via
 - Vite for the dev server and the build, Biome for formatting and linting
 - State persisted to `localStorage`
 - Library data encrypted at rest with Web Crypto (PBKDF2 + HKDF + AES-GCM)
-
-## Roadmap
-
-- A better search: submit with Enter, live suggestions, filters, and history
-- Richer album details, and a rebuilt edit screen
-- Log out moved out of the main navigation
 
 ## Privacy
 

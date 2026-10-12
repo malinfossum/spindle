@@ -9,3 +9,6 @@ desktop.ini
 # Node toolchain
 node_modules/
 dist/
+
+# Local-only notes
+*.private.md
