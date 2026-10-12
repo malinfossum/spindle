@@ -1695,26 +1695,24 @@ footer {
 	flex-wrap: wrap;
 }
 
-/* The lookups and stay rows pair a <label> with a <select> whose "on" option
-   names the hosts it talks to (profile.lookupsOn runs 76 characters) — the
-   one text in this panel a person most needs to actually read. Squeezing
-   both onto one phone-width line, however the select is sized, only leaves
-   room to show a clipped fragment of that sentence: a native <select> box
-   truncates internally rather than reporting overflow, so scrollWidth stays
-   equal to clientWidth even while "På — sender strekkoden..." renders as
-   "På — senc". Stacking removes the width fight instead of narrowing it:
-   label on its own line, select full width below up to the 320px cap set
-   inline in View/Profile/view.js — the longest option text still truncates
-   there, it just has more room first. 768px+ below returns to one row,
-   label and select sharing a bottom edge, once there is width to spare. */
-.profile-settings-row-stack {
-	flex-direction: column;
-	align-items: stretch;
-	gap: 0.3rem;
+/* The look-up and stay selects hold only Off and On, so they size to their
+   options and share the row's centre line with the label, the same way the
+   language picker above them does. At 320px the label wraps rather than the
+   select, so the select keeps its place on the right. */
+.profile-settings-select {
+	width: auto;
+	flex-shrink: 0;
 }
 
-.profile-settings-row-stack > select.form-input {
-	width: 100%;
+.profile-settings-label:has(+ .profile-settings-select) {
+	flex: 1 1 0;
+	min-width: 0;
+}
+
+/* Each select has its hint under it, so the next row keeps its distance and
+   does not read as more of the one above. */
+.profile-settings-row + .form-hint + .profile-settings-row {
+	margin-top: 0.75rem;
 }
 
 /* The Install row (v0.6) has no heading of its own and follows the stay help,
@@ -2350,23 +2348,6 @@ body.chrome-hidden > footer {
 
 /* ── Welcome refinements: tablet & desktop (≥ 768px) ── */
 @media (min-width: 768px) {
-	/* Room enough here for the label and select to share a row again: back to
-	   flex-direction: row, and align-items: flex-end (rather than the row's
-	   own center) is what actually closes the gap an 18px label and a 44px
-	   select otherwise leave at the bottom when they're side by side. The
-	   select drops the phone-width 100% for its own content width, still
-	   capped by its inline style="max-width: 320px", so more of a long
-	   option's text shows. */
-	.profile-settings-row-stack {
-		flex-direction: row;
-		align-items: flex-end;
-		gap: 1rem;
-	}
-
-	.profile-settings-row-stack > select.form-input {
-		width: auto;
-	}
-
 	.welcome {
 		min-height: calc(100vh - 3.5rem);
 		min-height: calc(100dvh - 3.5rem);
