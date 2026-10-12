@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { MASKABLE_SCALE, maskableSvg, ogSvg, recordMarkup } from "../scripts/compose.js";
+import {
+	BANNER_THEMES,
+	bannerSvg,
+	MASKABLE_SCALE,
+	maskableSvg,
+	ogSvg,
+	recordMarkup,
+} from "../scripts/compose.js";
 
 const icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <circle cx="256" cy="256" r="254"/>
@@ -33,4 +40,32 @@ test("ogSvg is 1200 by 630 and escapes its text", () => {
 	assert.ok(out.includes("Rock &amp; roll"));
 	assert.ok(out.includes("&lt;b&gt;"));
 	assert.ok(!out.includes("<b>"));
+});
+
+test("bannerSvg is 1600 by 400 in either theme and escapes its text", () => {
+	for (const theme of Object.keys(BANNER_THEMES)) {
+		const out = bannerSvg(recordMarkup(icon), {
+			title: "Spindle",
+			tagline: ["Rock & roll", "<b>"],
+			theme,
+		});
+		assert.match(out, /width="1600" height="400"/);
+		assert.ok(out.includes(`fill="${BANNER_THEMES[theme].page}"`));
+		assert.ok(out.includes("Rock &amp; roll"));
+		assert.ok(!out.includes("<b>"));
+	}
+});
+
+test("bannerSvg refuses a theme it does not have", () => {
+	assert.throws(() =>
+		bannerSvg(recordMarkup(icon), { title: "Spindle", tagline: [], theme: "sepia" }),
+	);
+});
+
+test("the banner's shelf ends as far from the right edge as the text starts from the left", () => {
+	const out = bannerSvg(recordMarkup(icon), { title: "Spindle", tagline: ["a"], theme: "dark" });
+	const plank = out.match(/<rect x="([\d.]+)" y="[\d.]+" width="([\d.]+)" height="12"/);
+	assert.ok(plank, "the plank is drawn");
+	assert.equal(1600 - (Number(plank[1]) + Number(plank[2])), 96);
+	assert.match(out, /<text x="96"/);
 });

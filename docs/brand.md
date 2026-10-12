@@ -146,5 +146,9 @@ renders everything else from it with `sharp`, and the output is committed:
 - `favicon.ico` (16, 32, 48), where 16 and 32 come from `public/icons/icon-small.svg`:
   no grooves and no sheen, so the rings do not merge at that size
 - `og-image.png`, 1200 × 630, the welcome page's composition for link previews
+- `docs/images/banner-dark.png` and `banner-light.png`, 1600 × 400, the README banner:
+  the name and the tagline beside a shelf of LP and CD spines, one of them in the
+  accent, and a sleeve with the record rising out of it. The sleeve carries the disc
+  mark, the same one that stands in for a missing cover in the app
 
 The wordmark is still the name set in the interface font at 700.

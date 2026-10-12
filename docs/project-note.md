@@ -2,7 +2,7 @@
 
 A summary of what Spindle is, how it works, how it is built and where it stands.
 
-**Last updated:** 12.10.2026 · **Version:** v1.0.2 · **Status:** finished
+**Last updated:** 13.10.2026 · **Version:** v1.0.3 · **Status:** finished
 
 ---
 
@@ -92,8 +92,8 @@ so clearing the site's data deletes the library unless you have exported a backu
 
 ## Status
 
-Spindle is finished at v1.0.2, its fifth tagged release. 107 commits between 14 May and
-12 October 2026; the first is the import of the team project it grew from. 120 tests, all
+Spindle is finished at v1.0.3, its sixth tagged release. 108 commits between 14 May and
+13 October 2026; the first is the import of the team project it grew from. 123 tests, all
 passing. Every version since v0.1 has a plan written up front, under `docs/`.
 
 It was built to learn how far plain JavaScript goes when it is done properly: layered,
@@ -108,7 +108,7 @@ tested, accessible and secure by design. It went further than I expected.
 | Can I use it on two devices? | Yes, through an encrypted backup: export on one, import on the other. There is no live sync. |
 | What if I forget the password? | The library cannot be opened. There is no reset, by design. You can delete it and restore from a backup, or start again. |
 | Does scanning work everywhere? | Where the browser has a barcode detector with the right formats, mostly Chrome on Android. Elsewhere you type the number and the look-up works the same. |
-| How large is the codebase? | Around 12,000 lines of JavaScript, CSS and HTML in production and 1,300 lines of tests. |
+| How large is the codebase? | Around 12,000 lines of JavaScript, CSS and HTML in production and 1,400 lines of tests. |
 
 ## Feedback and contributions
 

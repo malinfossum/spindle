@@ -1,10 +1,15 @@
 # Spindle
 
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/banner-light.png">
+  <img src="docs/images/banner-dark.png" width="800" alt="Spindle: your physical music library, kept safe on your own device. A shelf of record and CD spines, with one sleeve pulled out and its record rising from it.">
+</picture>
+
 A local music library for organizing physical LP and CD collections, built in vanilla JavaScript.
 
 **Live:** [spindle-music.pages.dev](https://spindle-music.pages.dev)
 
-**Status:** finished at v1.0.2. Read the [project note](docs/project-note.md) for how it works, how it is built and where it stands.
+**Status:** finished at v1.0.3. Read the [project note](docs/project-note.md) for how it works, how it is built and where it stands.
 
 ## Run locally
 
@@ -32,6 +37,17 @@ Spindle needs a secure context for encryption. Opening `index.html` directly via
 - Light and dark theme, remembered between visits
 - Installable as an app, and once installed it opens without a network
 - Mobile and desktop layouts
+
+## Screenshots
+
+The albums and covers below are made up for the demo.
+
+<img src="docs/images/library-desktop-dark.png" width="800" alt="The library on desktop in the dark theme: genre, location, format, decade and sort filters above a list of albums, each with its cover, artist, genres, shelf location and year.">
+
+<p>
+  <img src="docs/images/library-phone-light.png" width="260" alt="The library on a phone in the light theme, with the filters folded behind a Filters button.">
+  <img src="docs/images/album-phone-light.png" width="260" alt="One album on a phone in the light theme: cover, artist, title, location, year, format, genre and a note.">
+</p>
 
 ## Stack
 
