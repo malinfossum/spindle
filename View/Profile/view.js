@@ -81,10 +81,9 @@ export function profilePage() {
                 <span class="profile-settings-label">${t("profile.language")}</span>
                 ${langPicker("profile")}
             </div>
-            <div class="profile-settings-row profile-settings-row-stack">
+            <div class="profile-settings-row">
                 <label class="profile-settings-label" for="profile-lookups">${t("profile.lookups")}</label>
-                <select class="form-input" id="profile-lookups"
-                        style="max-width: 320px"
+                <select class="form-input profile-settings-select" id="profile-lookups"
                         aria-describedby="profile-lookups-help"
                         data-action-change="set-lookups">
                     ${
@@ -97,10 +96,9 @@ export function profilePage() {
                 </select>
             </div>
             <p class="form-hint" id="profile-lookups-help">${t("profile.lookupsHelp")}</p>
-            <div class="profile-settings-row profile-settings-row-stack">
+            <div class="profile-settings-row">
                 <label class="profile-settings-label" for="profile-stay">${t("profile.stay")}</label>
-                <select class="form-input" id="profile-stay"
-                        style="max-width: 320px"
+                <select class="form-input profile-settings-select" id="profile-stay"
                         aria-describedby="profile-stay-help"
                         data-action-change="set-stay">
                     <option value="off" ${model.app.stayUnlocked ? "" : "selected"}>${t("profile.stayOff")}</option>

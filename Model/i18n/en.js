@@ -23,7 +23,7 @@ export const STRINGS_EN = {
 	"theme.dark": "Dark",
 
 	// ---- Welcome ------------------------------------------------------------
-	"welcome.tagline": "Your physical music library — kept safe on your own device.",
+	"welcome.tagline": "Your physical music library, kept safe on your own device.",
 	"welcome.createLibrary": "Create library",
 	"welcome.login": "Log in",
 	"welcome.about": "About Spindle",
@@ -40,7 +40,7 @@ export const STRINGS_EN = {
 		"Spindle began as a team assignment at GET Academy. It has been rebuilt here as an open project for general use.",
 	"about.privacyTitle": "Privacy",
 	"about.privacyBody":
-		"No server, no tracking, and no third parties — with two exceptions you choose. If you turn on barcode look-ups, the scanned number is sent to musicbrainz.org and the cover of the album you pick is fetched from coverartarchive.org — nothing from your library — and, as with any web request, they see your IP address. If you tick “Stay unlocked on this device” when logging in, the key that opens your library is kept in this browser until you log out, so anyone holding the device can open it meanwhile. Your library is encrypted at rest with a key derived from your password (PBKDF2 + HKDF). Without the password the data cannot be read — there is no password recovery, so export regularly.",
+		"No server, no tracking, and no third parties, with two exceptions you choose. If you turn on barcode look-ups, the scanned number is sent to musicbrainz.org and the cover of the album you pick is fetched from coverartarchive.org. Nothing from your library is sent, but as with any web request, those sites see your IP address. If you tick “Stay unlocked on this device” when logging in, the key that opens your library is kept in this browser until you log out, so anyone holding the device can open it meanwhile. Your library is encrypted at rest with a key derived from your password (PBKDF2 + HKDF). Without the password the data cannot be read. There is no password recovery, so export regularly.",
 	"about.a11yTitle": "Accessibility",
 	"about.a11yBody":
 		"Spindle is built to work with a keyboard and a screen reader: semantic HTML, visible focus, sufficient contrast, and respect for reduced motion.",
@@ -63,13 +63,13 @@ export const STRINGS_EN = {
 	"auth.noLibrary": "No library yet?",
 	"auth.backToStart": "← Back to start",
 	"auth.passwordHint":
-		"At least 8 characters. Remember it — the library cannot be recovered without it.",
+		"At least 8 characters. Remember it: the library cannot be recovered without it.",
 	"auth.strength": "Password strength: {level} of {max}",
 
 	// ---- Stay unlocked (v0.5) --------------------------------------------
 	"login.stay": "Stay unlocked on this device",
 	"login.stayHelp":
-		"Keeps the library open after a reload or a switch to another app — until you log out. Anyone holding this device can open it meanwhile. The password is still never stored.",
+		"Keeps the library open after a reload or a switch to another app, until you log out. Anyone holding this device can open it meanwhile. The password is still never stored.",
 	"login.stayFailed": "Logged in, but this device could not be kept unlocked.",
 	"login.stayClearFailed":
 		"Logged out, but the stored key could not be removed. Clear this site's data in your browser to be sure.",
@@ -118,8 +118,8 @@ export const STRINGS_EN = {
 		"Look-ups are off. Turn them on under Profile to fill in details from the barcode.",
 	"lookup.coverAdded":
 		"Cover added from the Cover Art Archive. Change it below if it is the wrong pressing.",
-	"lookup.coverNone": "No cover in the archive for this album — add one below.",
-	"lookup.coverBusy": "The cover archive is busy — try Look up again in a moment.",
+	"lookup.coverNone": "No cover in the archive for this album. Add one below.",
+	"lookup.coverBusy": "The cover archive is busy. Try Look up again in a moment.",
 	"lookup.coverFailed":
 		"The cover could not be fetched. The details were filled in; add a cover below.",
 	"lookup.genres": "Genre: {genres}.",
@@ -187,8 +187,8 @@ export const STRINGS_EN = {
 	"wishlist.titleCount": "Wishlist ({count})",
 	"wishlist.empty": "Your wishlist is empty. Tick “Wishlist” on an album to add it.",
 	"search.noResults": 'No results for "{query}"',
-	"search.count": 'Searched: "{query}" — {count} results',
-	"search.countOne": 'Searched: "{query}" — 1 result',
+	"search.count": '{count} results for "{query}"',
+	"search.countOne": '1 result for "{query}"',
 
 	// ---- Profile ------------------------------------------------------------
 	"profile.title": "{username}'s profile",
@@ -223,7 +223,7 @@ export const STRINGS_EN = {
 		"The stored key could not be removed. Log out and clear this site's data in your browser to be sure.",
 	"profile.install": "Install Spindle",
 	"profile.installBtn": "Install",
-	"profile.installAccepted": "Spindle is installed — open it from your home screen.",
+	"profile.installAccepted": "Spindle is installed. Open it from your home screen.",
 	"profile.installDismissed": "Not installed. The browser menu can still install it.",
 	"profile.installIos": 'To install Spindle, tap Share, then "Add to Home Screen".',
 
@@ -243,13 +243,13 @@ export const STRINGS_EN = {
 	"dialog.logoutConfirm": "Log out",
 	"dialog.lookupTitle": "Look up this barcode?",
 	"dialog.lookupBody":
-		"Spindle will send this barcode to musicbrainz.org to find the album, and fetch the cover of the album you pick from coverartarchive.org — nothing from your library, and never on its own. As with any web request, those sites see your IP address. You can turn look-ups off under Profile.",
+		"Spindle will send this barcode to musicbrainz.org to find the album, and fetch the cover of the album you pick from coverartarchive.org. It never sends anything from your library, and never sends on its own. As with any web request, those sites see your IP address. You can turn look-ups off under Profile.",
 	"dialog.lookupConfirm": "Look up",
 	"dialog.lookupCancel": "Not now",
 
 	"dialog.lookupsAskTitle": "Look up barcodes online?",
 	"dialog.lookupsAskBody":
-		"When you scan or type a barcode, Spindle can send it to musicbrainz.org to find the album and fetch its cover from coverartarchive.org — nothing from your library, and never on its own. As with any web request, those sites see your IP address. You can change this under Profile.",
+		"When you scan or type a barcode, Spindle can send it to musicbrainz.org to find the album and fetch its cover from coverartarchive.org. It never sends anything from your library, and never sends on its own. As with any web request, those sites see your IP address. You can change this under Profile.",
 	"dialog.lookupsAskConfirm": "Yes, look them up",
 	"dialog.lookupsAskCancel": "No, keep it offline",
 
@@ -266,7 +266,7 @@ export const STRINGS_EN = {
 	"storage.corrupt":
 		'The stored library is damaged. Restore a backup, or delete it under "Can\'t open the library?" on the login page.',
 	"storage.otherTab":
-		"The library was changed in another tab. Your changes are no longer saved here — reload the page to continue.",
+		"The library was changed in another tab. Your changes are no longer saved here. Reload the page to continue.",
 	"storage.tooNew":
 		"The stored library was created by a newer version of Spindle. Update to the latest version before continuing.",
 
@@ -290,7 +290,7 @@ export const STRINGS_EN = {
 	"backup.plaintext": "Readable copy",
 	"backup.plaintextBtn": "Export unencrypted",
 	"backup.plaintextHint":
-		"An unencrypted file. Anyone who opens it can read your whole library. It cannot be restored — use the encrypted copy for that.",
+		"An unencrypted file. Anyone who opens it can read your whole library. It cannot be restored. Use the encrypted copy for that.",
 	"backup.plaintextTitle": "Export without encryption?",
 	"backup.plaintextBody":
 		"The file is saved as plain text. Anyone who gets hold of it can read your entire library without a password.",
@@ -333,11 +333,11 @@ export const STRINGS_EN = {
 	"error.repeatPassword": "Repeat your password.",
 	"error.passwordsDiffer": "The passwords do not match.",
 	"error.passwordTooShort": "The password must be at least 8 characters.",
-	"error.passwordWeak": "Choose a stronger password — this one is on our list of weak passwords.",
+	"error.passwordWeak": "Choose a stronger password. This one is on our list of weak passwords.",
 	"error.wrongPassword": "Wrong password.",
 	"error.noLibraryFound": "No library found. Create one first.",
-	"error.libraryInOtherTab": "A library was created in another tab — reload the page and log in.",
-	"error.noSpace": "Not enough space — free up storage and try again.",
+	"error.libraryInOtherTab": "A library was created in another tab. Reload the page and log in.",
+	"error.noSpace": "Not enough space. Free up storage and try again.",
 	"error.unexpected": "Something went wrong. Please try again.",
 	"error.fillArtist": "Enter an artist.",
 	"error.fillTitle": "Enter a title.",

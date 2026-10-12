@@ -29,7 +29,7 @@ export const STRINGS_NO = {
 	"theme.dark": "Mørkt",
 
 	// ---- Welcome ------------------------------------------------------------
-	"welcome.tagline": "Ditt fysiske musikkbibliotek — trygt lagret på din egen enhet.",
+	"welcome.tagline": "Ditt fysiske musikkbibliotek, trygt lagret på din egen enhet.",
 	"welcome.createLibrary": "Opprett bibliotek",
 	"welcome.login": "Logg inn",
 	"welcome.about": "Om Spindle",
@@ -46,7 +46,7 @@ export const STRINGS_NO = {
 		"Spindle begynte som en lagoppgave på GET Academy. Det er bygget om her som et åpent prosjekt for allmenn bruk.",
 	"about.privacyTitle": "Personvern",
 	"about.privacyBody":
-		"Ingen server, ingen sporing og ingen tredjeparter — med to unntak du velger selv. Slår du på strekkodeoppslag, sendes det skannede nummeret til musicbrainz.org og omslaget til albumet du velger hentes fra coverartarchive.org — ingenting fra biblioteket ditt — og som ved enhver nettforespørsel ser de IP-adressen din. Huker du av «Hold opplåst på denne enheten» ved innlogging, beholdes nøkkelen som åpner biblioteket i denne nettleseren til du logger ut, så alle som holder enheten kan åpne det imens. Biblioteket ditt krypteres i ro med en nøkkel utledet fra passordet ditt (PBKDF2 + HKDF). Uten passordet kan dataen ikke leses — det finnes ingen passordgjenoppretting, så eksporter jevnlig.",
+		"Ingen server, ingen sporing og ingen tredjeparter, med to unntak du velger selv. Slår du på strekkodeoppslag, sendes det skannede nummeret til musicbrainz.org og omslaget til albumet du velger hentes fra coverartarchive.org. Ingenting fra biblioteket ditt sendes, men som ved enhver nettforespørsel ser de nettstedene IP-adressen din. Huker du av «Hold opplåst på denne enheten» ved innlogging, beholdes nøkkelen som åpner biblioteket i denne nettleseren til du logger ut, så alle som holder enheten kan åpne det imens. Biblioteket ditt krypteres i ro med en nøkkel utledet fra passordet ditt (PBKDF2 + HKDF). Uten passordet kan dataen ikke leses. Det finnes ingen passordgjenoppretting, så eksporter jevnlig.",
 	"about.a11yTitle": "Tilgjengelighet",
 	"about.a11yBody":
 		"Spindle bygges tastatur- og skjermleservennlig: semantisk HTML, synlig fokus, tilstrekkelig kontrast, og respekt for «redusert bevegelse».",
@@ -69,13 +69,13 @@ export const STRINGS_NO = {
 	"auth.noLibrary": "Ingen bibliotek?",
 	"auth.backToStart": "← Tilbake til start",
 	"auth.passwordHint":
-		"Minst 8 tegn. Husk passordet — biblioteket kan ikke gjenopprettes uten det.",
+		"Minst 8 tegn. Husk passordet: biblioteket kan ikke gjenopprettes uten det.",
 	"auth.strength": "Passordstyrke: {level} av {max}",
 
 	// ---- Hold opplåst (v0.5) ---------------------------------------------
 	"login.stay": "Hold opplåst på denne enheten",
 	"login.stayHelp":
-		"Biblioteket holdes åpent etter en omlasting eller et bytte til en annen app — til du logger ut. Alle som holder enheten kan åpne det imens. Passordet lagres fortsatt aldri.",
+		"Biblioteket holdes åpent etter en omlasting eller et bytte til en annen app, til du logger ut. Alle som holder enheten kan åpne det imens. Passordet lagres fortsatt aldri.",
 	"login.stayFailed": "Logget inn, men enheten kunne ikke holdes opplåst.",
 	"login.stayClearFailed":
 		"Logget ut, men den lagrede nøkkelen kunne ikke fjernes. Slett nettstedets data i nettleseren for å være sikker.",
@@ -123,8 +123,8 @@ export const STRINGS_NO = {
 	"lookup.off": "Oppslag er av. Slå dem på under Profil for å fylle inn detaljer fra strekkoden.",
 	"lookup.coverAdded":
 		"Omslag hentet fra Cover Art Archive. Bytt det under hvis det er feil utgave.",
-	"lookup.coverNone": "Arkivet har ikke noe omslag for dette albumet — legg til ett under.",
-	"lookup.coverBusy": "Omslagsarkivet er opptatt — prøv Slå opp igjen om litt.",
+	"lookup.coverNone": "Arkivet har ikke noe omslag for dette albumet. Legg til ett under.",
+	"lookup.coverBusy": "Omslagsarkivet er opptatt. Prøv Slå opp igjen om litt.",
 	"lookup.coverFailed":
 		"Omslaget kunne ikke hentes. Detaljene ble fylt inn; legg til et omslag under.",
 	"lookup.genres": "Sjanger: {genres}.",
@@ -193,8 +193,8 @@ export const STRINGS_NO = {
 	"wishlist.titleCount": "Ønskeliste ({count})",
 	"wishlist.empty": "Ønskelisten er tom. Kryss av «Ønskeliste» på et album for å legge det til.",
 	"search.noResults": 'Ingen treff for "{query}"',
-	"search.count": 'Søkt: "{query}" — {count} treff',
-	"search.countOne": 'Søkt: "{query}" — 1 treff',
+	"search.count": '{count} treff for "{query}"',
+	"search.countOne": '1 treff for "{query}"',
 
 	// ---- Profile ------------------------------------------------------------
 	"profile.title": "{username} sin profil",
@@ -229,7 +229,7 @@ export const STRINGS_NO = {
 		"Den lagrede nøkkelen kunne ikke fjernes. Logg ut og slett nettstedets data i nettleseren for å være sikker.",
 	"profile.install": "Installer Spindle",
 	"profile.installBtn": "Installer",
-	"profile.installAccepted": "Spindle er installert — åpne den fra hjemskjermen.",
+	"profile.installAccepted": "Spindle er installert. Åpne den fra hjemskjermen.",
 	"profile.installDismissed": "Ikke installert. Nettleserens meny kan fortsatt installere den.",
 	"profile.installIos":
 		"For å installere Spindle: trykk på Del, og så på «Legg til på Hjem-skjerm».",
@@ -251,13 +251,13 @@ export const STRINGS_NO = {
 	"dialog.logoutConfirm": "Logg ut",
 	"dialog.lookupTitle": "Slå opp denne strekkoden?",
 	"dialog.lookupBody":
-		"Spindle sender denne strekkoden til musicbrainz.org for å finne albumet, og henter omslaget til albumet du velger fra coverartarchive.org — ingenting fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser de nettstedene IP-adressen din. Du kan slå av oppslag under Profil.",
+		"Spindle sender denne strekkoden til musicbrainz.org for å finne albumet, og henter omslaget til albumet du velger fra coverartarchive.org. Den sender aldri noe fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser de nettstedene IP-adressen din. Du kan slå av oppslag under Profil.",
 	"dialog.lookupConfirm": "Slå opp",
 	"dialog.lookupCancel": "Ikke nå",
 
 	"dialog.lookupsAskTitle": "Slå opp strekkoder på nett?",
 	"dialog.lookupsAskBody":
-		"Når du skanner eller skriver inn en strekkode, kan Spindle sende den til musicbrainz.org for å finne albumet og hente omslaget fra coverartarchive.org — ingenting fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser de nettstedene IP-adressen din. Du kan endre dette under Profil.",
+		"Når du skanner eller skriver inn en strekkode, kan Spindle sende den til musicbrainz.org for å finne albumet og hente omslaget fra coverartarchive.org. Den sender aldri noe fra biblioteket ditt, og aldri av seg selv. Som ved enhver nettforespørsel ser de nettstedene IP-adressen din. Du kan endre dette under Profil.",
 	"dialog.lookupsAskConfirm": "Ja, slå dem opp",
 	"dialog.lookupsAskCancel": "Nei, hold det frakoblet",
 
@@ -274,7 +274,7 @@ export const STRINGS_NO = {
 	"storage.corrupt":
 		"Det lagrede biblioteket er skadet. Gjenopprett en sikkerhetskopi, eller slett det under «Får du ikke åpnet biblioteket?» på innloggingssiden.",
 	"storage.otherTab":
-		"Biblioteket ble endret i en annen fane. Endringene dine lagres ikke lenger her — last inn siden på nytt for å fortsette.",
+		"Biblioteket ble endret i en annen fane. Endringene dine lagres ikke lenger her. Last inn siden på nytt for å fortsette.",
 	"storage.tooNew":
 		"Det lagrede biblioteket ble laget av en nyere versjon av Spindle. Oppdater til nyeste versjon før du fortsetter.",
 
@@ -298,7 +298,7 @@ export const STRINGS_NO = {
 	"backup.plaintext": "Lesbar kopi",
 	"backup.plaintextBtn": "Eksporter ukryptert",
 	"backup.plaintextHint":
-		"Ukryptert fil. Alle som åpner den, kan lese hele biblioteket. Den kan ikke gjenopprettes — bruk den krypterte kopien til det.",
+		"Ukryptert fil. Alle som åpner den, kan lese hele biblioteket. Den kan ikke gjenopprettes. Bruk den krypterte kopien til det.",
 	"backup.plaintextTitle": "Eksportere uten kryptering?",
 	"backup.plaintextBody":
 		"Filen lagres i klartekst. Alle som får tak i den, kan lese hele biblioteket ditt uten passord.",
@@ -345,12 +345,12 @@ export const STRINGS_NO = {
 	"error.repeatPassword": "Gjenta passordet.",
 	"error.passwordsDiffer": "Passordene er ikke like.",
 	"error.passwordTooShort": "Passordet må være minst 8 tegn.",
-	"error.passwordWeak": "Velg et sterkere passord — dette er på vår liste over svake passord.",
+	"error.passwordWeak": "Velg et sterkere passord. Dette er på vår liste over svake passord.",
 	"error.wrongPassword": "Feil passord.",
 	"error.noLibraryFound": "Ingen bibliotek funnet. Opprett ett først.",
 	"error.libraryInOtherTab":
-		"Et bibliotek ble opprettet i en annen fane — last inn siden på nytt og logg inn.",
-	"error.noSpace": "Ikke nok plass — frigjør lagring og prøv igjen.",
+		"Et bibliotek ble opprettet i en annen fane. Last inn siden på nytt og logg inn.",
+	"error.noSpace": "Ikke nok plass. Frigjør lagring og prøv igjen.",
 	"error.unexpected": "En uventet feil oppsto. Prøv igjen.",
 	"error.fillArtist": "Fyll inn artist.",
 	"error.fillTitle": "Fyll inn tittel.",
