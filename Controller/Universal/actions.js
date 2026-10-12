@@ -434,6 +434,9 @@ const ACTIONS = {
 	"welcome-backup-toggle": (_event, target) => {
 		model.viewState.welcomeBackupOpen = target.open;
 	},
+	"login-forgot-toggle": (_event, target) => {
+		model.viewState.loginForgotOpen = target.open;
+	},
 };
 
 // Called once from the boot script in index.html. Binding to the document
