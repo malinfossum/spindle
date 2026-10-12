@@ -208,15 +208,16 @@ export const STRINGS_EN = {
 		"Removes the library, its covers and the look-up choice from this browser. Theme and language stay. This cannot be undone.",
 	"profile.lookups": "Barcode look-ups",
 	"profile.lookupsOff": "Off",
-	"profile.lookupsOn":
-		"On — sends the barcode to musicbrainz.org, covers from coverartarchive.org",
+	"profile.lookupsOn": "On",
+	"profile.lookupsHelp":
+		"On: a barcode you scan or type is sent to musicbrainz.org, and the album cover comes from coverartarchive.org. Nothing from your library is sent.",
 
 	"profile.lookupsUnset": "Not chosen yet",
 	"profile.stay": "Stay unlocked on this device",
 	"profile.stayHelp":
-		"On: the library opens without the password after a reload, until you log out — anyone holding this device can open it. Log out is the lock.",
+		"On: the library opens without the password after a reload, until you log out. Anyone holding this device can open it. Log out is the lock.",
 	"profile.stayOff": "Off",
-	"profile.stayOn": "On — until I log out",
+	"profile.stayOn": "On",
 	"profile.stayFailed": "This device could not be kept unlocked.",
 	"profile.stayClearFailed":
 		"The stored key could not be removed. Log out and clear this site's data in your browser to be sure.",

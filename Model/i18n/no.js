@@ -214,15 +214,16 @@ export const STRINGS_NO = {
 		"Fjerner biblioteket, coverbildene og valget om oppslag fra denne nettleseren. Tema og språk blir værende. Dette kan ikke angres.",
 	"profile.lookups": "Strekkodeoppslag",
 	"profile.lookupsOff": "Av",
-	"profile.lookupsOn":
-		"På — sender strekkoden til musicbrainz.org, omslag fra coverartarchive.org",
+	"profile.lookupsOn": "På",
+	"profile.lookupsHelp":
+		"På: en strekkode du skanner eller skriver inn sendes til musicbrainz.org, og omslaget hentes fra coverartarchive.org. Ingenting fra biblioteket ditt sendes.",
 
 	"profile.lookupsUnset": "Ikke valgt ennå",
 	"profile.stay": "Hold opplåst på denne enheten",
 	"profile.stayHelp":
-		"På: biblioteket åpnes uten passord etter en omlasting, til du logger ut — alle som holder enheten kan åpne det. Logg ut er låsen.",
+		"På: biblioteket åpnes uten passord etter en omlasting, til du logger ut. Alle som holder enheten kan åpne det. Logg ut er låsen.",
 	"profile.stayOff": "Av",
-	"profile.stayOn": "På — til jeg logger ut",
+	"profile.stayOn": "På",
 	"profile.stayFailed": "Enheten kunne ikke holdes opplåst.",
 	"profile.stayClearFailed":
 		"Den lagrede nøkkelen kunne ikke fjernes. Logg ut og slett nettstedets data i nettleseren for å være sikker.",

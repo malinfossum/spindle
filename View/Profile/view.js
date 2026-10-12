@@ -85,6 +85,7 @@ export function profilePage() {
                 <label class="profile-settings-label" for="profile-lookups">${t("profile.lookups")}</label>
                 <select class="form-input" id="profile-lookups"
                         style="max-width: 320px"
+                        aria-describedby="profile-lookups-help"
                         data-action-change="set-lookups">
                     ${
 						getPref("lookups") === "unset"
@@ -95,6 +96,7 @@ export function profilePage() {
                     <option value="on" ${getPref("lookups") === "on" ? "selected" : ""}>${t("profile.lookupsOn")}</option>
                 </select>
             </div>
+            <p class="form-hint" id="profile-lookups-help">${t("profile.lookupsHelp")}</p>
             <div class="profile-settings-row profile-settings-row-stack">
                 <label class="profile-settings-label" for="profile-stay">${t("profile.stay")}</label>
                 <select class="form-input" id="profile-stay"
