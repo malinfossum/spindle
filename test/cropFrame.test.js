@@ -142,15 +142,15 @@ test("panBy moves the square against the drag and never leaves a gap", () => {
 
 test("keyStep: arrows move 2 %, Shift 10 %, + and - zoom, other keys are not ours", () => {
 	const frame = at(1000, 1000, 1000);
-	// An arrow moves the photo the way a drag in that direction would.
+	// An arrow moves the square over the photo, against a drag.
 	assert.deepEqual(squareOf(keyStep(frame, PHOTO, "ArrowRight", false)), {
-		x: 980,
+		x: 1020,
 		y: 1000,
 		side: 1000,
 	});
 	assert.deepEqual(squareOf(keyStep(frame, PHOTO, "ArrowDown", true)), {
 		x: 1000,
-		y: 900,
+		y: 1100,
 		side: 1000,
 	});
 	assert.ok(keyStep(frame, PHOTO, "+", false).side < 1000);

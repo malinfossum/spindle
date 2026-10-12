@@ -227,15 +227,16 @@ const ARROWS = {
 };
 
 // A key pressed on the stage, as a new frame, or null when the key is not
-// one of the crop's. An arrow moves the photo the way a drag in that
-// direction would.
+// one of the crop's. An arrow moves the square over the photo, the way the
+// focused thing moves, so the photo slides the other way on screen: the
+// opposite of a drag, which carries the photo with the finger.
 export function keyStep(frame, photo, key, shift) {
 	if (key === "+") return zoomBy(frame, photo, ZOOM_STEP);
 	if (key === "-") return zoomBy(frame, photo, 1 / ZOOM_STEP);
 	if (!Object.hasOwn(ARROWS, key)) return null;
 	const [dirX, dirY] = ARROWS[key];
 	const step = frame.side * (shift ? MOVE_STEP_LARGE : MOVE_STEP);
-	return panBy(frame, photo, dirX * step, dirY * step);
+	return panBy(frame, photo, -dirX * step, -dirY * step);
 }
 
 // How far the line between two fingers turned, from one angle to the next,
