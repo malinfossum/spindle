@@ -307,7 +307,7 @@ body {
 
 /* ── Icons ──
    Inline SVG from View/Universal/icons.js. Each one is sized by its own width
-   and height attributes; these rules only stop it behaving like text — a
+   and height attributes; these rules only stop it behaving like text: a
    baseline-aligned inline box that a line-height can shift off centre. */
 .icon {
 	display: block;
