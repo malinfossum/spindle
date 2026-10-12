@@ -449,6 +449,13 @@ footer {
 	pointer-events: none;
 }
 
+/* An unarmed confirm (v0.9). Still focusable, so not pointer-events: none: a
+   press has to reach the handler that says why nothing happened. */
+.btn[aria-disabled="true"] {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
 /* ============================================================
    PAGE HEADER
    ============================================================ */
@@ -1763,6 +1770,10 @@ footer {
 	margin-bottom: 1.25rem;
 }
 
+.dialog-field {
+	margin-bottom: 1.25rem;
+}
+
 .dialog-actions {
 	display: flex;
 	justify-content: flex-end;
@@ -1953,6 +1964,11 @@ footer {
 
 	.crop-tilt input[type="range"]::-moz-range-thumb {
 		background: Highlight;
+	}
+
+	.btn[aria-disabled="true"] {
+		color: GrayText;
+		border-color: GrayText;
 	}
 }
 

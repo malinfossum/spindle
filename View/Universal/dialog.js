@@ -6,8 +6,24 @@
 // page with Back or forward — or, with `outcomes`, to which of the three it
 // was. The body is written with textContent, never innerHTML, so user-entered
 // names (album titles, genres, locations) can be dropped in without escaping.
+// With `confirmWord` (v0.9) a typed word arms the confirm button.
 
 import { t } from "../../Model/i18n/i18n.js";
+
+// v0.9. The typed-word check for a destructive confirm. Trimmed and upper-cased,
+// then exact: "delete" arms, "DELET" and "DELETED" do not. An empty word never
+// matches, so a caller that forgets the word cannot arm the button by default.
+export function matchesConfirmWord(typed, word) {
+	const want = String(word ?? "")
+		.trim()
+		.toUpperCase();
+	if (!want) return false;
+	return (
+		String(typed ?? "")
+			.trim()
+			.toUpperCase() === want
+	);
+}
 
 export function openDialog({
 	title,
@@ -19,6 +35,12 @@ export function openDialog({
 	// boolean: the Create-library question needs to tell the No button (an
 	// answer) from Escape, Back and the backdrop (not an answer).
 	outcomes = false,
+	// v0.9. A word the user must type before the confirm button arms (delete
+	// library). The label and the mismatch message come from the caller, so the
+	// dialog stays generic.
+	confirmWord = "",
+	confirmWordLabel = "",
+	confirmWordMismatch = "",
 }) {
 	return new Promise((resolve) => {
 		const opener = document.activeElement;
@@ -47,10 +69,65 @@ export function openDialog({
 		const confirmBtn = document.createElement("button");
 		confirmBtn.className = danger ? "btn btn-danger" : "btn btn-accent";
 		confirmBtn.textContent = confirmText;
-		confirmBtn.addEventListener("click", () => dialog.close("confirm"));
+		// The word field (v0.9). aria-disabled, not disabled: the button stays in
+		// the tab order and a screen reader hears that it is unavailable. A press
+		// while unarmed is not silent: it shows the mismatch under the field (an
+		// alert region present from the start) and puts focus back in the field.
+		let input = null;
+		let fieldError = null;
+		const field = confirmWord ? document.createElement("div") : null;
+		if (field) {
+			field.className = "form-row dialog-field";
+			const label = document.createElement("label");
+			label.className = "form-label";
+			label.htmlFor = "dialog-confirm-word";
+			label.textContent = confirmWordLabel;
+			input = document.createElement("input");
+			input.className = "form-input";
+			input.id = "dialog-confirm-word";
+			input.type = "text";
+			input.autocomplete = "off";
+			input.spellcheck = false;
+			input.setAttribute("autocapitalize", "characters");
+			input.setAttribute("enterkeyhint", "done");
+			input.setAttribute("aria-invalid", "false");
+			input.setAttribute("aria-describedby", "dialog-confirm-error");
+			fieldError = document.createElement("span");
+			fieldError.className = "field-error";
+			fieldError.id = "dialog-confirm-error";
+			fieldError.setAttribute("role", "alert");
+			field.append(label, input, fieldError);
+			confirmBtn.setAttribute("aria-disabled", "true");
+		}
+
+		const armed = () => !confirmWord || matchesConfirmWord(input.value, confirmWord);
+		const refuse = () => {
+			fieldError.textContent = confirmWordMismatch;
+			input.setAttribute("aria-invalid", "true");
+			input.focus();
+		};
+		const tryConfirm = () => {
+			if (armed()) dialog.close("confirm");
+			else refuse();
+		};
+
+		confirmBtn.addEventListener("click", tryConfirm);
+		input?.addEventListener("input", () => {
+			const ok = armed();
+			confirmBtn.setAttribute("aria-disabled", ok ? "false" : "true");
+			if (ok) {
+				fieldError.textContent = "";
+				input.setAttribute("aria-invalid", "false");
+			}
+		});
+		input?.addEventListener("keydown", (event) => {
+			if (event.key !== "Enter") return;
+			event.preventDefault();
+			tryConfirm();
+		});
 
 		actions.append(cancelBtn, confirmBtn);
-		dialog.append(heading, message, actions);
+		dialog.append(heading, message, ...(field ? [field] : []), actions);
 		document.body.appendChild(dialog);
 
 		// A click landing outside the dialog box is the backdrop → cancel. Testing
@@ -94,7 +171,9 @@ export function openDialog({
 		});
 
 		dialog.showModal();
-		// Destructive actions focus Cancel so Enter doesn't delete by reflex.
-		(danger ? cancelBtn : confirmBtn).focus();
+		// Destructive actions focus Cancel so Enter doesn't delete by reflex. With a
+		// word to type, the field is where the user has to start anyway.
+		if (input) input.focus();
+		else (danger ? cancelBtn : confirmBtn).focus();
 	});
 }
