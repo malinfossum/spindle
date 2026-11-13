@@ -29,8 +29,12 @@ export const STRINGS_EN = {
 	"welcome.about": "About Spindle",
 	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Backup",
-	"welcome.iosSafari":
-		'On iPhone, install Spindle before you create the library: tap Share, then "Add to Home Screen". The Home Screen app keeps its own storage and cannot see a library made in Safari.',
+	"ios.installTitle": "Install Spindle first",
+	"ios.installStep1": "Tap the Share button in Safari.",
+	"ios.installStep2": 'Choose "Add to Home Screen".',
+	"ios.installStep3": "Open Spindle from the icon and create your library there.",
+	"ios.installWhy":
+		"On iPhone and iPad, Safari can delete a site's data after 7 days without use. The Home Screen app keeps its own storage, which stays.",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Back",

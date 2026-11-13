@@ -1,8 +1,10 @@
 import { PASSWORD_STRENGTH_MAX, passwordStrength } from "../../Model/auth.js";
 import { t } from "../../Model/i18n/i18n.js";
+import { iosStorageSide } from "../../Model/install.js";
 import { model } from "../../Model/model.js";
 import { authNotice } from "../Universal/authNotice.js";
 import { escapeHtml } from "../Universal/escape.js";
+import { iosInstallSteps } from "../Universal/iosInstall.js";
 
 // The strength meter is rendered twice: once as part of the page, and once per
 // keystroke by renderStrength() below. Both go through barClass(), so the
@@ -18,6 +20,20 @@ function strengthBars(score) {
 }
 
 export function registerPage() {
+	// iOS Safari creates no library: the installed app does (see iosInstall.js).
+	if (iosStorageSide(model.app.install) === "safari") {
+		return /*HTML*/ `
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            ${iosInstallSteps()}
+            <p class="auth-footer">
+                <a class="auth-back" href="#welcome" data-action="nav">${t("auth.backToStart")}</a>
+            </p>
+        </div>
+    </div>
+    `;
+	}
+
 	const busy = model.app.authBusy;
 	const errors = model.viewState.createProfile.errors;
 	const strength = passwordStrength(model.viewState.createProfile.password);

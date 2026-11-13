@@ -35,8 +35,12 @@ export const STRINGS_NO = {
 	"welcome.about": "Om Spindle",
 	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Sikkerhetskopi",
-	"welcome.iosSafari":
-		"På iPhone: installer Spindle før du oppretter biblioteket. Trykk på Del, og så på «Legg til på Hjem-skjerm». Appen på Hjem-skjermen har sin egen lagring og ser ikke et bibliotek laget i Safari.",
+	"ios.installTitle": "Installer Spindle først",
+	"ios.installStep1": "Trykk på Del-knappen i Safari.",
+	"ios.installStep2": "Velg «Legg til på Hjem-skjerm».",
+	"ios.installStep3": "Åpne Spindle fra ikonet og opprett biblioteket der.",
+	"ios.installWhy":
+		"På iPhone og iPad kan Safari slette data fra en nettside etter 7 dager uten bruk. Appen på Hjem-skjermen har sin egen lagring, som blir værende.",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Tilbake",
