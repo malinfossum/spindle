@@ -9,7 +9,7 @@ A local music library for organizing physical LP and CD collections, built in va
 
 **Live:** [spindle-music.pages.dev](https://spindle-music.pages.dev)
 
-**Status:** finished at v1.0.4. Read the [project note](docs/project-note.md) for how it works, how it is built and where it stands.
+**Status:** finished at v1.0.4, tested on Android, iPhone and desktop browsers. Read the [project note](docs/project-note.md) for how it works, how it is built and where it stands.
 
 ## Run locally
 

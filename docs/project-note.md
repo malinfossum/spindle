@@ -114,11 +114,12 @@ tested, accessible and secure by design. It went further than I expected.
 
 Feedback is welcome, particularly on these points:
 
-1. **iPhone and Safari.** This is the weakest part. I have tested on Android, Windows and
-   desktop browsers. The first test on a real iPhone showed that the Home Screen app keeps its
-   own storage apart from Safari, so since v1.0.4 the library is created in the installed app
-   on iOS. The rest of the iPhone pass is still to come. Safari has no barcode detector and
-   handles the on-screen keyboard differently.
+1. **iPhone and Safari.** This is still the least tested part. I have tested on Android,
+   Windows and desktop browsers, and on a real iPhone. The first iPhone test showed that the
+   Home Screen app keeps its own storage apart from Safari, so since v1.0.4 the library is
+   created in the installed app on iOS. A retest confirmed that saving works, both before and
+   after flight mode. Safari has no barcode detector and handles the on-screen keyboard
+   differently.
 2. **The interface on a small screen.** Is the library easy to scan at 320 px? Does adding an
    album feel quick enough to do standing at a shelf?
 3. **The architecture.** Is the MVC split clean, or has the Controller layer grown too large?
