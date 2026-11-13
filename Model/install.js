@@ -14,3 +14,17 @@ export function installRowState({ canPrompt, outcome, ios, standalone }) {
 	if (ios) return "ios";
 	return "none";
 }
+
+// iOS gives a Home Screen app its own storage, apart from Safari, so a library
+// made in Safari is not there when the installed app opens (a tester hit this
+// in v1.0.3). The data never leaves the device, so nothing syncs the two; a
+// backup file is the only bridge. So Spindle tells each side what to do:
+//
+//   safari: iOS in the browser. Install first, then create the library.
+//   app:    iOS running installed. An empty app may have a library in Safari.
+//   none:   every other browser shares one store with its installed app.
+
+export function iosStorageSide({ ios, standalone }) {
+	if (!ios) return "none";
+	return standalone ? "app" : "safari";
+}

@@ -35,6 +35,8 @@ export const STRINGS_NO = {
 	"welcome.about": "Om Spindle",
 	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Sikkerhetskopi",
+	"welcome.iosSafari":
+		"På iPhone: installer Spindle før du oppretter biblioteket. Trykk på Del, og så på «Legg til på Hjem-skjerm». Appen på Hjem-skjermen har sin egen lagring og ser ikke et bibliotek laget i Safari.",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Tilbake",
@@ -348,6 +350,8 @@ export const STRINGS_NO = {
 	"error.passwordWeak": "Velg et sterkere passord. Dette er på vår liste over svake passord.",
 	"error.wrongPassword": "Feil passord.",
 	"error.noLibraryFound": "Ingen bibliotek funnet. Opprett ett først.",
+	"error.noLibraryIosApp":
+		"Ingen bibliotek i denne appen ennå. Appen på Hjem-skjermen har sin egen lagring, atskilt fra Safari. Opprett et bibliotek her, eller gjenopprett en sikkerhetskopi fra startsiden.",
 	"error.libraryInOtherTab":
 		"Et bibliotek ble opprettet i en annen fane. Last inn siden på nytt og logg inn.",
 	"error.noSpace": "Ikke nok plass. Frigjør lagring og prøv igjen.",

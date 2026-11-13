@@ -29,6 +29,8 @@ export const STRINGS_EN = {
 	"welcome.about": "About Spindle",
 	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Backup",
+	"welcome.iosSafari":
+		'On iPhone, install Spindle before you create the library: tap Share, then "Add to Home Screen". The Home Screen app keeps its own storage and cannot see a library made in Safari.',
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Back",
@@ -336,6 +338,8 @@ export const STRINGS_EN = {
 	"error.passwordWeak": "Choose a stronger password. This one is on our list of weak passwords.",
 	"error.wrongPassword": "Wrong password.",
 	"error.noLibraryFound": "No library found. Create one first.",
+	"error.noLibraryIosApp":
+		"No library in this app yet. The Home Screen app keeps its own storage, apart from Safari. Create a library here, or restore a backup from the start page.",
 	"error.libraryInOtherTab": "A library was created in another tab. Reload the page and log in.",
 	"error.noSpace": "Not enough space. Free up storage and try again.",
 	"error.unexpected": "Something went wrong. Please try again.",

@@ -1,4 +1,5 @@
 import { t } from "../../Model/i18n/i18n.js";
+import { iosStorageSide } from "../../Model/install.js";
 import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";
 import { authNotice } from "../Universal/authNotice.js";
@@ -23,6 +24,13 @@ export function welcomePage() {
         </a>`;
 
 	const actions = hasLibrary ? loginBtn + createBtn : createBtn + loginBtn;
+
+	// iOS Safari only: the Home Screen app gets its own storage, so a library
+	// made here is not there once installed. Said before the first press.
+	const iosHint =
+		iosStorageSide(model.app.install) === "safari"
+			? `<p class="auth-notice welcome-ios">${t("welcome.iosSafari")}</p>`
+			: "";
 
 	// Restoring a backup has to work from here, not only from Profile: a corrupt
 	// library or a forgotten password locks you out of the app entirely, and that
@@ -57,6 +65,7 @@ export function welcomePage() {
             </p>
 
             ${authNotice()}
+            ${iosHint}
 
             <div class="welcome-actions">
                 ${actions}

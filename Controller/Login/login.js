@@ -11,6 +11,7 @@ import {
 } from "../../Model/auth.js";
 import { migrateInlineCovers, pruneCovers } from "../../Model/covers.js";
 import { t } from "../../Model/i18n/i18n.js";
+import { iosStorageSide } from "../../Model/install.js";
 import { blankAlbum, blankLibraryView, model } from "../../Model/model.js";
 import { normalizeAlbums, persistState, readEnvelope } from "../../Model/persistence.js";
 import { isLoggedIn } from "../../Model/selectors.js";
@@ -114,7 +115,10 @@ export async function login() {
 
 	const result = readEnvelope();
 	if (!result?.ok) {
-		setAuthMessage("error.noLibraryFound");
+		// On iOS the installed app cannot see Safari's storage, so an empty app
+		// is the expected case after creating the library in Safari.
+		const inIosApp = iosStorageSide(model.app.install) === "app";
+		setAuthMessage(inIosApp ? "error.noLibraryIosApp" : "error.noLibraryFound");
 		updateView();
 		return;
 	}
