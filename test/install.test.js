@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { installRowState } from "../Model/install.js";
+import { installRowState, iosStorageSide } from "../Model/install.js";
 
 const base = { canPrompt: false, outcome: "", ios: false, standalone: false };
 
@@ -26,4 +26,11 @@ test("running installed shows nothing, whatever else is true", () => {
 
 test("any other browser shows nothing", () => {
 	assert.equal(installRowState(base), "none");
+});
+
+test("iOS in Safari and iOS installed are told apart; elsewhere nothing", () => {
+	assert.equal(iosStorageSide({ ios: true, standalone: false }), "safari");
+	assert.equal(iosStorageSide({ ios: true, standalone: true }), "app");
+	assert.equal(iosStorageSide({ ios: false, standalone: false }), "none");
+	assert.equal(iosStorageSide({ ios: false, standalone: true }), "none");
 });

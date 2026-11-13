@@ -1,8 +1,10 @@
 import { t } from "../../Model/i18n/i18n.js";
+import { iosStorageSide } from "../../Model/install.js";
 import { model } from "../../Model/model.js";
 import { loadState } from "../../Model/persistence.js";
 import { authNotice } from "../Universal/authNotice.js";
 import { backupSection } from "../Universal/backup.js";
+import { iosInstallSteps } from "../Universal/iosInstall.js";
 import { langPicker, themePicker } from "../Universal/pickers.js";
 
 export function welcomePage() {
@@ -22,7 +24,12 @@ export function welcomePage() {
             ${t("welcome.login")}
         </a>`;
 
-	const actions = hasLibrary ? loginBtn + createBtn : createBtn + loginBtn;
+	// iOS Safari: the install steps take the Create button's place (see
+	// iosInstall.js). Log in stays for a library already made in Safari, so it
+	// can still be opened and exported to the app as a backup.
+	const iosSafari = iosStorageSide(model.app.install) === "safari";
+	let actions = hasLibrary ? loginBtn + createBtn : createBtn + loginBtn;
+	if (iosSafari) actions = hasLibrary ? loginBtn : "";
 
 	// Restoring a backup has to work from here, not only from Profile: a corrupt
 	// library or a forgotten password locks you out of the app entirely, and that
@@ -57,16 +64,15 @@ export function welcomePage() {
             </p>
 
             ${authNotice()}
+            ${iosSafari ? iosInstallSteps() : ""}
 
-            <div class="welcome-actions">
-                ${actions}
-            </div>
+            ${actions ? `<div class="welcome-actions">${actions}</div>` : ""}
 
             <a class="link-btn welcome-about" href="#about" data-action="nav">
                 ${t("welcome.about")}
             </a>
 
-            ${backupPanel}
+            ${iosSafari && !hasLibrary ? "" : backupPanel}
         </div>
 
         <p class="welcome-footer">

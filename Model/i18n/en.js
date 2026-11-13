@@ -29,6 +29,12 @@ export const STRINGS_EN = {
 	"welcome.about": "About Spindle",
 	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Backup",
+	"ios.installTitle": "Install Spindle first",
+	"ios.installStep1": "Tap the Share button in Safari.",
+	"ios.installStep2": 'Choose "Add to Home Screen".',
+	"ios.installStep3": "Open Spindle from the icon and create your library there.",
+	"ios.installWhy":
+		"On iPhone and iPad, Safari can delete a site's data after 7 days without use. The Home Screen app keeps its own storage, which stays.",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Back",
@@ -336,6 +342,8 @@ export const STRINGS_EN = {
 	"error.passwordWeak": "Choose a stronger password. This one is on our list of weak passwords.",
 	"error.wrongPassword": "Wrong password.",
 	"error.noLibraryFound": "No library found. Create one first.",
+	"error.noLibraryIosApp":
+		"No library in this app yet. The Home Screen app keeps its own storage, apart from Safari. Create a library here, or restore a backup from the start page.",
 	"error.libraryInOtherTab": "A library was created in another tab. Reload the page and log in.",
 	"error.noSpace": "Not enough space. Free up storage and try again.",
 	"error.unexpected": "Something went wrong. Please try again.",

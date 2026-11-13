@@ -35,6 +35,12 @@ export const STRINGS_NO = {
 	"welcome.about": "Om Spindle",
 	"welcome.credit": "Spindle ©",
 	"welcome.backup": "Sikkerhetskopi",
+	"ios.installTitle": "Installer Spindle først",
+	"ios.installStep1": "Trykk på Del-knappen i Safari.",
+	"ios.installStep2": "Velg «Legg til på Hjem-skjerm».",
+	"ios.installStep3": "Åpne Spindle fra ikonet og opprett biblioteket der.",
+	"ios.installWhy":
+		"På iPhone og iPad kan Safari slette data fra en nettside etter 7 dager uten bruk. Appen på Hjem-skjermen har sin egen lagring, som blir værende.",
 
 	// ---- About --------------------------------------------------------------
 	"about.back": "← Tilbake",
@@ -348,6 +354,8 @@ export const STRINGS_NO = {
 	"error.passwordWeak": "Velg et sterkere passord. Dette er på vår liste over svake passord.",
 	"error.wrongPassword": "Feil passord.",
 	"error.noLibraryFound": "Ingen bibliotek funnet. Opprett ett først.",
+	"error.noLibraryIosApp":
+		"Ingen bibliotek i denne appen ennå. Appen på Hjem-skjermen har sin egen lagring, atskilt fra Safari. Opprett et bibliotek her, eller gjenopprett en sikkerhetskopi fra startsiden.",
 	"error.libraryInOtherTab":
 		"Et bibliotek ble opprettet i en annen fane. Last inn siden på nytt og logg inn.",
 	"error.noSpace": "Ikke nok plass. Frigjør lagring og prøv igjen.",

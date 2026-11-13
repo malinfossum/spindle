@@ -1626,6 +1626,42 @@ footer {
 	text-align: left;
 }
 
+/* iOS Safari's install steps (v1.0.4). The notice's accent edge marks them as
+   the way forward, since they stand where the Create button would be. */
+.ios-install {
+	margin-bottom: 1rem;
+	padding: 0.9rem 1rem;
+	border: 1px solid var(--border);
+	border-left: 3px solid var(--accent);
+	background: var(--surface2);
+	color: var(--text);
+	border-radius: 8px;
+	font-size: 0.92rem;
+	line-height: 1.5;
+	text-align: left;
+}
+
+.ios-install-title {
+	font-size: 1rem;
+	font-weight: 700;
+	margin: 0 0 0.5rem;
+}
+
+.ios-install-steps {
+	margin: 0 0 0.6rem;
+	padding-left: 1.3rem;
+}
+
+.ios-install-steps li + li {
+	margin-top: 0.3rem;
+}
+
+.ios-install-why {
+	margin: 0;
+	color: var(--text-muted);
+	font-size: 0.85rem;
+}
+
 .storage-banner {
 	margin: 0 0 1rem;
 	padding: 0.75rem 0.9rem;
