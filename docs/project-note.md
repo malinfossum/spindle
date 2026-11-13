@@ -2,7 +2,7 @@
 
 A summary of what Spindle is, how it works, how it is built and where it stands.
 
-**Last updated:** 13.10.2026 · **Version:** v1.0.3 · **Status:** finished
+**Last updated:** 13.11.2026 · **Version:** v1.0.4 · **Status:** finished
 
 ---
 
@@ -92,8 +92,8 @@ so clearing the site's data deletes the library unless you have exported a backu
 
 ## Status
 
-Spindle is finished at v1.0.3, its sixth tagged release. 109 commits between 14 May and
-13 October 2026; the first is the import of the team project it grew from. 123 tests, all
+Spindle is finished at v1.0.4, its seventh tagged release. 122 commits between 14 May and
+13 November 2026; the first is the import of the team project it grew from. 124 tests, all
 passing. Every version since v0.1 has a plan written up front, under `docs/`.
 
 It was built to learn how far plain JavaScript goes when it is done properly: layered,
@@ -115,8 +115,10 @@ tested, accessible and secure by design. It went further than I expected.
 Feedback is welcome, particularly on these points:
 
 1. **iPhone and Safari.** This is the weakest part. I have tested on Android, Windows and
-   desktop browsers, but not yet on a real iPhone. Safari has no barcode detector, handles the
-   on-screen keyboard differently and treats installed web apps its own way.
+   desktop browsers. The first test on a real iPhone showed that the Home Screen app keeps its
+   own storage apart from Safari, so since v1.0.4 the library is created in the installed app
+   on iOS. The rest of the iPhone pass is still to come. Safari has no barcode detector and
+   handles the on-screen keyboard differently.
 2. **The interface on a small screen.** Is the library easy to scan at 320 px? Does adding an
    album feel quick enough to do standing at a shelf?
 3. **The architecture.** Is the MVC split clean, or has the Controller layer grown too large?
